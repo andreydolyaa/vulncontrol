@@ -23,6 +23,13 @@ const UserSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    id: {
+      type: String,
+      default: function () {
+        return this._id;
+      },
+      index: true,
+    },
   },
   {
     versionKey: false,
