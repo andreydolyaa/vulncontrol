@@ -16,5 +16,8 @@ export const databaseMsg = {
 export const userMsg = {
   REGISTER_SUCCESS: "User created successfully",
   REGISTER_FAILED: "User registration failed",
-  REGISTER_EXISTS: "Email already exists"
+  REGISTER_EXISTS: "Email already exists",
+  LOGIN_SUCCESS: "Logged in successfully",
+  LOGIN_FAILED: "Wrong credentials",
+  LOGIN_ERROR: "Error occurred during login"
 }
