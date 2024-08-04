@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -11,22 +12,47 @@ body,
 html,
 #root {
   height: 100%;
+  background-color: #f6f6f6;
 }
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Open Sans", Inter, system-ui, Avenir, Helvetica, Arial,
+    sans-serif;
   font-size: 14px;
   color: rgb(33, 33, 33);
 }
 
 input {
   border: 1px solid rgb(199, 199, 199);
-  border-radius: 5px;
-  padding: 5px 5px;
+  border-radius: 10px;
+  padding: 10px;
 }
 
 button {
   border: 1px solid rgb(199, 199, 199);
-  padding: 5px 5px;
-  border-radius: 5px;
+  padding: 10px;
+  border-radius: 10px;
   /* background-color: #2e394e; */
+}
+
+.full-page-centered {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.children-margin > * {
+  margin: 15px 0;
+}
+
+.shadow {
+  box-shadow: 1px 1px 20px rgb(225, 225, 225);
+}
+
+.login-divider::before,
+.login-divider::after {
+  content: "";
+  display: block;
+  border-bottom: 1px solid rgb(212, 212, 212);
+  width: 50%;
 }

@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import { RootLayout } from "./layout/RootLayout";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
@@ -20,7 +20,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: isAuthenticated() ? <RootLayout /> : <Login />,
+    element: isAuthenticated() ? <RootLayout /> : <Navigate to="login" />,
     errorElement: <Error />,
     children: [
       {
