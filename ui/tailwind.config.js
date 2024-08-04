@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       animation: {
-
+        appear: "appear .2s ease-in-out 1"
       },
       colors: {
         grayBg: "#F6F6F6",

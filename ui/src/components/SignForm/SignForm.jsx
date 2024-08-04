@@ -1,20 +1,22 @@
 import React from "react";
-import SignFormItem from "./SignFormItem";
 
-export const SignForm = ({ children, buttonText, onSignFormSubmit }) => {
+export const SignForm = ({ children, buttonText, onFormSubmit }) => {
   const isLoginPage = () => buttonText === "Log In";
 
   return (
     <div className="login-layout h-full full-page-centered">
       <div className="login-container w-[450px] flex justify-center">
-        <form className="children-margin bg-white p-10 w-full flex flex-col rounded-xl shadow">
+        <form
+          onSubmit={onFormSubmit}
+          className="children-margin bg-white p-10 w-full flex flex-col rounded-xl shadow animate-appear"
+        >
           <h1 className="text-4xl text-center font-bold py-6">
             {isLoginPage() ? "Welcome Back!" : "Register"}
           </h1>
 
           {children}
 
-          <button className="py-5 font-bold bg-purpleBg border-none text-white">
+          <button className="py-5 font-bold bg-purpleBg border-none text-white hover:bg-opacity-80">
             {buttonText}
           </button>
 
