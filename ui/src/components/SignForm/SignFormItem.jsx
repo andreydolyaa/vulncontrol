@@ -15,6 +15,7 @@ const SignFormItem = ({
         name={name}
         onChange={onFormChange}
         placeholder={placeholder}
+        required
       />
     </div>
   );

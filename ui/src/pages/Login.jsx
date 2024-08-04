@@ -1,12 +1,16 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { SignForm } from "../components/SignForm/SignForm";
 import SignFormItem from "../components/SignForm/SignFormItem";
+import { login } from "../redux/userSlice";
 
 export const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const { user, status, error } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   const onFormChange = (e) => {
     const { name, value } = e.target;
@@ -19,11 +23,17 @@ export const Login = () => {
   const submitLoginForm = (e) => {
     e.preventDefault();
     console.log(formData, "ready form");
-
-    // redux action to submit to server here
+    dispatch(login(formData));
   };
+
+  const isLoading = () => status === "loading";
+
   return (
-    <SignForm buttonText={"Log In"} onFormSubmit={submitLoginForm}>
+    <SignForm
+      buttonText={"Log In"}
+      onFormSubmit={submitLoginForm}
+      isLoading={isLoading}
+    >
       <SignFormItem
         inputType={"email"}
         label={"Work Email"}

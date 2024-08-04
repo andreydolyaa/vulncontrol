@@ -1,6 +1,7 @@
 import React from "react";
+import { RiLoader4Line } from "react-icons/ri";
 
-export const SignForm = ({ children, buttonText, onFormSubmit }) => {
+export const SignForm = ({ children, buttonText, onFormSubmit, isLoading }) => {
   const isLoginPage = () => buttonText === "Log In";
 
   return (
@@ -17,7 +18,11 @@ export const SignForm = ({ children, buttonText, onFormSubmit }) => {
           {children}
 
           <button className="py-5 font-bold bg-purpleBg border-none text-white hover:bg-opacity-80">
-            {buttonText}
+            {isLoading() ? (
+              <RiLoader4Line className="animate-spin w-8 h-8 border-none text-center" />
+            ) : (
+              buttonText
+            )}
           </button>
 
           <div className="login-divider flex items-center mb-4">
