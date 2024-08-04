@@ -1,7 +1,16 @@
 import React from "react";
-import { RiLoader4Line } from "react-icons/ri";
+import { ErrorBox } from "../ErrorBox";
+import { SignFormButton } from "./SignFormButton";
+import { SignFormTitle } from "./SignFormTitle";
+import { SignFormFooter } from "./SignFormFooter";
 
-export const SignForm = ({ children, buttonText, onFormSubmit, isLoading }) => {
+export const SignForm = ({
+  children,
+  buttonText,
+  onFormSubmit,
+  isLoading,
+  error,
+}) => {
   const isLoginPage = () => buttonText === "Log In";
 
   return (
@@ -11,29 +20,11 @@ export const SignForm = ({ children, buttonText, onFormSubmit, isLoading }) => {
           onSubmit={onFormSubmit}
           className="children-margin bg-white p-10 w-full flex flex-col rounded-xl shadow animate-appear"
         >
-          <h1 className="text-4xl text-center font-bold py-6">
-            {isLoginPage() ? "Welcome Back!" : "Register"}
-          </h1>
-
+          <SignFormTitle isLoginPage={isLoginPage} />
+          <ErrorBox error={error} />
           {children}
-
-          <button className="py-5 font-bold bg-purpleBg border-none text-white hover:bg-opacity-80">
-            {isLoading() ? (
-              <RiLoader4Line className="animate-spin w-8 h-8 border-none text-center" />
-            ) : (
-              buttonText
-            )}
-          </button>
-
-          <div className="login-divider flex items-center mb-4">
-            <span className="text-gray-400 mx-3">OR</span>
-          </div>
-
-          <div className="text-gray-400 text-center underline">
-            <a href={isLoginPage() ? "/register" : "/login"}>
-              {isLoginPage() ? "Register New Account" : "Log In"}
-            </a>
-          </div>
+          <SignFormButton buttonText={buttonText} isLoading={isLoading} />
+          <SignFormFooter isLoginPage={isLoginPage} />
         </form>
       </div>
     </div>

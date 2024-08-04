@@ -33,6 +33,7 @@ export const Login = () => {
       buttonText={"Log In"}
       onFormSubmit={submitLoginForm}
       isLoading={isLoading}
+      error={error}
     >
       <SignFormItem
         inputType={"email"}

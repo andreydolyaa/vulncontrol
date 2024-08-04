@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { SignForm } from "../components/SignForm/SignForm";
 import SignFormItem from "../components/SignForm/SignFormItem";
+import { useDispatch, useSelector } from "react-redux";
+import { register } from "../redux/userSlice";
 
 export const Register = () => {
   const [formData, setFormData] = useState({
@@ -9,6 +11,8 @@ export const Register = () => {
     email: "",
     password: "",
   });
+  const dispatch = useDispatch();
+  const { user, status, error } = useSelector((state) => state.user);
 
   const onFormChange = (e) => {
     const { name, value } = e.target;
@@ -20,12 +24,17 @@ export const Register = () => {
 
   const submitRegisterForm = (e) => {
     e.preventDefault();
-    console.log(formData, "ready form");
-
-    // redux action to submit to server here
+    dispatch(register(formData));
   };
+
+  const isLoading = () => status === "loading";
+
   return (
-    <SignForm buttonText={"Register"} onFormSubmit={submitRegisterForm}>
+    <SignForm
+      buttonText={"Register"}
+      onFormSubmit={submitRegisterForm}
+      isLoading={isLoading}
+    >
       <SignFormItem
         label={"First Name"}
         placeholder={"Enter your first name"}

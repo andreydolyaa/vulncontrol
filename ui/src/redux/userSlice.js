@@ -16,6 +16,20 @@ export const login = createAsyncThunk(
   }
 );
 
+export const register = createAsyncThunk(
+  "user/register",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await api.post("/api/auth/register", data);
+      return response.data;
+    } catch (error) {
+      if (error.response?.data) {
+        return rejectWithValue(error.response?.data);
+      }
+    }
+  }
+);
+
 export const userSlice = createSlice({
   name: "user",
   initialState: {
@@ -23,7 +37,11 @@ export const userSlice = createSlice({
     status: "idle",
     error: null,
   },
-  reducers: {},
+  reducers: {
+    clearError: (state) => {
+      state.error = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(login.pending, (state) => {
@@ -37,9 +55,20 @@ export const userSlice = createSlice({
       .addCase(login.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
+      })
+      .addCase(register.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(register.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.user = action.payload;
+      })
+      .addCase(register.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
       });
   },
 });
 
-export const { display, changeName } = userSlice.actions;
+export const { clearError } = userSlice.actions;
 export default userSlice.reducer;
