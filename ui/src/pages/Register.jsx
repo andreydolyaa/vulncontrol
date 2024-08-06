@@ -12,7 +12,7 @@ export const Register = () => {
     password: "",
   });
   const dispatch = useDispatch();
-  const { user, status, error } = useSelector((state) => state.user);
+  const { status, message } = useSelector((state) => state.user);
 
   const onFormChange = (e) => {
     const { name, value } = e.target;
@@ -34,6 +34,8 @@ export const Register = () => {
       buttonText={"Register"}
       onFormSubmit={submitRegisterForm}
       isLoading={isLoading}
+      message={message}
+      status={status}
     >
       <SignFormItem
         label={"First Name"}

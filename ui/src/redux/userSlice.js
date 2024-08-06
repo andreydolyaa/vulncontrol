@@ -1,3 +1,4 @@
+import { jwtDecode } from "jwt-decode";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../api/index";
 
@@ -35,11 +36,13 @@ export const userSlice = createSlice({
   initialState: {
     user: {},
     status: "idle",
-    error: null,
+    message: null,
+    tokenName: "project_manager_login_token",
+    token: {},
   },
   reducers: {
-    clearError: (state) => {
-      state.error = null;
+    clearMessage: (state) => {
+      state.message = null;
     },
   },
   extraReducers: (builder) => {
@@ -49,26 +52,31 @@ export const userSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.user = action.payload;
+        state.user = jwtDecode(action.payload.token);
+
         // TODO: handle token parsing to get user data
+        localStorage.setItem(
+          state.tokenName,
+          JSON.stringify(action.payload?.token)
+        );
       })
       .addCase(login.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.payload;
+        state.message = action.payload;
       })
       .addCase(register.pending, (state) => {
         state.status = "loading";
       })
       .addCase(register.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.user = action.payload;
+        state.message = action.payload;
       })
       .addCase(register.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.payload;
+        state.message = action.payload;
       });
   },
 });
 
-export const { clearError } = userSlice.actions;
+export const { clearMessage } = userSlice.actions;
 export default userSlice.reducer;

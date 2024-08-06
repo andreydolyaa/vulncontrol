@@ -9,7 +9,7 @@ export const Login = () => {
     email: "",
     password: "",
   });
-  const { user, status, error } = useSelector((state) => state.user);
+  const { status, message } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const onFormChange = (e) => {
@@ -22,18 +22,22 @@ export const Login = () => {
 
   const submitLoginForm = (e) => {
     e.preventDefault();
-    console.log(formData, "ready form");
-    dispatch(login(formData));
+    dispatch(login(formData))
   };
 
   const isLoading = () => status === "loading";
+
+  // TODO: handle redirect to /Home after login
+  // TODO: Protect login and register routes after logged in
+  // TODO: confirm how should you store the token (localstorage/memory) and handle refresh
 
   return (
     <SignForm
       buttonText={"Log In"}
       onFormSubmit={submitLoginForm}
       isLoading={isLoading}
-      error={error}
+      message={message}
+      status={status}
     >
       <SignFormItem
         inputType={"email"}

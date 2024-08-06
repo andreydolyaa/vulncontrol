@@ -1,14 +1,14 @@
 import React from "react";
 import { RiLoader4Line } from "react-icons/ri";
 import { useDispatch } from "react-redux";
-import { clearError } from "../../redux/userSlice";
+import { clearMessage } from "../../redux/userSlice";
 
 export const SignFormButton = ({ buttonText, isLoading }) => {
   const dispatch = useDispatch();
   
   return (
     <button
-      onClick={() => dispatch(clearError())}
+      onClick={() => dispatch(clearMessage())}
       disabled={isLoading()}
       className={`h-16 font-bold bg-purpleBg border-none text-white ${
         isLoading() ? "" : "hover:bg-opacity-80"
