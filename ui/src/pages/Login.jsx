@@ -1,16 +1,26 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { SignForm } from "../components/SignForm/SignForm";
 import SignFormItem from "../components/SignForm/SignFormItem";
 import { login } from "../redux/userSlice";
+import { useNavigate } from "react-router-dom";
 
 export const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const { status, message } = useSelector((state) => state.user);
+  const { status, message, user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log(status);
+
+    if (status === "succeeded" && user.isLoggedIn) {
+      navigate("/");
+    }
+  }, [status, user]);
 
   const onFormChange = (e) => {
     const { name, value } = e.target;
@@ -22,14 +32,10 @@ export const Login = () => {
 
   const submitLoginForm = (e) => {
     e.preventDefault();
-    dispatch(login(formData))
+    dispatch(login(formData));
   };
 
   const isLoading = () => status === "loading";
-
-  // TODO: handle redirect to /Home after login
-  // TODO: Protect login and register routes after logged in
-  // TODO: confirm how should you store the token (localstorage/memory) and handle refresh
 
   return (
     <SignForm

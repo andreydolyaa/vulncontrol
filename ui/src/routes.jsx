@@ -6,8 +6,8 @@ import { Home } from "./pages/Home";
 import { Projects } from "./pages/Projects/Projects";
 import { Tasks } from "./pages/Tasks/Tasks";
 import { Error } from "./pages/Error/Error";
+import { PrivateRoute } from "./components/PrivateRoute/PrivateRoute";
 
-const isAuthenticated = () => false;
 
 export const router = createBrowserRouter([
   {
@@ -20,7 +20,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: isAuthenticated() ? <RootLayout /> : <Navigate to="login" />,
+    element: <PrivateRoute />,
     errorElement: <Error />,
     children: [
       {
