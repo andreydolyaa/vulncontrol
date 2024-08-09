@@ -51,12 +51,9 @@ export const getLoggedUser = createAsyncThunk(
     try {
       const rawToken = localStorage.getItem("login_token_1");
       const token = rawToken.replace(/"/g, "");
-      
       const response = await api.get("/api/auth/user", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      console.log(response ,"REPSONSE");
-      
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data);
@@ -122,7 +119,8 @@ export const userSlice = createSlice({
       })
       .addCase(getLoggedUser.fulfilled, (state, action) => {
         state.status = "succeeded";
-        console.log(action.payload, "getLoggedUser succeeded");
+        state.user = action.payload.user;
+        // console.log(state.user, "getLoggedUser succeeded");
       })
       .addCase(getLoggedUser.rejected, (state, action) => {
         state.status = "failed";

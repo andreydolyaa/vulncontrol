@@ -4,6 +4,9 @@ import { Navigate } from "react-router-dom";
 import { RootLayout } from "../../layout/RootLayout";
 
 export const PrivateRoute = () => {
+  
+  // TODO watch routes and restrict access
+
   const { user } = useSelector((state) => state.user);
-  return user?.isLoggedIn ? <RootLayout /> : <Navigate to="/login" />;
+  return user ? <RootLayout /> : <Navigate to="/login" />;
 };

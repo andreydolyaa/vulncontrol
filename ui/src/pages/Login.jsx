@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { SignForm } from "../components/SignForm/SignForm";
 import SignFormItem from "../components/SignForm/SignFormItem";
-import { login } from "../redux/userSlice";
+import { getLoggedUser, login } from "../redux/userSlice";
 import { useNavigate } from "react-router-dom";
 
 export const Login = () => {
@@ -10,17 +10,9 @@ export const Login = () => {
     email: "",
     password: "",
   });
-  const { status, message, user } = useSelector((state) => state.user);
+  const { status, message } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    console.log(status);
-
-    if (status === "succeeded" && user.isLoggedIn) {
-      navigate("/");
-    }
-  }, [status, user]);
 
   const onFormChange = (e) => {
     const { name, value } = e.target;
@@ -32,7 +24,10 @@ export const Login = () => {
 
   const submitLoginForm = (e) => {
     e.preventDefault();
-    dispatch(login(formData));
+    dispatch(login(formData))
+      .unwrap()
+      .then(() => dispatch(getLoggedUser()))
+      .then(() => navigate("/"));
   };
 
   const isLoading = () => status === "loading";
