@@ -24,8 +24,15 @@ export const Login = () => {
 
   const submitLoginForm = (e) => {
     e.preventDefault();
+
     dispatch(login(formData))
       .unwrap()
+      .then(() => {
+        setFormData({
+          email: "",
+          password: "",
+        });
+      })
       .then(() => dispatch(getLoggedUser()))
       .then(() => navigate("/"));
   };
@@ -45,6 +52,7 @@ export const Login = () => {
         label={"Work Email"}
         placeholder={"Enter your work email"}
         name={"email"}
+        value={formData.email}
         onFormChange={onFormChange}
       />
 
@@ -53,6 +61,7 @@ export const Login = () => {
         label={"Password"}
         placeholder={"Enter your password"}
         name={"password"}
+        value={formData.password}
         onFormChange={onFormChange}
       />
     </SignForm>

@@ -5,6 +5,7 @@ const SignFormItem = ({
   name,
   label,
   placeholder,
+  value,
   onFormChange,
 }) => {
   return (
@@ -13,6 +14,7 @@ const SignFormItem = ({
       <input
         type={inputType}
         name={name}
+        value={value}
         onChange={onFormChange}
         placeholder={placeholder}
         required

@@ -1,6 +1,7 @@
 // import { jwtDecode } from "jwt-decode";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../api/index";
+import { createBearerToken } from "../utils";
 
 export const login = createAsyncThunk(
   "user/login",
@@ -35,7 +36,13 @@ export const logout = createAsyncThunk(
   "user/logout",
   async (data, { rejectWithValue }) => {
     try {
-      const response = await api.post("/api/auth/logout", data);
+      const response = await api.post(
+        "/api/auth/logout",
+        {},
+        {
+          headers: { Authorization: createBearerToken("login_token_1") },
+        }
+      );
       return response.data;
     } catch (error) {
       if (error.response?.data) {
@@ -49,10 +56,8 @@ export const getLoggedUser = createAsyncThunk(
   "user/getLoggedUser",
   async (_, { rejectWithValue }) => {
     try {
-      const rawToken = localStorage.getItem("login_token_1");
-      const token = rawToken.replace(/"/g, "");
       const response = await api.get("/api/auth/user", {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: createBearerToken("login_token_1") },
       });
       return response.data;
     } catch (error) {
@@ -119,6 +124,7 @@ export const userSlice = createSlice({
       })
       .addCase(getLoggedUser.fulfilled, (state, action) => {
         state.status = "succeeded";
+
         state.user = action.payload.user;
         // console.log(state.user, "getLoggedUser succeeded");
       })

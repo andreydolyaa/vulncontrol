@@ -4,8 +4,6 @@ import { Topbar } from "../components/TopBar/Topbar";
 import { useSelector } from "react-redux";
 
 export const RootLayout = () => {
-  const { user } = useSelector((state) => state.user);
-  console.log("user: ", user);
 
 
   return (

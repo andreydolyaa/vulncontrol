@@ -25,6 +25,12 @@ export const Register = () => {
   const submitRegisterForm = (e) => {
     e.preventDefault();
     dispatch(register(formData));
+    setFormData({
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+    });
   };
 
   const isLoading = () => status === "loading";
@@ -41,6 +47,7 @@ export const Register = () => {
         label={"First Name"}
         placeholder={"Enter your first name"}
         name={"firstName"}
+        value={formData.firstName}
         onFormChange={onFormChange}
       />
 
@@ -48,6 +55,7 @@ export const Register = () => {
         label={"Last Name"}
         placeholder={"Enter your last name"}
         name={"lastName"}
+        value={formData.lastName}
         onFormChange={onFormChange}
       />
 
@@ -55,6 +63,7 @@ export const Register = () => {
         label={"Email"}
         placeholder={"Enter your work email"}
         name={"email"}
+        value={formData.email}
         onFormChange={onFormChange}
       />
 
@@ -63,6 +72,7 @@ export const Register = () => {
         label={"Password"}
         placeholder={"Enter your password"}
         name={"password"}
+        value={formData.password}
         onFormChange={onFormChange}
       />
     </SignForm>

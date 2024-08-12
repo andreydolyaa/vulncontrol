@@ -7,16 +7,16 @@ import { Projects } from "./pages/Projects/Projects";
 import { Tasks } from "./pages/Tasks/Tasks";
 import { Error } from "./pages/Error/Error";
 import { PrivateRoute } from "./components/PrivateRoute/PrivateRoute";
-
+import { PublicRoute } from "./components/PublicRoute/PublicRoute";
 
 export const router = createBrowserRouter([
   {
     path: "/login",
-    element: <Login />,
+    element: <PublicRoute element={<Login />} />,
   },
   {
     path: "/register",
-    element: <Register />,
+    element: <PublicRoute element={<Register />} />,
   },
   {
     path: "/",
