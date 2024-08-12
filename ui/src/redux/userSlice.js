@@ -1,4 +1,3 @@
-// import { jwtDecode } from "jwt-decode";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../api/index";
 import { createBearerToken } from "../utils";
@@ -40,7 +39,11 @@ export const logout = createAsyncThunk(
         "/api/auth/logout",
         {},
         {
-          headers: { Authorization: createBearerToken("login_token_1") },
+          headers: {
+            Authorization: createBearerToken(
+              import.meta.env.VITE_AUTH_TOKEN_NAME
+            ),
+          },
         }
       );
       return response.data;
@@ -57,7 +60,11 @@ export const getLoggedUser = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await api.get("/api/auth/user", {
-        headers: { Authorization: createBearerToken("login_token_1") },
+        headers: {
+          Authorization: createBearerToken(
+            import.meta.env.VITE_AUTH_TOKEN_NAME
+          ),
+        },
       });
       return response.data;
     } catch (error) {
@@ -72,7 +79,7 @@ export const userSlice = createSlice({
     user: {},
     status: "idle",
     message: null,
-    tokenName: "login_token_1",
+    tokenName: import.meta.env.VITE_AUTH_TOKEN_NAME,
     token: null,
   },
   reducers: {
@@ -124,9 +131,7 @@ export const userSlice = createSlice({
       })
       .addCase(getLoggedUser.fulfilled, (state, action) => {
         state.status = "succeeded";
-
         state.user = action.payload.user;
-        // console.log(state.user, "getLoggedUser succeeded");
       })
       .addCase(getLoggedUser.rejected, (state, action) => {
         state.status = "failed";
