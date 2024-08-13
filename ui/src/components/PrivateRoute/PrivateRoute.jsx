@@ -1,9 +1,10 @@
-import React from "react";
 import { Navigate } from "react-router-dom";
-import { RootLayout } from "../../layout/RootLayout";
-import useAuth from "../../hooks/useAuth";
+import { useSelector } from "react-redux";
 
-export const PrivateRoute = () => {
-  const isAuthenticated = useAuth();
-  return isAuthenticated ? <RootLayout /> : <Navigate to="/login" replace />;
+export const PrivateRoute = ({ children }) => {
+  const { user, loading } = useSelector((state) => state.user);
+
+  if (loading) return <div>Loading...</div>;
+  if (!user.isLoggedIn) return <Navigate to="/login" replace />;
+  return children;
 };

@@ -78,6 +78,7 @@ export const userSlice = createSlice({
   initialState: {
     user: {},
     status: "idle",
+    loading: false,
     message: null,
     tokenName: import.meta.env.VITE_AUTH_TOKEN_NAME,
     token: null,
@@ -128,13 +129,16 @@ export const userSlice = createSlice({
       })
       .addCase(getLoggedUser.pending, (state) => {
         state.status = "loading";
+        state.loading = true;
       })
       .addCase(getLoggedUser.fulfilled, (state, action) => {
         state.status = "succeeded";
+        state.loading = false;
         state.user = action.payload.user;
       })
       .addCase(getLoggedUser.rejected, (state, action) => {
         state.status = "failed";
+        state.loading = false;
         state.message = action.payload;
       });
   },

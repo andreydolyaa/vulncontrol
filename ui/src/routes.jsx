@@ -14,42 +14,116 @@ import { Settings } from "./pages/Settings/Settings";
 
 export const router = createBrowserRouter([
   {
-    path: "/login",
-    element: <PublicRoute element={<Login />} />,
-  },
-  {
-    path: "/register",
-    element: <PublicRoute element={<Register />} />,
-  },
-  {
     path: "/",
-    element: <PrivateRoute />,
+    element: <RootLayout />,
     errorElement: <Error />,
     children: [
       {
         index: true,
-        element: <Home />,
+        element: (
+          <PrivateRoute>
+            <Home />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/overview",
-        element: <Overview />,
+        element: (
+          <PrivateRoute>
+            <Overview />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/nmap",
-        element: <Nmap />,
+        element: (
+          <PrivateRoute>
+            <Nmap />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/nikto",
-        element: <Nikto />,
+        element: (
+          <PrivateRoute>
+            <Nikto />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/wpscan",
-        element: <WPScan />,
+        element: (
+          <PrivateRoute>
+            <WPScan />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/settings",
-        element: <Settings />,
+        element: (
+          <PrivateRoute>
+            <Settings />
+          </PrivateRoute>
+        ),
       },
     ],
   },
+  {
+    path: "/login",
+    element: (
+      <PublicRoute>
+        <Login />
+      </PublicRoute>
+    ),
+  },
+  {
+    path: "/register",
+    element: (
+      <PublicRoute>
+        <Register />
+      </PublicRoute>
+    ),
+  },
 ]);
+
+// export const router = createBrowserRouter([
+//   {
+//     path: "/",
+//     element: <RootLayout />,
+//     errorElement: <Error />,
+//     children: [
+//       {
+//         index: true,
+//         element: <Home />,
+//       },
+//       {
+//         path: "/overview",
+//         element: <Overview />,
+//       },
+//       {
+//         path: "/nmap",
+//         element: <Nmap />,
+//       },
+//       {
+//         path: "/nikto",
+//         element: <Nikto />,
+//       },
+//       {
+//         path: "/wpscan",
+//         element: <WPScan />,
+//       },
+//       {
+//         path: "/settings",
+//         element: <Settings />,
+//       },
+//     ],
+//   },
+//   {
+//     path: "/login",
+//     element: <Login />,
+//   },
+//   {
+//     path: "/register",
+//     element: <Register />,
+//   },
+// ]);
