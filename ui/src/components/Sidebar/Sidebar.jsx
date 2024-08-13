@@ -15,7 +15,7 @@ import {
 export const Sidebar = () => {
   return (
     <div className="sidebar text-white font-sans">
-      <div className="container px-4 lg:px-6 animate-appear2">
+      <div className="container px-4 lg:px-6 lg:animate-appear">
         <Logo />
 
         <Section title={"Dashboard"} />
@@ -27,10 +27,10 @@ export const Sidebar = () => {
 
         <Section title={"Vulnerability Scanners"} />
         <Item icon={Bug} title={"Nikto"} link="nikto" />
-        <Item icon={Report} title={"WPScan"} link="wpscan"/>
+        <Item icon={Report} title={"WPScan"} link="wpscan" />
 
         <Section title={"System"} />
-        <Item icon={Settings} title={"Settings"} link="settings"/>
+        <Item icon={Settings} title={"Settings"} link="settings" />
         <Item icon={Logout} title={"Log Out"} isLogout />
       </div>
     </div>

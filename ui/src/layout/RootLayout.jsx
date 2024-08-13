@@ -7,7 +7,7 @@ import { Sidebar } from "../components/Sidebar/Sidebar";
 export const RootLayout = () => {
   return (
     <div className="root-layout">
-      <Topbar />
+      {/* <Topbar /> */}
       <Sidebar />
       <div className="main">
         <Outlet />
