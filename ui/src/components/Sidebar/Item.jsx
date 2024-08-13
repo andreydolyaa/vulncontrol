@@ -1,16 +1,21 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { NavLink, useMatch } from "react-router-dom";
+import { NavLink, useMatch, useNavigate } from "react-router-dom";
 import { logout } from "../../redux/userSlice";
 
 export const Item = ({ icon, title, link = "none", isLogout }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const match = useMatch(link);
   const IconComponent = icon;
 
   const handleLogout = () => {
     if (isLogout) {
-      dispatch(logout());
+      dispatch(logout())
+        .unwrap()
+        .then(() => {
+          navigate("/login");
+        });
     }
   };
 

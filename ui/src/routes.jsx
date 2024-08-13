@@ -4,8 +4,6 @@ import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
 import { Home } from "./pages/Home";
 import { Error } from "./pages/Error/Error";
-import { PrivateRoute } from "./components/PrivateRoute/PrivateRoute";
-import { PublicRoute } from "./components/PublicRoute/PublicRoute";
 import { Overview } from "./pages/Overview/Overview";
 import { Nmap } from "./pages/Nmap/Nmap";
 import { Nikto } from "./pages/Nikto/Nikto";
@@ -20,69 +18,37 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: (
-          <PrivateRoute>
-            <Home />
-          </PrivateRoute>
-        ),
+        element: <Home />,
       },
       {
         path: "/overview",
-        element: (
-          <PrivateRoute>
-            <Overview />
-          </PrivateRoute>
-        ),
+        element: <Overview />,
       },
       {
         path: "/nmap",
-        element: (
-          <PrivateRoute>
-            <Nmap />
-          </PrivateRoute>
-        ),
+        element: <Nmap />,
       },
       {
         path: "/nikto",
-        element: (
-          <PrivateRoute>
-            <Nikto />
-          </PrivateRoute>
-        ),
+        element: <Nikto />,
       },
       {
         path: "/wpscan",
-        element: (
-          <PrivateRoute>
-            <WPScan />
-          </PrivateRoute>
-        ),
+        element: <WPScan />,
       },
       {
         path: "/settings",
-        element: (
-          <PrivateRoute>
-            <Settings />
-          </PrivateRoute>
-        ),
+        element: <Settings />,
       },
     ],
   },
   {
     path: "/login",
-    element: (
-      <PublicRoute>
-        <Login />
-      </PublicRoute>
-    ),
+    element: <Login />,
   },
   {
     path: "/register",
-    element: (
-      <PublicRoute>
-        <Register />
-      </PublicRoute>
-    ),
+    element: <Register />,
   },
 ]);
 
