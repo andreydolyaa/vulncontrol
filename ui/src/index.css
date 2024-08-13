@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@200..1000&family=Rubik:wght@300..900&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -58,6 +59,10 @@ button {
   width: 50%;
 }
 
+a {
+  transition: .2s;
+}
+
 .root-layout {
   display: grid;
   grid-template-columns: 270px 1fr;
@@ -73,6 +78,8 @@ button {
   position: fixed;
   width: 270px;
   height: 100%;
+  background-color: #121926;
+  /* background-color: #2f4364; */
 }
 .root-layout .topbar {
   grid-area: header;
@@ -98,6 +105,16 @@ button {
   100% {
     opacity: 1;
     transform: translateX(0);
+  }
+}
+@keyframes appear2 {
+  0% {
+    opacity: 0.2;
+    /* transform: translateX(-50px); */
+  }
+  100% {
+    opacity: 1;
+    /* transform: translateX(0); */
   }
 }
 

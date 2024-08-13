@@ -34,7 +34,8 @@ export const Login = () => {
         });
       })
       .then(() => dispatch(getLoggedUser()))
-      .then(() => navigate("/"));
+      .then(() => navigate("/"))
+      .catch(() => null);
   };
 
   const isLoading = () => status === "loading";

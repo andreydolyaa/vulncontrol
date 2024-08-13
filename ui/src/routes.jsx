@@ -3,11 +3,14 @@ import { RootLayout } from "./layout/RootLayout";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
 import { Home } from "./pages/Home";
-import { Projects } from "./pages/Projects/Projects";
-import { Tasks } from "./pages/Tasks/Tasks";
 import { Error } from "./pages/Error/Error";
 import { PrivateRoute } from "./components/PrivateRoute/PrivateRoute";
 import { PublicRoute } from "./components/PublicRoute/PublicRoute";
+import { Overview } from "./pages/Overview/Overview";
+import { Nmap } from "./pages/Nmap/Nmap";
+import { Nikto } from "./pages/Nikto/Nikto";
+import { WPScan } from "./pages/WPScan/WPScan";
+import { Settings } from "./pages/Settings/Settings";
 
 export const router = createBrowserRouter([
   {
@@ -28,12 +31,24 @@ export const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/projects",
-        element: <Projects />,
+        path: "/overview",
+        element: <Overview />,
       },
       {
-        path: "/tasks",
-        element: <Tasks />,
+        path: "/nmap",
+        element: <Nmap />,
+      },
+      {
+        path: "/nikto",
+        element: <Nikto />,
+      },
+      {
+        path: "/wpscan",
+        element: <WPScan />,
+      },
+      {
+        path: "/settings",
+        element: <Settings />,
       },
     ],
   },
