@@ -76,12 +76,11 @@ export const getLoggedUser = createAsyncThunk(
 export const userSlice = createSlice({
   name: "user",
   initialState: {
-    user: null,
     status: "idle",
+    user: null,
     loading: false,
     message: null,
     tokenName: import.meta.env.VITE_AUTH_TOKEN_NAME,
-    token: null,
   },
   reducers: {
     clearMessage: (state) => {
@@ -91,54 +90,58 @@ export const userSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(login.pending, (state) => {
-        state.status = "loading";
+        state.loading = true;
       })
       .addCase(login.fulfilled, (state, action) => {
+        state.loading = false;
         state.status = "succeeded";
         localStorage.setItem(
           state.tokenName,
-          JSON.stringify(action.payload?.token)
+          JSON.stringify(action.payload.token)
         );
       })
       .addCase(login.rejected, (state, action) => {
+        state.loading = false;
         state.status = "failed";
         state.message = action.payload;
+        console.log(state.message, "state.message");
+        
       })
       .addCase(register.pending, (state) => {
-        state.status = "loading";
+        state.loading = true;
       })
       .addCase(register.fulfilled, (state, action) => {
+        state.loading = false;
         state.status = "succeeded";
         state.message = action.payload;
       })
       .addCase(register.rejected, (state, action) => {
+        state.loading = false;
         state.status = "failed";
         state.message = action.payload;
       })
       .addCase(logout.pending, (state) => {
-        state.status = "loading";
+        state.loading = true;
       })
       .addCase(logout.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state.user = {};
+        state.loading = false;
+        state.user = null;
         localStorage.clear(state.tokenName);
       })
       .addCase(logout.rejected, (state, action) => {
-        state.status = "failed";
+        state.loading = false;
         state.message = action.payload;
       })
       .addCase(getLoggedUser.pending, (state) => {
-        state.status = "loading";
         state.loading = true;
       })
       .addCase(getLoggedUser.fulfilled, (state, action) => {
-        state.status = "succeeded";
         state.loading = false;
         state.user = action.payload.user;
       })
       .addCase(getLoggedUser.rejected, (state, action) => {
-        state.status = "failed";
         state.loading = false;
+        state.user = null;
         state.message = action.payload;
       });
   },

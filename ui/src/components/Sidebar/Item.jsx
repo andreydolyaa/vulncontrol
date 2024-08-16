@@ -21,6 +21,8 @@ export const Item = ({ icon, title, link = "none", isLogout }) => {
 
   return (
     <NavLink
+      data-tooltip-id="tooltip"
+      data-tooltip-content={title}
       to={isLogout ? "#" : link}
       onClick={handleLogout}
       className={`flex items-center justify-center lg:justify-start pl-0 lg:pl-3 mb-2 text-lg font-nunito font-medium h-16 lg:h-12 rounded-md

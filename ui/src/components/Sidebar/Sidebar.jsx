@@ -1,4 +1,5 @@
 import React from "react";
+import { Tooltip } from "react-tooltip";
 import { Logo } from "./Logo";
 import { Section } from "./Section";
 import { Item } from "./Item";
@@ -32,6 +33,7 @@ export const Sidebar = () => {
         <Section title={"System"} />
         <Item icon={Settings} title={"Settings"} link="settings" />
         <Item icon={Logout} title={"Log Out"} isLogout />
+        <Tooltip id="tooltip" className="tooltip lg:hidden" />
       </div>
     </div>
   );

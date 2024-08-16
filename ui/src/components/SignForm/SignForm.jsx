@@ -9,18 +9,17 @@ export const SignForm = ({
   children,
   buttonText,
   onFormSubmit,
-  isLoading,
+  loading,
   message,
   status,
 }) => {
   const isLoginPage = () => buttonText === "Log In";
-
   return (
     <SignFormWrapper onFormSubmit={onFormSubmit}>
       <SignFormTitle isLoginPage={isLoginPage} />
       <MessageBox message={message} status={status} />
       {children}
-      <SignFormButton buttonText={buttonText} isLoading={isLoading} />
+      <SignFormButton buttonText={buttonText} loading={loading} />
       <SignFormFooter isLoginPage={isLoginPage} />
     </SignFormWrapper>
   );

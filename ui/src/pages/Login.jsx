@@ -6,13 +6,13 @@ import { getLoggedUser, login } from "../redux/userSlice";
 import { useNavigate } from "react-router-dom";
 
 export const Login = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { message, loading, status } = useSelector((state) => state.user);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const { status, message } = useSelector((state) => state.user);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const onFormChange = (e) => {
     const { name, value } = e.target;
@@ -24,27 +24,18 @@ export const Login = () => {
 
   const submitLoginForm = (e) => {
     e.preventDefault();
-
     dispatch(login(formData))
       .unwrap()
-      .then(() => {
-        setFormData({
-          email: "",
-          password: "",
-        });
-      })
       .then(() => dispatch(getLoggedUser()))
-      .then(() => navigate("/"))
+      .then(() => setFormData({ email: "", password: "" }))
       .catch(() => null);
   };
-
-  const isLoading = () => status === "loading";
 
   return (
     <SignForm
       buttonText={"Log In"}
       onFormSubmit={submitLoginForm}
-      isLoading={isLoading}
+      loading={loading}
       message={message}
       status={status}
     >
