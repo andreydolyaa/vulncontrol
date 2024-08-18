@@ -1,22 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
+import { Container } from "../../components/Container/Container";
+import { useDispatch } from "react-redux";
+import { startScan } from "../../redux/nmapSlice";
 
 export const Nmap = () => {
+  const [formData, setFormData] = useState({
+    target: "",
+  });
+  const dispatch = useDispatch();
+
+  const onFormChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const start = (e) => {
+    e.preventDefault();
+    console.log(formData);
+    
+    dispatch(startScan(formData));
+  };
+
   return (
-    <div className="nmap-container">
-      <div className="target">
-        <input type="text" placeholder="Target" />
-      </div>
-      <div className="options">
-      <label for="fruits">Select your favorite fruits:</label>
-    <select id="fruits" name="fruits" multiple>
-        <option value="apple">Apple</option>
-        <option value="banana">Banana</option>
-        <option value="orange">Orange</option>
-        <option value="mango">Mango</option>
-        <option value="grapes">Grapes</option>
-        <option value="pineapple">Pineapple</option>
-    </select>
-      </div>
-    </div>
+    <Container>
+      <form className="target w-full border border-red-400" onSubmit={start}>
+        <input
+          type="text"
+          placeholder="Target"
+          className="w-96"
+          name="target"
+          onChange={onFormChange}
+        />
+        <button>Scan</button>
+      </form>
+    </Container>
   );
 };

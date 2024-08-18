@@ -10,9 +10,9 @@ export const login = async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
+    await sleep (2000)
     const user = await User.findOne({ email });
     if (!user) {
-      await sleep(3000);
       throw new Error(userMsg.LOGIN_FAILED);
     } else {
       const match = await bcrypt.compare(password, user?.password);
@@ -83,6 +83,8 @@ export const register = async (req, res, next) => {
 
 export const getLoggedUser = async (req, res) => {
   try {
+    // TODO: for loading screens
+    // await sleep(1500)
     let token = req.headers?.authorization?.split(" ")[1];
 
     if (!token) {

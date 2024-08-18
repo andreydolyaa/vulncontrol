@@ -104,8 +104,6 @@ export const userSlice = createSlice({
         state.loading = false;
         state.status = "failed";
         state.message = action.payload;
-        console.log(state.message, "state.message");
-        
       })
       .addCase(register.pending, (state) => {
         state.loading = true;
