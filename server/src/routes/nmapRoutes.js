@@ -1,8 +1,11 @@
 import express from "express";
-import { startNmapScan } from "../controllers/nmapController.js";
+import { getLastScan, startNmapScan } from "../controllers/nmapController.js";
 
 const router = express.Router();
 
-router.post("/auth/nmap", startNmapScan);
+// TODO: Need to add auth middleware
+
+router.post("/nmap", startNmapScan);
+router.get("/nmap/last", getLastScan)
 
 export default router;

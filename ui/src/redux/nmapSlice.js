@@ -3,9 +3,24 @@ import api from "../api/index";
 
 export const startScan = createAsyncThunk(
   "nmap/startScan",
-  async (data, { rejectWithValue }) => {
+  async ({ data, userId }, { rejectWithValue }) => {
     try {
-      const response = await api.post("/api/auth/nmap", data);
+      const response = await api.post("/api/nmap", { data, userId });
+      return response.data;
+    } catch (error) {
+      if (error.response?.data) {
+        return rejectWithValue(error.response?.data);
+      }
+      return rejectWithValue({ message: "An error occurred" });
+    }
+  }
+);
+
+export const getLastScan = createAsyncThunk(
+  "nmap/getLastScan",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await api.get("/api/nmap/last");
       return response.data;
     } catch (error) {
       if (error.response?.data) {
@@ -22,8 +37,16 @@ export const nmapSlice = createSlice({
     scan: null,
     loading: false,
     status: "idle",
+    messages: [],
   },
-  reducers: {},
+  reducers: {
+    addMessage: (state, action) => {
+      state.messages.push(action.payload);
+    },
+    clearMessages: (state) => {
+      state.messages = [];
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(startScan.pending, (state) => {
@@ -36,9 +59,25 @@ export const nmapSlice = createSlice({
       .addCase(startScan.rejected, (state, action) => {
         state.status = "failed";
         state.loading = false;
+      })
+      .addCase(getLastScan.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getLastScan.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.loading = false;
+        // const data = action.payload.scan.split(" ");
+        // // state.messages =
+        // console.log(data);
+        // state.messages = [];
+        state.messages = action.payload.scan;
+      })
+      .addCase(getLastScan.rejected, (state, action) => {
+        state.status = "failed";
+        state.loading = false;
       });
   },
 });
 
-// export const { clearMessage } = userSlice.actions;
+export const { addMessage, clearMessages } = nmapSlice.actions;
 export default nmapSlice.reducer;

@@ -1,6 +1,7 @@
 export const serverMsg = {
   START_ERROR: "Failed to start server",
-  START_SUCCESS: (port) => `Server started on port ${port}`,
+  START_SUCCESS: (port) => `HTTP server started on port ${port}`,
+  START_SUCCESS_WS: (port) => `Websocket server started on port ${port}`,
   SHUT_DOWN_IN_PROGRESS: "Shutting down server...",
   SHUT_DOWN_COMPLETE: "HTTP Server and Websocket Server closed.",
 };
