@@ -1,11 +1,13 @@
 import React from "react";
 
-export const Scan = ({messages}) => {
+export const Scan = ({ messages }) => {
   return (
-    <pre className="bg-black">
-      {messages.map((message, index) => (
-        <pre key={index}>{message || "\u00a0"}</pre>
-      ))}
-    </pre>
+    <div className="terminal bg-gra">
+      <pre>
+        {messages.map((message, index) => (
+          <div key={index}>{message || "\u00a0"}</div>
+        ))}
+      </pre>
+    </div>
   );
 };

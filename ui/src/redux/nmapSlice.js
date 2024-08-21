@@ -31,12 +31,28 @@ export const getLastScan = createAsyncThunk(
   }
 );
 
+export const getAllScans = createAsyncThunk(
+  "nmap/getAllScans",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await api.get("/api/nmap/all");
+      return response.data;
+    } catch (error) {
+      if (error.response?.data) {
+        return rejectWithValue(error.response?.data);
+      }
+      return rejectWithValue({ message: "An error occurred" });
+    }
+  }
+);
+
 export const nmapSlice = createSlice({
   name: "nmap",
   initialState: {
-    scan: null,
     loading: false,
     status: "idle",
+    scans: [],
+    scan: null,
     messages: [],
     scanId: null,
   },
@@ -71,6 +87,18 @@ export const nmapSlice = createSlice({
         state.messages = action.payload.scan;
       })
       .addCase(getLastScan.rejected, (state, action) => {
+        state.status = "failed";
+        state.loading = false;
+      })
+      .addCase(getAllScans.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getAllScans.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.loading = false;
+        state.scans = action.payload;
+      })
+      .addCase(getAllScans.rejected, (state, action) => {
         state.status = "failed";
         state.loading = false;
       });

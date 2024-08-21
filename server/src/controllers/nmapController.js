@@ -13,8 +13,8 @@ import { User } from "../models/userModel.js";
 
 const executeChildProcess = async (reqBody) => {
   const command = "nmap";
-  // const commandArgs = ["scanme.nmap.org", "-v"]; // temp
-  const commandArgs = ["scanme.nmap.org", "-v", "-p", "31337"]; // temp
+  const commandArgs = ["scanme.nmap.org", "-v"]; // temp
+  // const commandArgs = ["scanme.nmap.org", "-v", "-p", "31337"]; // temp
   const child = spawn(command, commandArgs);
   let newScan;
 
@@ -74,3 +74,15 @@ export const getLastScan = async (req, res) => {
     return res.status(400).send({ message: "Could not find last scan", error });
   }
 };
+
+
+export const getAllScans = async (req, res) => {
+  try {
+    const scans = await NmapScan.find({})
+    if (!scans) throw new Error();
+    return res.status(200).send(scans);
+  } catch (error) {
+    return res.status(400).send({ message: "No scans found", error });
+  }
+};
+
