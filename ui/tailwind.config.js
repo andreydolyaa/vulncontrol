@@ -16,7 +16,9 @@ export default {
         grayBg: "#F6F6F6",
         purpleBg: "#6055EE",
         purpleBg: "#6055EE",
-        greenish: "rgb(0, 255, 166)"
+        greenish: "rgb(0, 255, 166)",
+        sidebarAndCardBg: "#171721",
+        globalBg: "#23232E"
       },
     },
   },

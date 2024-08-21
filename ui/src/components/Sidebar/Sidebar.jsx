@@ -24,7 +24,7 @@ export const Sidebar = () => {
         <Item icon={Project} title={"Overview"} link="overview" />
 
         <Section title={"Port Scanners"} />
-        <Item icon={Radar} title={"Nmap"} link="nmap" />
+        <Item icon={Radar} title={"Nmap"} link="nmap/*" />
 
         <Section title={"Vulnerability Scanners"} />
         <Item icon={Bug} title={"Nikto"} link="nikto" />

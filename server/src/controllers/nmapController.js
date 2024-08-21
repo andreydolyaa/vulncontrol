@@ -5,74 +5,42 @@ import { exec, spawn } from "child_process";
 import logger from "../core/logger.js";
 import { sendWebsocketMessage } from "../../index.js";
 import { NmapScan } from "../models/nmapScanModel.js";
+import { User } from "../models/userModel.js";
 
 // TODO: split to multiple files
 // Remove writing to file as it changed to direct db save
 // refactor some
 
-const initNmapScan = (reqBody) => {
-  const fileName = "nmap_stdout.txt";
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = path.dirname(__filename);
-  const filePath = path.join(__dirname, "../temp", fileName);
-
-  if (isOutputFileExists(filePath)) {
-    logger.info(`File ${fileName} already exists`);
-  } else {
-    createNewFile(filePath);
-    logger.info(`New ${fileName} created`);
-  }
-
-  executeChildProcess(reqBody, filePath);
-};
-
-const isOutputFileExists = (filePath) => {
-  return fs.existsSync(filePath);
-};
-
-const createNewFile = (filePath) => {
-  return fs.writeFile(filePath, "", (err) => {
-    if (err) throw new Error(err);
-  });
-};
-
-const executeChildProcess = (reqBody, filePath) => {
+const executeChildProcess = async (reqBody) => {
   const command = "nmap";
-  const commandArgs = ["scanme.nmap.org", "-v"]; // temp
-  // const commandArgs = ["scanme.nmap.org", "-v", "-p", "80"]; // temp
-
+  // const commandArgs = ["scanme.nmap.org", "-v"]; // temp
+  const commandArgs = ["scanme.nmap.org", "-v", "-p", "31337"]; // temp
   const child = spawn(command, commandArgs);
+  let newScan;
 
-  let output = "";
+  try {
+    newScan = await NmapScan.create({ scan: [], byUser: reqBody.userId });
+    // res.status(200).send(newScan._id)
+  } catch (error) {
+    throw new Error(error);
+  }
 
   child.stdout.on("data", async (data) => {
     console.log("stdout: ", data.toString());
     sendWebsocketMessage(`${data.toString()}`);
-    output += data.toString();
-    
-    // TODO: fix need to write to db during scan for persisting...
-    fs.appendFile(filePath, `${data.toString()}`, (err) => {
-      if (err) {
-        return res
-          .status(500)
-          .send({ message: "Failed to write to nmap file" });
-      }
-    });
+    try {
+      await NmapScan.findOneAndUpdate(
+        newScan._id,
+        { $push: { scan: data.toString() } },
+        { new: true }
+      );
+    } catch (error) {
+      throw new Error(error);
+    }
   });
 
   child.stdout.on("end", async () => {
-    console.log("stdout has ended, deleting file...");
-    fs.unlink(filePath, (err) => {
-      if (err) console.log("failed to delete file");
-    });
-    // console.log("!!!");
-    // try {
-    //   await NmapScan.create({ scan: output, byUser: reqBody.userId });
-    // } catch (error) {
-    //   console.log("error save nmap scan to db");
-    // }
-    await processScanOutput(output, reqBody.userId);
-    output = "";
+    console.log("stdout has ended");
   });
 
   child.stderr.on("data", (data) => {
@@ -84,31 +52,16 @@ const executeChildProcess = (reqBody, filePath) => {
       console.log(`child process exited with code ${code}`);
     }
   });
-};
 
-const processScanOutput = async (output, userId) => {
-  const outputChunks = output.split("\n");
-  const newScan = new NmapScan({
-    scan: outputChunks,
-    byUser: userId,
-  });
-  try {
-    await newScan.save();
-  } catch (error) {
-    console.log("err saving scan to db");
-  }
+  return newScan._id;
 };
 
 export const startNmapScan = async (req, res) => {
   try {
-    // executeChildProcess(req.body);
-    // console.log(req.body);
-
-    initNmapScan(req.body);
-
-    return res.status(200).send({ message: "started" });
+    const scanId = await executeChildProcess(req.body);
+    return res.status(200).send({ message: "Nmap scan started", scanId });
   } catch (error) {
-    return res.status(400).send({ message: "error 44" });
+    return res.status(400).send({ message: "Failed to start Nmap scan" });
   }
 };
 
@@ -116,8 +69,6 @@ export const getLastScan = async (req, res) => {
   try {
     const lastScan = await NmapScan.findOne().sort({ _id: -1 }).exec();
     if (!lastScan) throw new Error();
-    // console.log(lastScan, "LAST SCAN!");
-    
     return res.status(200).send(lastScan);
   } catch (error) {
     return res.status(400).send({ message: "Could not find last scan", error });

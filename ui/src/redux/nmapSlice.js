@@ -38,6 +38,7 @@ export const nmapSlice = createSlice({
     loading: false,
     status: "idle",
     messages: [],
+    scanId: null,
   },
   reducers: {
     addMessage: (state, action) => {
@@ -55,6 +56,7 @@ export const nmapSlice = createSlice({
       .addCase(startScan.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.loading = false;
+        state.scanId = action.payload.scanId;
       })
       .addCase(startScan.rejected, (state, action) => {
         state.status = "failed";
@@ -66,10 +68,6 @@ export const nmapSlice = createSlice({
       .addCase(getLastScan.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.loading = false;
-        // const data = action.payload.scan.split(" ");
-        // // state.messages =
-        // console.log(data);
-        // state.messages = [];
         state.messages = action.payload.scan;
       })
       .addCase(getLastScan.rejected, (state, action) => {
