@@ -2,7 +2,7 @@ import React from "react";
 
 export const Scan = ({messages}) => {
   return (
-    <pre>
+    <pre className="bg-black">
       {messages.map((message, index) => (
         <pre key={index}>{message || "\u00a0"}</pre>
       ))}

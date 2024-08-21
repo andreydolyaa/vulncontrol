@@ -6,7 +6,7 @@ export const SignFormWrapper = ({ children, onFormSubmit }) => {
       <div className="login-container w-[450px] flex justify-center">
         <form
           onSubmit={onFormSubmit}
-          className="children-margin bg-white p-10 w-full flex flex-col rounded-xl shadow animate-appear"
+          className="bg-sidebarAndCardBg children-margin p-10 w-full flex flex-col rounded-xl shadow animate-appear"
         >
           {children}
         </form>

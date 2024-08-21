@@ -13,7 +13,9 @@ body,
 html,
 #root {
   height: 100%;
-  background-color: #f6f6f6;
+  /* background-color: #f6f6f6; */
+  background-color: #23232e;
+  color: white;
 }
 :root {
   font-family: "Open Sans", Inter, system-ui, Avenir, Helvetica, Arial,
@@ -25,18 +27,21 @@ html,
 .tooltip {
   background-color: #6c6c6c !important;
   color: #ffffff !important;
-  opacity: .9 !important;
+  opacity: 0.9 !important;
   font-size: 11px !important;
   /* font-weight: bold; */
   font-family: "Open sans";
-  transition: .2s !important;
+  transition: 0.2s !important;
   padding: 2px 5px !important;
 }
 
 input {
-  border: 1px solid rgb(199, 199, 199);
+  /* border: 1px solid rgb(199, 199, 199); */
   border-radius: 10px;
-  padding: 10px;
+  padding: 15px 10px;
+  background-color: #1f1f2c !important;
+  border:1px solid rgb(44, 46, 50) !important; 
+  outline: none;
 }
 
 button {
@@ -44,7 +49,9 @@ button {
   padding: 10px;
   border-radius: 10px;
   transition: 0.2s;
-  /* background-color: #2e394e; */
+}
+.sign-button{
+  margin-top: 25px !important;
 }
 
 .full-page-centered {
@@ -58,8 +65,20 @@ button {
   margin: 15px 0;
 }
 
+
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active  {
+  transition: background-color 5000s;
+  -webkit-text-fill-color: #fff !important;
+}
+
+
+
 .shadow {
-  box-shadow: 1px 1px 20px rgb(225, 225, 225);
+  box-shadow: 1px 1px 20px #161621;
 }
 
 .login-divider::before,
@@ -71,7 +90,7 @@ button {
 }
 
 a {
-  transition: .2s;
+  transition: 0.2s;
 }
 
 .root-layout {
@@ -89,8 +108,9 @@ a {
   position: fixed;
   width: 270px;
   height: 100%;
-  background-color: #121926;
+  /* background-color: #121926; */
   /* background-color: #2f4364; */
+  background-color: #171721;
 }
 .root-layout .topbar {
   grid-area: header;
@@ -98,6 +118,7 @@ a {
   left: 270px;
   height: 60px;
   width: 100%;
+  border-bottom: 1px solid rgb(43, 43, 43);
 }
 
 .root-layout .main {

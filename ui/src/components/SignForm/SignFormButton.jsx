@@ -10,7 +10,7 @@ export const SignFormButton = ({ buttonText, loading }) => {
     <button
       onClick={() => dispatch(clearMessage())}
       disabled={loading}
-      className={`h-16 font-bold bg-purpleBg border-none text-white ${
+      className={`sign-button h-16 font-bold bg-purpleBg border-none text-white ${
         loading ? "" : "hover:bg-opacity-80"
       }`}
     >
