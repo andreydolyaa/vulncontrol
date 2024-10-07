@@ -4,7 +4,7 @@ server env vars:
 <br/>JWT_SECRET=secret123
 
 ui env vars:
-<br/>VITE_BASE_URL=http://127.0.0.1
+<br/>VITE_BASE_URL=http://127.0.0.1:SERVER_PORT
 
 requirments:
 <br/>mongodb
