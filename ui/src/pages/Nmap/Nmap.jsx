@@ -1,24 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { Container } from "../../components/Container/Container";
 import { useDispatch, useSelector } from "react-redux";
-import { clearMessages, getLastScan, startScan } from "../../redux/nmapSlice";
-import { useWebSocket } from "../../hooks/useWebSocket";
-import { useNavigate } from "react-router-dom";
-import { Scan } from "./Scan";
+import { getScans, startScan } from "../../redux/nmapSlice";
 import { StartForm } from "./StartForm";
+import { Scans } from "./Scans";
 
 export const Nmap = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const websocket = useWebSocket("ws://localhost:3000"); // TODO: move
-  const { messages } = useSelector((state) => state.nmap);
+  // const websocket = useWebSocket("ws://localhost:3000"); // TODO: move
+  const { scans, loading } = useSelector((state) => state.nmap);
   const { user } = useSelector((state) => state.user);
   const [formData, setFormData] = useState({
     target: "",
   });
 
   useEffect(() => {
-    dispatch(getLastScan());
+    dispatch(getScans());
   }, []);
 
   const onFormChange = (e) => {
@@ -29,20 +26,16 @@ export const Nmap = () => {
     });
   };
 
-  const start = (e) => {
+  const start = async (e) => {
     e.preventDefault();
-    dispatch(clearMessages());
-    dispatch(startScan({ data: formData, userId: user.id }))
-      .unwrap()
-      .then((data) => {
-        navigate(`/nmap/${data.scanId}`);
-      });
+    await dispatch(startScan({ data: formData, userId: user.id })).unwrap();
+    dispatch(getScans());
   };
 
   return (
     <Container>
       <StartForm start={start} onFormChange={onFormChange} />
-      <Scan messages={messages} />
+      {loading ? <div>Loading</div> : <Scans scans={scans} />}
     </Container>
   );
 };

@@ -12,11 +12,13 @@ import { User } from "../models/userModel.js";
 // refactor some
 
 const executeChildProcess = async (reqBody) => {
-  const command = "nmap";
-  const commandArgs = ["scanme.nmap.org", "-v"]; // temp
+  const command = "docker";
+  const commandArgs = ["run", "instrumentisto/nmap", "scanme.nmap.org", "-v"]; // temp
   // const commandArgs = ["scanme.nmap.org", "-v", "-p", "31337"]; // temp
   const child = spawn(command, commandArgs);
   let newScan;
+
+  // console.log(child);
 
   try {
     newScan = await NmapScan.create({ scan: [], byUser: reqBody.userId });
@@ -75,10 +77,9 @@ export const getLastScan = async (req, res) => {
   }
 };
 
-
 export const getAllScans = async (req, res) => {
   try {
-    const scans = await NmapScan.find({})
+    const scans = await NmapScan.find({});
     if (!scans) throw new Error();
     return res.status(200).send(scans);
   } catch (error) {
@@ -86,3 +87,11 @@ export const getAllScans = async (req, res) => {
   }
 };
 
+export const getScanById = async (req, res) => {
+  try {
+    const scan = await NmapScan.findOne({ _id: req.params.id});
+    return res.status(200).send(scan);
+  } catch (error) {
+    return res.status(400).send({ message: "Could not find user", error });
+  }
+};

@@ -5,6 +5,7 @@ import { getLoggedUser } from "./redux/userSlice";
 import { Home } from "./pages/Home";
 import { Overview } from "./pages/Overview/Overview";
 import { Nmap } from "./pages/Nmap/Nmap";
+import { Scan } from "./pages/Nmap/Scan";
 import { Nikto } from "./pages/Nikto/Nikto";
 import { WPScan } from "./pages/WPScan/WPScan";
 import { Settings } from "./pages/Settings/Settings";
@@ -23,10 +24,8 @@ export const App = () => {
   }, []);
 
   if (!isInitialized) {
-    return <Loading />
+    return <Loading />;
   }
-
-
 
   return (
     <BrowserRouter>
@@ -34,7 +33,8 @@ export const App = () => {
         <Route element={<ProtectedRoutes />}>
           <Route path="/" element={<Home />} />
           <Route path="/overview" element={<Overview />} />
-          <Route path="/nmap/:scanId?" element={<Nmap />} />
+          <Route path="/nmap" element={<Nmap />} />
+          <Route path="/scans/:scanId" element={<Scan />} />
           <Route path="/nikto" element={<Nikto />} />
           <Route path="/wpscan" element={<WPScan />} />
           <Route path="/settings" element={<Settings />} />
