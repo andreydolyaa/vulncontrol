@@ -7,26 +7,28 @@ import { BASE_URL, WS_URL } from "../../api/baseUrl";
 export const Scan = () => {
   // const dispatch = useDispatch();
   const { scanId } = useParams();
-  const [scan, setScan] = useState(null);
+  const [scan, setScan] = useState([]);
+  const [scanByUser, setScanByUser] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [ws, setWs] = useState(null);
   const scanSubscriptionRoute = `${WS_URL}/ws/scan/${scanId}`;
 
   useEffect(() => {
     setIsLoading(true);
     fetch(`${BASE_URL}/api/nmap/${scanId}`)
       .then((res) => res.json())
-      .then((data) => setScan(data))
+      .then((data) => {
+        setScan(data.scan);
+        setScanByUser(data.byUser);
+      })
       .catch((error) => setError(error))
       .finally(() => setIsLoading(false));
 
     const websocket = new WebSocket(scanSubscriptionRoute);
-    setWs(websocket);
     websocket.onmessage = (event) => {
-      const message = event.data;
-      console.log(message);
+      setScan((prevScan) => [...prevScan, JSON.parse(event.data)]);
     };
+
     return () => {
       websocket.close();
     };
@@ -45,7 +47,7 @@ export const Scan = () => {
       <div>scan {scanId}</div>
       {scan && (
         <pre>
-          {scan.scan.map((line) => {
+          {scan.map((line) => {
             return <div key={line}>{line}</div>;
           })}
         </pre>

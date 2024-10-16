@@ -6,6 +6,7 @@ import { NmapScan } from "../../models/nmapScanModel.js";
 
 // "instrumentisto/nmap",
 // "scanme.nmap.org",
+let containers = {};
 
 // initiate new scan
 export const startNmapContainer = async (reqBody) => {
@@ -19,20 +20,26 @@ export const startNmapContainer = async (reqBody) => {
 const handleNmapProcess = async (scanId, target, uniqueContainerName) => {
   const containerName = `nmap_${uniqueContainerName}`;
   const nmapImage = "instrumentisto/nmap";
+  containers[containerName] = scanId;
   const args = [
     "run",
     "--name",
     containerName,
     nmapImage,
     target,
-    "-v",
+    "-vv",
     // "-p-",
     "-T2",
+    // "--stats-every",
+    // "1s",
   ];
   const process = spawn("docker", args);
 
   process.stdout.on("data", async (data) => {
-    logger.info(`nmap stdout: ${data.toString()}`);
+    // logger.info(`nmap stdout: ${data.toString()}`);
+    logger.info(
+      `nmap scan in progress... [scan_id: ${scanId} container: ${containerName}]`
+    );
     websocketServer.send(data.toString(), scanId);
     await updateScanLive(scanId, data);
   });
@@ -40,6 +47,7 @@ const handleNmapProcess = async (scanId, target, uniqueContainerName) => {
   process.stdout.on("end", async () => {
     logger.info("nmap scan ended successfully");
     removeNmapContainer(containerName);
+    delete containers[containerName];
   });
 
   process.stderr.on("data", (data) => {
@@ -66,6 +74,14 @@ const removeNmapContainer = (containerName) => {
   rm.on("close", (code) => {
     logger.info(`docker rm process exited with code ${code}`);
   });
+};
+
+// remove all containers (used on server shutdown)
+export const removeAllContainers = () => {
+  Object.keys(containers).forEach((container) =>
+    removeNmapContainer(container)
+  );
+  containers = {};
 };
 
 // create new scan document in db

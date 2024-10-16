@@ -9,6 +9,7 @@ import { serverMsg } from "./src/constants/messages.js";
 import { connectToDatabase } from "./src/core/database.js";
 import { httpLoggerMiddleware } from "./src/middleware/httpLogger.js";
 import { WsServer } from "./src/core/websocket.js";
+import { removeAllContainers } from "./src/controllers/nmap/nmapDockerProcess.js";
 
 dotenv.config();
 
@@ -35,6 +36,7 @@ const startServers = async () => {
 
 const shutdown = (code) => {
   logger.error(serverMsg.SHUT_DOWN_IN_PROGRESS);
+  removeAllContainers();
   websocketServer.shutdownServer(() => {
     httpServer.close(() => {
       logger.error(serverMsg.SHUT_DOWN_COMPLETE);
@@ -42,6 +44,11 @@ const shutdown = (code) => {
     });
   });
 };
+
+process.on("exit", (code) => {
+  logger.info(`Process exited with code: ${code}`);
+  shutdown(0);
+});
 
 setupErrorHandler(httpServer, logger, shutdown)
   .then(startServers)
