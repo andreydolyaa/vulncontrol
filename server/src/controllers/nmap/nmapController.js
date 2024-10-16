@@ -1,6 +1,8 @@
 import { NmapScan } from "../../models/nmapScanModel.js";
 import { startNmapContainer } from "./nmapDockerProcess.js";
 
+
+// start new scan
 export const startNmapScan = async (req, res) => {
   try {
     const scanId = await startNmapContainer(req.body);
@@ -10,6 +12,7 @@ export const startNmapScan = async (req, res) => {
   }
 };
 
+// get all the scans
 export const getAllScans = async (req, res) => {
   try {
     const scans = await NmapScan.find({});
@@ -20,6 +23,7 @@ export const getAllScans = async (req, res) => {
   }
 };
 
+// find scan by id
 export const getScanById = async (req, res) => {
   try {
     const scan = await NmapScan.findOne({ _id: req.params.id });

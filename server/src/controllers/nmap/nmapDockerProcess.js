@@ -6,13 +6,16 @@ import { NmapScan } from "../../models/nmapScanModel.js";
 // "instrumentisto/nmap",
 // "scanme.nmap.org",
 
+// initiate new scan
 export const startNmapContainer = async (reqBody) => {
   const { target, instance } = reqBody.data;
-  const scanId = await saveScanInDB(reqBody.userId);
+  const scanId = await createNewScan(reqBody.userId);
   handleNmapProcess(scanId, target, instance);
   return scanId;
 };
 
+
+// handle nmap's scan stdout and stderr
 const handleNmapProcess = async (scanId, target, uniqueContainerName) => {
   const containerName = `nmap_${uniqueContainerName}`;
   const nmapImage = "instrumentisto/nmap";
@@ -41,6 +44,7 @@ const handleNmapProcess = async (scanId, target, uniqueContainerName) => {
   });
 };
 
+// remove nmap container after scan is done
 const removeNmapContainer = (containerName) => {
   const rm = spawn("docker", ["rm", containerName]);
 
@@ -55,7 +59,9 @@ const removeNmapContainer = (containerName) => {
   });
 };
 
-const saveScanInDB = async (userId) => {
+
+// create new scan document in db
+const createNewScan = async (userId) => {
   try {
     const scan = await NmapScan.create({ scan: [], byUser: userId });
     return scan._id;
@@ -64,10 +70,11 @@ const saveScanInDB = async (userId) => {
   }
 };
 
+// update the scan document on runtime
 const updateScanLive = async (scanId, data) => {
   try {
     return await NmapScan.findOneAndUpdate(
-      435345,
+      scanId,
       { $push: { data: data.toString() } },
       { new: true }
     );
