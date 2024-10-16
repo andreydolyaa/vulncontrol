@@ -17,6 +17,7 @@ const port = process.env.SERVER_PORT;
 const httpServer = http.createServer(app);
 const websocketServer = new WebSocketServer({ server: httpServer });
 let activeWebsocket = null; // TODO: resolve this
+let nmapScanSubscribers = {};
 
 app.use(express.json());
 app.use(cors());
@@ -48,22 +49,32 @@ const shutdown = (code) => {
 };
 
 const initWebsocketListener = () => {
-  websocketServer.on("connection", (websocket) => {
-    handleNewConnection(websocket);
+  websocketServer.on("connection", (websocket, request) => {
+    const url = new URL(request.url, `http://${request.headers.host}`);
+    const pathname = url.pathname;
+    const scanId = pathname.split("/").pop();
+
+    handleNewConnection(websocket, scanId);
     websocket.on("message", handleIncomingMessage);
-    websocket.on("close", handleDisconnected);
+    websocket.on("close", ()=>handleDisconnected(scanId));
     websocket.on("error", handleWebsocketError);
   });
 };
 
-const handleNewConnection = (websocket) => {
-  activeWebsocket = websocket;
-  logger.info("New client connected");
+const handleNewConnection = (websocket, scanId) => {
+  // activeWebsocket = websocket;
+  // console.log(websocket, "wesocket client connected");
+  console.log(scanId, "SCAN ID");
+  nmapScanSubscribers[scanId] = "x";
+  console.log(nmapScanSubscribers);
+  
+  logger.info(`client subscribed to nmap scan ${scanId}`);
 };
 
-const handleDisconnected = () => {
-  activeWebsocket = null;
-  logger.info("Client disconnected");
+const handleDisconnected = (scanId) => {
+  // activeWebsocket = null;
+  delete nmapScanSubscribers[scanId]
+  logger.info("client disconnected");
 };
 
 const handleIncomingMessage = (data) => {

@@ -2,7 +2,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { BASE_URL } from "../../api/baseUrl";
+import { BASE_URL, WS_URL } from "../../api/baseUrl";
 
 export const Scan = () => {
   // const dispatch = useDispatch();
@@ -10,16 +10,26 @@ export const Scan = () => {
   const [scan, setScan] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [ws, setWs] = useState(null);
+  const scanSubscriptionRoute = `${WS_URL}/ws/scan/${scanId}`;
 
   useEffect(() => {
     setIsLoading(true);
     fetch(`${BASE_URL}/api/nmap/${scanId}`)
       .then((res) => res.json())
-      .then((data) => {
-        setScan(data);
-      })
+      .then((data) => setScan(data))
       .catch((error) => setError(error))
       .finally(() => setIsLoading(false));
+
+    const websocket = new WebSocket(scanSubscriptionRoute);
+    setWs(websocket);
+    websocket.onmessage = (event) => {
+      const message = event.data;
+      console.log(message);
+    };
+    return () => {
+      websocket.close();
+    };
   }, []);
 
   if (isLoading) {

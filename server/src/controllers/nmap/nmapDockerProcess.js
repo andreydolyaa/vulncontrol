@@ -75,7 +75,7 @@ const updateScanLive = async (scanId, data) => {
   try {
     return await NmapScan.findOneAndUpdate(
       scanId,
-      { $push: { data: data.toString() } },
+      { $push: { scan: data.toString() } },
       { new: true }
     );
   } catch (error) {
