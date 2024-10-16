@@ -10,6 +10,13 @@ export const StartForm = ({ start, onFormChange }) => {
         name="target"
         onChange={onFormChange}
       />
+      <input
+        type="text"
+        placeholder="Temp Container instance"
+        className="w-96"
+        name="instance"
+        onChange={onFormChange}
+      />
       <button>Scan</button>
     </form>
   );

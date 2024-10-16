@@ -20,7 +20,7 @@ export const getScans = createAsyncThunk(
   "nmap/getScans",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await api.get("/api/nmap/all");
+      const response = await api.get("/api/nmap/scans");
       return response.data;
     } catch (error) {
       if (error.response?.data) {
