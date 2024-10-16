@@ -3,7 +3,7 @@ import { startNmapContainer } from "./nmapDockerProcess.js";
 
 
 // start new scan
-export const startNmapScan = async (req, res) => {
+export const startNmap = async (req, res) => {
   try {
     const scanId = await startNmapContainer(req.body);
     return res.status(200).send({ message: "Nmap scan started", scanId });

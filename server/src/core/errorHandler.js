@@ -1,6 +1,5 @@
-export const setupErrorHandler = async(
+export const setupErrorHandler = async (
   httpServer,
-  websocketServer,
   logger,
   shutdown
 ) => {
@@ -18,11 +17,6 @@ export const setupErrorHandler = async(
 
   httpServer.on("error", (error) => {
     logger.error(`HTTP Server error occurred: ${error}`);
-    shutdown(1);
-  });
-
-  websocketServer.on("error", (error) => {
-    logger.error(`Websocket Server error occurred: ${error}`);
     shutdown(1);
   });
 };
