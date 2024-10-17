@@ -47,7 +47,6 @@ export class WsServer {
     if (this.subscribers[subscriber]) {
       try {
         this.subscribers[subscriber].send(JSON.stringify(message));
-        logger.info(`ws | message sent to client: [${JSON.stringify(message)}]`)
       } catch (error) {
         logger.error(
           `ws | failed to send message to subscriber: ${subscriber} error: ${error}`
@@ -80,5 +79,8 @@ export class WsServer {
         logger.info("webSocket server shut down gracefully");
       }
     });
+  }
+  getSubscribers() {
+    return this.subscribers;
   }
 }

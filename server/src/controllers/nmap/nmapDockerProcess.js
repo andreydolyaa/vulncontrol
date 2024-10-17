@@ -3,6 +3,8 @@ import logger from "../../core/logger.js";
 import { websocketServer } from "../../../index.js";
 import { NmapScan } from "../../models/nmapScanModel.js";
 
+// TODO: refactor this file
+
 let containers = {}; // TODO: find how to cache (redis maybe)
 let updateInterval;
 
@@ -43,8 +45,12 @@ const handleNmapProcess = async (scanId, reqBody) => {
   });
 
   process.on("close", async (code) => {
-    await quickUpdate(userId, "done");
-    logger.info(`docker nmap process exited with code ${code}`);
+    logger.info(`docker nmap process is closed [code ${code}]`);
+  });
+
+  process.on("exit", async (code) => {
+    await quickUpdateSubscribers("done");
+    logger.info(`docker nmap process exited [code ${code}]`);
   });
 };
 
@@ -59,7 +65,7 @@ const removeNmapContainer = (containerName) => {
     logger.error(`docker rm ${containerName} stderr: ${data}`);
   });
   rm.on("close", (code) => {
-    logger.info(`docker rm process exited with code ${code}`);
+    logger.info(`docker rm process exited [code ${code}]`);
   });
 };
 
@@ -184,13 +190,23 @@ const checkForOpenPorts = (stdout) => {
 const sendScansUpdateInterval = async (userId) => {
   clearInterval(updateInterval);
   updateInterval = setInterval(async () => {
-    await quickUpdate(userId);
+    await quickUpdateSubscribers();
   }, 1000);
 };
 
-// get update on all live scans
-const quickUpdate = async (userId, statusC = "live") => {
-  const scans = await NmapScan.find({ status: statusC });
-  websocketServer.send(scans, `nmap-updates_${userId}`);
-  logger.info(`sent scans update [total ${scans.length} scans]`);
+// send update on all live scans to all subscribers
+const quickUpdateSubscribers = async (status = "live") => {
+  const subscribers = websocketServer.getSubscribers();
+  if (Object.keys(subscribers).length === 0) return;
+
+  const scans = await NmapScan.find({ status });
+
+  for (const subscriber in subscribers) {
+    if (subscriber.includes("nmap-updates")) {
+      websocketServer.send(scans, subscriber);
+      logger.info(
+        `sent scans update to subscriber: ${subscriber} [total of ${scans.length} scans]`
+      );
+    }
+  }
 };

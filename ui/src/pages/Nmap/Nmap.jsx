@@ -5,6 +5,7 @@ import { getScans, incomingScan, startScan } from "../../redux/nmapSlice";
 import { StartForm } from "./StartForm";
 import { Scans } from "./Scans";
 import { WS_URL } from "../../api/baseUrl";
+import { randomNum } from "../../utils";
 
 export const Nmap = () => {
   const dispatch = useDispatch();
@@ -23,7 +24,7 @@ export const Nmap = () => {
       "-T2": false,
     },
   });
-  const scanSubscriptionRoute = `${WS_URL}/ws/nmap/nmap-updates_${user.id}`;
+  const scanSubscriptionRoute = `${WS_URL}/ws/nmap/nmap-updates_${randomNum()}`;
 
   useEffect(() => {
     dispatch(getScans());
