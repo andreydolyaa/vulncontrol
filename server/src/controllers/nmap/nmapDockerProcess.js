@@ -23,9 +23,9 @@ const handleNmapProcess = async (scanId, reqBody) => {
   logger.info(`starting new process: docker ${argsList.join(" ")}`);
 
   process.stdout.on("data", async (data) => {
-    logger.info(`nmap scan in progress... [scan_id: ${scanId}]`);
-    websocketServer.send(data.toString(), scanId);
     await updateScanLive(scanId, data);
+    websocketServer.send(data.toString(), scanId);
+    logger.info(`nmap scan in progress... [scan_id: ${scanId}]`);
   });
 
   process.stdout.on("end", async () => {
@@ -77,6 +77,7 @@ const createNewScan = async (reqBody) => {
       status: "live",
       byUser: reqBody.userId,
       scanType: setScanType(args),
+      date: new Date(),
     });
     return scan._id;
   } catch (error) {
@@ -86,17 +87,26 @@ const createNewScan = async (reqBody) => {
 
 // TODO: create shared function which will use findOneAndUpdate
 
-// update the scan document on runtime
+// update the scan document on runtime (updates scan stdout and open ports fields)
 const updateScanLive = async (scanId, data) => {
-  const item = { $push: { scan: data.toString() } };
+  const isPortDetected = checkForOpenPorts(data);
+
+  const updates = {
+    $push: { scan: data.toString() },
+  };
+
+  if (isPortDetected) {
+    updates.$push = { openPorts: isPortDetected };
+  }
+
   try {
-    return await NmapScan.findOneAndUpdate(scanId, item, { new: true });
+    return await NmapScan.findOneAndUpdate(scanId, updates, { new: true });
   } catch (error) {
     logger.error(`db | failed to update scan ${scanId}`);
   }
 };
 
-// update scan to done status when over
+// update scan to done status when finished
 const setScanStatusDone = async (scanId) => {
   try {
     return await NmapScan.findOneAndUpdate(scanId, { status: "done" });
@@ -142,7 +152,22 @@ const createArgsList = (args, containerName, target) => {
     containerName,
     "instrumentisto/nmap",
     target,
-    "-vv",
+    "-v",
     ...userSelectedArgs,
   ];
+};
+
+// identify and store open ports which found during scan
+const checkForOpenPorts = (stdout) => {
+  const line = stdout.toString();
+  const searchStr = "Discovered open port";
+  if (!line.includes(searchStr)) return;
+
+  const port = line
+    .split(" ")
+    .find((part) => part.includes("/tcp") || part.includes("/udp"));
+
+  if (!port) return;
+
+  return parseInt(port);
 };
