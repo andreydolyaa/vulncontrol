@@ -2,6 +2,7 @@ import { spawn } from "child_process";
 import logger from "../../core/logger.js";
 import { websocketServer } from "../../../index.js";
 import { NmapScan } from "../../models/nmapScanModel.js";
+import { getAllScans } from "./nmapController.js";
 
 let containers = {}; // TODO: find how to cache (redis maybe)
 
@@ -25,6 +26,10 @@ const handleNmapProcess = async (scanId, reqBody) => {
   process.stdout.on("data", async (data) => {
     await updateScanLive(scanId, data);
     websocketServer.send(data.toString(), scanId);
+    // const scans = await getAllScans();
+    // console.log(scans, "@@@@@@@@@@@@@@@@@@@@@@@");
+    
+    // websocketServer.send(scans.toString(), "/nmap")
     logger.info(`nmap scan in progress... [scan_id: ${scanId}]`);
   });
 
@@ -77,7 +82,7 @@ const createNewScan = async (reqBody) => {
       status: "live",
       byUser: reqBody.userId,
       scanType: setScanType(args),
-      date: new Date(),
+      startTime: new Date(),
     });
     return scan._id;
   } catch (error) {
@@ -106,10 +111,14 @@ const updateScanLive = async (scanId, data) => {
   }
 };
 
-// update scan to done status when finished
+// update scan status and time when scan finished
 const setScanStatusDone = async (scanId) => {
+  const updates = {
+    status: "done",
+    endTime: new Date(),
+  };
   try {
-    return await NmapScan.findOneAndUpdate(scanId, { status: "done" });
+    return await NmapScan.findOneAndUpdate(scanId, updates);
   } catch (error) {
     logger.error(`db | failed to update scan status ${scanId}`);
   }

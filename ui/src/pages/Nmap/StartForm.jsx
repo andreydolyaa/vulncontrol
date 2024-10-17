@@ -10,13 +10,6 @@ export const StartForm = ({ start, formData, onFormChange }) => {
         name="target"
         onChange={onFormChange}
       />
-      {/* <input
-        type="text"
-        placeholder="Temp Container instance"
-        className="w-96"
-        name="instance"
-        onChange={onFormChange}
-      /> */}
 
       <div className="nmap-args">
         {Object.keys(formData.args).map((arg) => {

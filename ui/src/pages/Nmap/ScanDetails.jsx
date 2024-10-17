@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { BASE_URL, WS_URL } from "../../api/baseUrl";
 
-export const Scan = () => {
+export const ScanDetails = () => {
   // const dispatch = useDispatch();
   const { scanId } = useParams();
   const [scan, setScan] = useState([]);

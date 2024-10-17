@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getScans, startScan } from "../../redux/nmapSlice";
 import { StartForm } from "./StartForm";
 import { Scans } from "./Scans";
+import { WS_URL } from "../../api/baseUrl";
 
 export const Nmap = () => {
   const dispatch = useDispatch();
@@ -21,9 +22,21 @@ export const Nmap = () => {
       "-T2": false,
     },
   });
+  const scanSubscriptionRoute = `${WS_URL}/ws/nmap/nmap-updates`;
 
   useEffect(() => {
     dispatch(getScans());
+  }, []);
+
+  useEffect(() => {
+    const websocket = new WebSocket(scanSubscriptionRoute);
+    websocket.onmessage = (event) => {
+      console.log(event.data, "message from subscription /ws/scans");
+    };
+
+    return () => {
+      websocket.close();
+    };
   }, []);
 
   const onFormChange = (e) => {

@@ -20,18 +20,27 @@ const NmapScanSchema = new mongoose.Schema(
     },
     // duration: {
     //   type: String,
-    //   required: true,
     // },
     status: {
       type: String,
       required: true,
     },
-    date: {
+    startTime: {
       type: Date,
-      required: true,
+    },
+    endTime: {
+      type: Date,
     },
     openPorts: [Number],
+    id: {
+      type: String,
+      default: function () {
+        return this._id;
+      },
+      index: true,
+    },
   },
+
   {
     versionKey: false,
   }

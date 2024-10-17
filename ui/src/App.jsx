@@ -5,7 +5,7 @@ import { getLoggedUser } from "./redux/userSlice";
 import { Home } from "./pages/Home";
 import { Overview } from "./pages/Overview/Overview";
 import { Nmap } from "./pages/Nmap/Nmap";
-import { Scan } from "./pages/Nmap/Scan";
+import { ScanDetails } from "./pages/Nmap/ScanDetails";
 import { Nikto } from "./pages/Nikto/Nikto";
 import { WPScan } from "./pages/WPScan/WPScan";
 import { Settings } from "./pages/Settings/Settings";
@@ -34,7 +34,7 @@ export const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/overview" element={<Overview />} />
           <Route path="/nmap" element={<Nmap />} />
-          <Route path="/scans/:scanId" element={<Scan />} />
+          <Route path="/scans/:scanId" element={<ScanDetails />} />
           <Route path="/nikto" element={<Nikto />} />
           <Route path="/wpscan" element={<WPScan />} />
           <Route path="/settings" element={<Settings />} />
