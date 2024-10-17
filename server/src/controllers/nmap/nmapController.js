@@ -1,6 +1,6 @@
+import logger from "../../core/logger.js";
 import { NmapScan } from "../../models/nmapScanModel.js";
 import { startNmapContainer } from "./nmapDockerProcess.js";
-
 
 // start new scan
 export const startNmap = async (req, res) => {
@@ -8,7 +8,10 @@ export const startNmap = async (req, res) => {
     const scanId = await startNmapContainer(req.body);
     return res.status(200).send({ message: "Nmap scan started", scanId });
   } catch (error) {
-    return res.status(400).send({ message: "Failed to start Nmap scan" });
+    logger.error(`Failed to start nmap scan: ${error}`);
+    return res
+      .status(400)
+      .send({ message: "Failed to start Nmap scan" });
   }
 };
 
@@ -19,7 +22,8 @@ export const getAllScans = async (req, res) => {
     if (!scans) throw new Error();
     return res.status(200).send(scans);
   } catch (error) {
-    return res.status(400).send({ message: "No scans found", error });
+    logger.error(`Failed to get scans: ${error}`);
+    return res.status(400).send({ message: "No scans found" });
   }
 };
 
@@ -29,6 +33,7 @@ export const getScanById = async (req, res) => {
     const scan = await NmapScan.findOne({ _id: req.params.id });
     return res.status(200).send(scan);
   } catch (error) {
-    return res.status(400).send({ message: "Could not find user", error });
+    logger.error(`Failed to get scan by id: ${error}`);
+    return res.status(400).send({ message: "Could not find user" });
   }
 };

@@ -10,6 +10,23 @@ const NmapScanSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    target: {
+      type: String,
+      required: true,
+    },
+    scanType: {
+      type: String,
+      required: true,
+    },
+    // duration: {
+    //   type: String,
+    //   required: true,
+    // },
+    status: {
+      type: String,
+      required: true,
+    },
+    openPorts: [Number],
   },
   {
     versionKey: false,

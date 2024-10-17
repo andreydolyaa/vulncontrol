@@ -15,6 +15,11 @@ export const setupErrorHandler = async (
     shutdown(1);
   });
 
+  process.on("exit", (code) => {
+    logger.info(`Process exited with code: ${code}`);
+    shutdown(0);
+  });
+
   httpServer.on("error", (error) => {
     logger.error(`HTTP Server error occurred: ${error}`);
     shutdown(1);

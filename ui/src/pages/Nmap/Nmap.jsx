@@ -7,11 +7,19 @@ import { Scans } from "./Scans";
 
 export const Nmap = () => {
   const dispatch = useDispatch();
-  // const websocket = useWebSocket("ws://localhost:3000"); // TODO: move
   const { scans, loading } = useSelector((state) => state.nmap);
   const { user } = useSelector((state) => state.user);
   const [formData, setFormData] = useState({
     target: "",
+    args: {
+      "-sn": false,
+      "-sV": false,
+      "-p-": false,
+      "-A": false,
+      "-sS": false,
+      "-sU": false,
+      "-T2": false,
+    },
   });
 
   useEffect(() => {
@@ -19,11 +27,21 @@ export const Nmap = () => {
   }, []);
 
   const onFormChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    const { name, value, type, checked } = e.target;
+    if (name in formData.args) {
+      setFormData({
+        ...formData,
+        args: {
+          ...formData.args,
+          [name]: type === "checkbox" ? checked : value,
+        },
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
 
   const start = async (e) => {
@@ -34,7 +52,11 @@ export const Nmap = () => {
 
   return (
     <Container>
-      <StartForm start={start} onFormChange={onFormChange} />
+      <StartForm
+        start={start}
+        formData={formData}
+        onFormChange={onFormChange}
+      />
       {loading ? <div>Loading</div> : <Scans scans={scans} />}
     </Container>
   );

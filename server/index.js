@@ -45,11 +45,6 @@ const shutdown = (code) => {
   });
 };
 
-process.on("exit", (code) => {
-  logger.info(`Process exited with code: ${code}`);
-  shutdown(0);
-});
-
 setupErrorHandler(httpServer, logger, shutdown)
   .then(startServers)
   .then(connectToDatabase)
