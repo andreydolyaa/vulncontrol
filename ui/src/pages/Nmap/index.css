@@ -1,0 +1,34 @@
+.scans {
+  margin: 30px 0 0 0;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #1e1e2b;
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    tr {
+      text-align: left;
+    }
+    tr:not(:last-child) {
+      border-bottom: 1px solid var(--border-color);
+    }
+    .table-header {
+      border-bottom: 1px solid var(--border-color);
+      background-color: var(--purple);
+      th {
+        font-size: 16px;
+        color: #c2c5ff;
+        padding: 20px;
+      }
+    }
+    .table-body {
+      cursor: pointer;
+      td {
+        padding: 20px;
+        font-weight: 500;
+        font-size: 14px;
+      }
+    }
+  }
+}

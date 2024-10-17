@@ -19,27 +19,32 @@ export const Scans = ({ scans }) => {
   };
 
   return (
-    <table className="table-auto w-full mt-10">
-      <thead>
-        <tr className="border-b text-left">
-          {items.map((item) => (
-            <th key={item} className="pb-4">
-              {item}
-            </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {scans.map((scan) => {
-          return (
-            <ScanItem
-              key={scan.id}
-              scan={scan}
-              onClick={() => navigateToScan(scan.id)}
-            />
-          );
-        })}
-      </tbody>
-    </table>
+    <div className="scans">
+      <table>
+        <thead className="">
+          <tr className="table-header">
+            {items.map((item) => (
+              <th
+                key={item}
+                className={`${item === "Actions" ? "text-center" : ""}`}
+              >
+                {item}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {scans.map((scan) => {
+            return (
+              <ScanItem
+                key={scan.id}
+                scan={scan}
+                onClick={() => navigateToScan(scan.id)}
+              />
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
   );
 };

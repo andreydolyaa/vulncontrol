@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@200..1000&family=Rubik:wght@300..900&display=swap");
+@import url("./pages/Nmap/index.css");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -13,14 +14,24 @@ body,
 html,
 #root {
   height: 100%;
-  background-color: #f9f9f9;
+  /* background-color: #f9f9f9; */
+  /* background-color: #1e1e2b; */
+  background-color: #171721;
 }
 
 :root {
   font-family: "Open Sans", Inter, system-ui, Avenir, Helvetica, Arial,
     sans-serif;
   font-size: 14px;
-  color: rgb(22, 22, 22);
+  /* color: rgb(229, 229, 229); */
+  color: #8686b4;
+  --border-color: #443c55;
+  --purple: #4e03c8;
+  --greenish: rgb(0, 255, 166);
+  /* --secondary-color: #2ecc71;
+  --accent-color: #e74c3c;
+  --text-color: #333;
+  --background-color: #f0f0f0; */
 }
 
 .tooltip {
@@ -117,7 +128,10 @@ a {
   height: 100%;
   /* background-color: #121926; */
   /* background-color: #2f4364; */
-  background-color: #171721;
+  /* background-color: #171721; */
+  background-color: #1e1e2b;
+  border-right: 1px dotted var(--border-color);
+  /* background-color: #16162A; */
 }
 .root-layout .topbar {
   grid-area: header;
@@ -125,6 +139,8 @@ a {
   left: 270px;
   height: 60px;
   width: 100%;
+  /* background-color: #1b1b26; */
+  background-color: #1e1e2b;
 }
 
 .root-layout .main {
