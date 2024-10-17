@@ -3,9 +3,9 @@ import api from "../api/index";
 
 export const startScan = createAsyncThunk(
   "nmap/startScan",
-  async ({ data, userId }, { rejectWithValue }) => {
+  async (data, { rejectWithValue }) => {
     try {
-      const response = await api.post("/api/nmap", { data, userId });
+      const response = await api.post("/api/nmap", data);
       return response.data;
     } catch (error) {
       if (error.response?.data) {
@@ -46,6 +46,21 @@ export const nmapSlice = createSlice({
     // clearMessages: (state) => {
     //   state.messages = [];
     // },
+    incomingScan: (state, action) => {
+      const newScans = JSON.parse(action.payload);
+      console.log(newScans, "XX");
+      
+      newScans.forEach((newScan) => {
+        const existingScanIndex = state.scans.findIndex(
+          (scan) => scan.id === newScan.id
+        );
+        if (existingScanIndex >= 0) {
+          state.scans[existingScanIndex] = newScan;
+        } else {
+          state.scans.push(newScan);
+        }
+      });
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -76,4 +91,5 @@ export const nmapSlice = createSlice({
 });
 
 // export const { addMessage, clearMessages } = nmapSlice.actions;
+export const { incomingScan } = nmapSlice.actions;
 export default nmapSlice.reducer;

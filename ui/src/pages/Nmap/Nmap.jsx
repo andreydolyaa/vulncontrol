@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Container } from "../../components/Container/Container";
 import { useDispatch, useSelector } from "react-redux";
-import { getScans, startScan } from "../../redux/nmapSlice";
+import { getScans, incomingScan, startScan } from "../../redux/nmapSlice";
 import { StartForm } from "./StartForm";
 import { Scans } from "./Scans";
 import { WS_URL } from "../../api/baseUrl";
@@ -12,6 +12,7 @@ export const Nmap = () => {
   const { user } = useSelector((state) => state.user);
   const [formData, setFormData] = useState({
     target: "",
+    userId: user.id,
     args: {
       "-sn": false,
       "-sV": false,
@@ -22,7 +23,7 @@ export const Nmap = () => {
       "-T2": false,
     },
   });
-  const scanSubscriptionRoute = `${WS_URL}/ws/nmap/nmap-updates`;
+  const scanSubscriptionRoute = `${WS_URL}/ws/nmap/nmap-updates_${user.id}`;
 
   useEffect(() => {
     dispatch(getScans());
@@ -31,7 +32,7 @@ export const Nmap = () => {
   useEffect(() => {
     const websocket = new WebSocket(scanSubscriptionRoute);
     websocket.onmessage = (event) => {
-      console.log(event.data, "message from subscription /ws/scans");
+      dispatch(incomingScan(event.data));
     };
 
     return () => {
@@ -59,7 +60,7 @@ export const Nmap = () => {
 
   const start = async (e) => {
     e.preventDefault();
-    await dispatch(startScan({ data: formData, userId: user.id })).unwrap();
+    await dispatch(startScan(formData)).unwrap();
     dispatch(getScans());
   };
 

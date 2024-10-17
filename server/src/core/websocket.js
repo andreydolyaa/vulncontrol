@@ -16,7 +16,11 @@ export class WsServer {
   }
   handleNewConnection(websocket, subscriber) {
     this.subscribers[subscriber] = websocket;
-    logger.info(`ws | new client subscribed to process updates: ${subscriber}`);
+    logger.info(
+      `ws | new client subscribed to process updates: ${subscriber} | [subscribers: ${JSON.stringify(
+        Object.keys(this.subscribers)
+      )}`
+    );
   }
   handleActions(websocket, subscriber) {
     websocket.on("message", this.handleIncomingMessage);
@@ -29,7 +33,11 @@ export class WsServer {
   }
   handleDisconnection(subscriber) {
     delete this.subscribers[subscriber];
-    logger.info(`ws | client unsubscribed from process: ${subscriber}`);
+    logger.info(
+      `ws | client unsubscribed from process: ${subscriber} | [subscribers: ${JSON.stringify(
+        this.subscribers
+      )}]`
+    );
   }
   handleError(error) {
     // TODO: TBD
@@ -39,6 +47,7 @@ export class WsServer {
     if (this.subscribers[subscriber]) {
       try {
         this.subscribers[subscriber].send(JSON.stringify(message));
+        logger.info(`ws | message sent to client: [${JSON.stringify(message)}]`)
       } catch (error) {
         logger.error(
           `ws | failed to send message to subscriber: ${subscriber} error: ${error}`

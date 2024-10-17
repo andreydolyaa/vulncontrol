@@ -2,9 +2,9 @@ import { spawn } from "child_process";
 import logger from "../../core/logger.js";
 import { websocketServer } from "../../../index.js";
 import { NmapScan } from "../../models/nmapScanModel.js";
-import { getAllScans } from "./nmapController.js";
 
 let containers = {}; // TODO: find how to cache (redis maybe)
+let updateInterval;
 
 // initiate new scan
 export const startNmapContainer = async (reqBody) => {
@@ -15,7 +15,7 @@ export const startNmapContainer = async (reqBody) => {
 
 // start nmap container and nmap scan & handle stdout and stderr
 const handleNmapProcess = async (scanId, reqBody) => {
-  const { target, args } = reqBody.data;
+  const { target, args, userId } = reqBody;
   const containerName = `nmap_${scanId.toString()}`;
   const argsList = createArgsList(args, containerName, target);
   containers[containerName] = scanId;
@@ -26,10 +26,7 @@ const handleNmapProcess = async (scanId, reqBody) => {
   process.stdout.on("data", async (data) => {
     await updateScanLive(scanId, data);
     websocketServer.send(data.toString(), scanId);
-    // const scans = await getAllScans();
-    // console.log(scans, "@@@@@@@@@@@@@@@@@@@@@@@");
-    
-    // websocketServer.send(scans.toString(), "/nmap")
+    await sendScansUpdateInterval(userId);
     logger.info(`nmap scan in progress... [scan_id: ${scanId}]`);
   });
 
@@ -37,6 +34,7 @@ const handleNmapProcess = async (scanId, reqBody) => {
     logger.info("nmap scan ended successfully");
     removeNmapContainer(containerName);
     setScanStatusDone(scanId);
+    clearInterval(updateInterval);
     delete containers[containerName];
   });
 
@@ -44,7 +42,8 @@ const handleNmapProcess = async (scanId, reqBody) => {
     logger.error(`stderr: ${data.toString()}`);
   });
 
-  process.on("close", (code) => {
+  process.on("close", async (code) => {
+    await quickUpdate(userId, "done");
     logger.info(`docker nmap process exited with code ${code}`);
   });
 };
@@ -74,13 +73,13 @@ export const removeAllContainers = () => {
 
 // create new scan document in db
 const createNewScan = async (reqBody) => {
-  const { target, args } = reqBody.data;
+  const { target, args, userId } = reqBody;
   try {
     const scan = await NmapScan.create({
       target,
       scan: [],
       status: "live",
-      byUser: reqBody.userId,
+      byUser: userId,
       scanType: setScanType(args),
       startTime: new Date(),
     });
@@ -179,4 +178,19 @@ const checkForOpenPorts = (stdout) => {
   if (!port) return;
 
   return parseInt(port);
+};
+
+// timed send scans status
+const sendScansUpdateInterval = async (userId) => {
+  clearInterval(updateInterval);
+  updateInterval = setInterval(async () => {
+    await quickUpdate(userId);
+  }, 1000);
+};
+
+// get update on all live scans
+const quickUpdate = async (userId, statusC = "live") => {
+  const scans = await NmapScan.find({ status: statusC });
+  websocketServer.send(scans, `nmap-updates_${userId}`);
+  logger.info(`sent scans update [total ${scans.length} scans]`);
 };
