@@ -13,9 +13,8 @@ export const Args = ({ formData, onFormChange }) => {
     <StyledDiv>
       {Object.keys(formData.args).map((arg) => {
         return (
-          <div className="checkbox-wrapper-custom">
+          <div key={arg} className="checkbox-wrapper-custom">
             <Checkbox
-              key={arg}
               label={arg}
               checked={formData.args[arg]}
               onFormChange={() => handleCheckboxChange(arg)}

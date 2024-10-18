@@ -12,7 +12,7 @@ export const StartForm = ({ start, formData, onFormChange }) => {
         <InputLabel text="Target IP Address" icon={TbWorld} />
         <div className="target-button">
           <Target onFormChange={onFormChange} />
-          <StyledButton>Scan</StyledButton>
+          <StyledButton>Start</StyledButton>
         </div>
       </StyledDivTarget>
       <StyledDivArgs>
@@ -54,11 +54,13 @@ const StyledDivArgs = styled.div`
 `;
 
 const StyledButton = styled.button`
-  border: 1px solid #ffbd08;
-  background-color: rgba(255, 183, 0, 0.1);
-  color: rgba(255, 183, 0, 1);
+  border: 1px dotted rgba(141, 70, 255, 1);;
+  background-color: rgba(141, 70, 255, .1);
+  color: rgba(141, 70, 255, 1);
   font-size: 18px;
+  letter-spacing: 1.5px;
   font-weight: 800;
   text-transform: uppercase;
-  width: 150px;
+  width:220px;
+  margin-left:20px;
 `;
