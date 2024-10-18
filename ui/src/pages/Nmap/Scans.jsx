@@ -15,11 +15,11 @@ export const Scans = ({ scans }) => {
   ];
 
   const navigateToScan = (scanId) => {
-    navigate(`/scans/${scanId}`);
+    navigate(`/nmap/${scanId}`);
   };
 
   return (
-    <div className="scans">
+    <div className="scans mt-12">
       <table>
         <thead className="">
           <tr className="table-header">

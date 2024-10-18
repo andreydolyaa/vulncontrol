@@ -6,6 +6,8 @@ import { StartForm } from "./StartForm";
 import { Scans } from "./Scans";
 import { WS_URL } from "../../api/baseUrl";
 import { randomNum } from "../../utils";
+import { ModuleName } from "../../components/ModuleName";
+import { TbRadar2 as Radar } from "react-icons/tb";
 
 export const Nmap = () => {
   const dispatch = useDispatch();
@@ -67,6 +69,7 @@ export const Nmap = () => {
 
   return (
     <Container>
+      <ModuleName text="Nmap" icon={Radar} />
       <StartForm
         start={start}
         formData={formData}

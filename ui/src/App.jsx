@@ -36,7 +36,7 @@ export const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/overview" element={<Overview />} />
           <Route path="/nmap" element={<Nmap />} />
-          <Route path="/scans/:scanId" element={<ScanDetails />} />
+          <Route path="/nmap/:scanId" element={<ScanDetails />} />
           <Route path="/nikto" element={<Nikto />} />
           <Route path="/wpscan" element={<WPScan />} />
           <Route path="/settings" element={<Settings />} />

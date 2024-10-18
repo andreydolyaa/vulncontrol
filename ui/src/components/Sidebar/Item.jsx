@@ -6,7 +6,7 @@ import { logout } from "../../redux/userSlice";
 export const Item = ({ icon, title, link = "none", isLogout }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const match = useMatch(link);
+  const match = useMatch(`${link}/*`);
   const IconComponent = icon;
 
   const handleLogout = () => {

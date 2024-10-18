@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 
 export const StartForm = ({ start, formData, onFormChange }) => {
   return (
-    <form className="target w-full border border-red-400" onSubmit={start}>
+    <form className="target w-full border border-red-400 mt-12" onSubmit={start}>
       <input
         type="text"
         placeholder="Target"

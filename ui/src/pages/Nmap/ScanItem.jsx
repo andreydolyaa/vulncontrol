@@ -2,7 +2,6 @@ import React from "react";
 import moment from "moment";
 import { Status } from "../../components/Status";
 import { TbAlignBoxLeftBottom, TbFileExport } from "react-icons/tb";
-import { Tooltip } from "react-tooltip";
 
 export const ScanItem = ({ scan, onClick }) => {
   const parseDate = (date) => {
@@ -41,8 +40,7 @@ export const ScanItem = ({ scan, onClick }) => {
           className="icon"
           data-tooltip-id="tooltip1"
           data-tooltip-content="Export"
-        />
-        {/* <Tooltip id="tooltip1" className="tooltip" /> */}
+        />{" "}
       </td>
     </tr>
   );

@@ -3,11 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { SignForm } from "../components/SignForm/SignForm";
 import SignFormItem from "../components/SignForm/SignFormItem";
 import { getLoggedUser, login } from "../redux/userSlice";
-import { useNavigate } from "react-router-dom";
 
 export const Login = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { message, loading, status } = useSelector((state) => state.user);
   const [formData, setFormData] = useState({
     email: "",

@@ -27,8 +27,11 @@ const StyledSphere = styled.div`
 export const Status = ({ text, background, spin = false }) => {
   return (
     <StyledDiv background={background}>
-      {spin ? <TbRefresh className="animate-spin mr-2 "/> : <StyledSphere background={background} />}
-      {/* <StyledSphere background={background} /> */}
+      {spin ? (
+        <TbRefresh className="animate-spin mr-2 " />
+      ) : (
+        <StyledSphere background={background} />
+      )}
       <div>{capitalize(text)}</div>
     </StyledDiv>
   );
