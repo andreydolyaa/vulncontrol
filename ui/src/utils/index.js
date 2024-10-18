@@ -12,3 +12,10 @@ export const capitalize = (str) => {
   if (!str) return str;
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
+
+
+export const changeRgbaAlpha = (rgba, newAlpha) => {
+  const parts = rgba.split(",");
+  parts[3] = `${newAlpha})`;
+  return parts.join(",");
+};

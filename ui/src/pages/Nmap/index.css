@@ -29,6 +29,17 @@
         font-weight: 500;
         font-size: 14px;
       }
+      .actions {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .icon {
+          height: 22px;
+          width: 22px;
+          stroke-width: 1.5;
+          margin: 0 5px;
+        }
+      }
     }
   }
 }

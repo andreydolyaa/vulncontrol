@@ -35,13 +35,13 @@ html,
 }
 
 .tooltip {
-  background-color: #6c6c6c !important;
-  color: #ffffff !important;
+  background-color: #40405f !important;
+  color: #91acde !important;
   opacity: 0.9 !important;
-  font-size: 11px !important;
+  font-size: 12px !important;
   font-family: "Open sans";
   transition: 0.2s !important;
-  padding: 2px 5px !important;
+  padding: 4px 10px !important;
 }
 
 input {

@@ -1,6 +1,8 @@
 import React from "react";
 import moment from "moment";
-import { capitalize } from "../../utils/index";
+import { Status } from "../../components/Status";
+import { TbAlignBoxLeftBottom, TbFileExport } from "react-icons/tb";
+import { Tooltip } from "react-tooltip";
 
 export const ScanItem = ({ scan, onClick }) => {
   const parseDate = (date) => {
@@ -9,17 +11,38 @@ export const ScanItem = ({ scan, onClick }) => {
     return time.format("hh:mm:ss A DD/MM/YY");
   };
 
+  const checkStatus = (status) => {
+    return status === "done" ? "rgba(255, 8, 173,.1)" : "rgba(8, 255, 139,.1)";
+  };
+
+  // className={`table-body ${scan.status === "live" ? "animate-pulse" : ""}`}
+
   return (
-    <tr key={scan.id} className="table-body" onClick={onClick}>
+    <tr key={scan.id} className={`table-body`} onClick={onClick}>
       <td>{scan.target}</td>
       <td>{scan.scanType}</td>
       <td>{parseDate(scan.startTime)}</td>
       <td>{parseDate(scan.endTime)}</td>
       <td>{scan.openPorts.length}</td>
-      <td>{capitalize(scan.status)}</td>
-      <td className="text-center">
-        <button>view</button>
-        <button>export</button>
+      <td>
+        <Status
+          text={scan.status}
+          background={checkStatus(scan.status)}
+          spin={scan.status === "live" ? true : false}
+        />
+      </td>
+      <td className="actions text-center" onClick={(e) => e.stopPropagation()}>
+        <TbAlignBoxLeftBottom
+          className="icon"
+          data-tooltip-id="tooltip1"
+          data-tooltip-content="View scan progress"
+        />
+        <TbFileExport
+          className="icon"
+          data-tooltip-id="tooltip1"
+          data-tooltip-content="Export scan file"
+        />
+        <Tooltip id="tooltip1" className="tooltip" />
       </td>
     </tr>
   );
