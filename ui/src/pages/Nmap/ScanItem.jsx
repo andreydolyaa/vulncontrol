@@ -35,14 +35,14 @@ export const ScanItem = ({ scan, onClick }) => {
         <TbAlignBoxLeftBottom
           className="icon"
           data-tooltip-id="tooltip1"
-          data-tooltip-content="View scan progress"
+          data-tooltip-content="View"
         />
         <TbFileExport
           className="icon"
           data-tooltip-id="tooltip1"
-          data-tooltip-content="Export scan file"
+          data-tooltip-content="Export"
         />
-        <Tooltip id="tooltip1" className="tooltip" />
+        {/* <Tooltip id="tooltip1" className="tooltip" /> */}
       </td>
     </tr>
   );

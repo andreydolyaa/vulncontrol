@@ -32,16 +32,20 @@ html,
   --accent-color: #e74c3c;
   --text-color: #333;
   --background-color: #f0f0f0; */
+  /* --rt-opacity: 0.9 !important; */
+  /* --rt-transition-show-delay: .3s !important; */
+  /* --rt-transition-closing-delay: 0.2s !important; */
 }
 
 .tooltip {
   background-color: #40405f !important;
-  color: #91acde !important;
-  opacity: 0.9 !important;
+  color: #a3c2fb !important;
+  /* opacity: 0.9 !important; */
   font-size: 12px !important;
   font-family: "Open sans";
   transition: 0.2s !important;
-  padding: 4px 10px !important;
+  padding: 3px 12px !important;
+  border-radius: 5px !important;
 }
 
 input {
