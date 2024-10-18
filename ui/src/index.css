@@ -25,11 +25,13 @@ html,
   /* color: rgb(229, 229, 229); */
   color: #8686b4;
   --border-color: #443c55;
+  --border-color-2: rgb(103, 91, 129);
   --background-color: #1e1e2b;
   --main-background-color: #171721;
   --radius: 10px;
   --purple: #4e03c8;
-  --orange: #00c8ff;
+  --purple-2: #8f9cff;
+  --orange: rgb(16 185 129);
   --greenish: rgb(0, 255, 166);
   /* --secondary-color: #2ecc71;
   --accent-color: #e74c3c;

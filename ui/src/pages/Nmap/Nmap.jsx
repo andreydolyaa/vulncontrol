@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Container } from "../../components/Container/Container";
 import { useDispatch, useSelector } from "react-redux";
 import { getScans, incomingScan, startScan } from "../../redux/nmapSlice";
-import { StartForm } from "./StartForm";
+import { StartForm } from "./StartForm/StartForm";
 import { Scans } from "./Scans";
 import { WS_URL } from "../../api/baseUrl";
 import { randomNum } from "../../utils";
@@ -24,6 +24,17 @@ export const Nmap = () => {
       "-sS": false,
       "-sU": false,
       "-T2": false,
+      "-F": false,
+      "-r": false,
+      "-sC": false,
+      "-O": false,
+      "-d": false,
+      "--reason": false,
+      "--packet-trace": false,
+      "--iflist": false,
+      "-6": false,
+      "--privileged": false,
+      "--unprivileged": false,
     },
   });
   const scanSubscriptionRoute = `${WS_URL}/ws/nmap/nmap-updates_${randomNum()}`;
@@ -44,7 +55,10 @@ export const Nmap = () => {
   }, []);
 
   const onFormChange = (e) => {
+    console.log(e);
+
     const { name, value, type, checked } = e.target;
+
     if (name in formData.args) {
       setFormData({
         ...formData,

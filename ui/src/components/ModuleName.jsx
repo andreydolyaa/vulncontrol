@@ -2,6 +2,19 @@ import React from "react";
 import styled from "styled-components";
 import { Search } from "./Search";
 
+export const ModuleName = ({ text, icon }) => {
+  const IconComponent = icon;
+  return (
+    <StyledDiv>
+      <div className="text-and-icon">
+        <IconComponent className="icon" />
+        <div className="text">{text}</div>
+      </div>
+      <Search placeholder="Search scans..." />
+    </StyledDiv>
+  );
+};
+
 const StyledDiv = styled.div`
   display: flex;
   align-items: center;
@@ -16,30 +29,17 @@ const StyledDiv = styled.div`
     display: flex;
     align-items: center;
     .text {
-      color: var(--orange);
+      color: white;
       font-weight: 600;
       /* font-family: ""; */
-      font-size: 30px;
+      font-size: 24px;
     }
     .icon {
       stroke-width: 1.5;
-      height: 30px;
-      width: 30px;
-      color: var(--orange);
+      height: 24px;
+      width: 24px;
+      color: white;
       margin-right: 5px;
     }
   }
 `;
-
-export const ModuleName = ({ text, icon }) => {
-  const IconComponent = icon;
-  return (
-    <StyledDiv>
-      <div className="text-and-icon">
-        <IconComponent className="icon" />
-        <div className="text">{text}</div>
-      </div>
-      <Search placeholder="Search scans..." />
-    </StyledDiv>
-  );
-};

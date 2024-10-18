@@ -151,6 +151,7 @@ const setScanType = (args) => {
     "-sS": "Stealth Scan",
     "-sU": "UDP Scan",
     "-T2": "Slow Scan",
+    "-F": "Fast Scan",
     "-st": "Standard Scan",
   };
   const type = list.find((arg) => Object.keys(types).includes(arg)) || "-st";
