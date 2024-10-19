@@ -53,8 +53,6 @@ export const Nmap = () => {
   }, []);
 
   const onFormChange = (e) => {
-    console.log(e);
-
     const { name, value, type, checked } = e.target;
 
     if (name in formData.args) {

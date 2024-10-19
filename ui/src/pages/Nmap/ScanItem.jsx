@@ -1,7 +1,7 @@
 import React from "react";
 import moment from "moment";
-import { Status } from "../../components/Status";
 import { TbAlignBoxLeftBottom, TbFileExport } from "react-icons/tb";
+import { ScanStatus } from "./ScanStatus";
 
 export const ScanItem = ({ scan, onClick }) => {
   const parseDate = (date) => {
@@ -9,13 +9,6 @@ export const ScanItem = ({ scan, onClick }) => {
     const time = moment(date);
     return time.format("hh:mm:ss A DD/MM/YY");
   };
-
-  const checkStatus = (status) => {
-    return status === "done" ? "rgba(255, 8, 173,.1)" : "rgba(8, 255, 139,.1)";
-  };
-
-  // className={`table-body ${scan.status === "live" ? "animate-pulse" : ""}`}
-
   return (
     <tr key={scan.id} className={`table-body`} onClick={onClick}>
       <td>{scan.target}</td>
@@ -24,11 +17,7 @@ export const ScanItem = ({ scan, onClick }) => {
       <td>{parseDate(scan.endTime)}</td>
       <td>{scan.openPorts.length}</td>
       <td>
-        <Status
-          text={scan.status}
-          background={checkStatus(scan.status)}
-          spin={scan.status === "live" ? true : false}
-        />
+        <ScanStatus status={scan.status} />
       </td>
       <td className="actions text-center" onClick={(e) => e.stopPropagation()}>
         <TbAlignBoxLeftBottom

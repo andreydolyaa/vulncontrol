@@ -1,17 +1,26 @@
-import React from "react";
+import styled from "styled-components";
+import React, { useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import { BASE_URL, WS_URL } from "../../api/baseUrl";
+import { Container } from "../../components/Container/Container";
+import { ModuleName } from "../../components/ModuleName";
+import { ScanStatus } from "./ScanStatus";
 
 export const ScanDetails = () => {
-  // const dispatch = useDispatch();
+  const terminalRef = useRef(null);
   const { scanId } = useParams();
   const [scan, setScan] = useState([]);
-  const [scanByUser, setScanByUser] = useState("");
+  const [status, setStatus] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const scanSubscriptionRoute = `${WS_URL}/ws/scan/${scanId}`;
+
+  useEffect(() => {
+    if (terminalRef.current) {
+      terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
+    }
+  }, [scan]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -19,14 +28,16 @@ export const ScanDetails = () => {
       .then((res) => res.json())
       .then((data) => {
         setScan(data.scan);
-        setScanByUser(data.byUser);
+        setStatus(data.status);
       })
       .catch((error) => setError(error))
       .finally(() => setIsLoading(false));
 
     const websocket = new WebSocket(scanSubscriptionRoute);
     websocket.onmessage = (event) => {
-      setScan((prevScan) => [...prevScan, JSON.parse(event.data)]);
+      const incoming = JSON.parse(event.data);
+      setScan((prevScan) => [...prevScan, incoming.stdout]);
+      setStatus(incoming.status);
     };
 
     return () => {
@@ -34,24 +45,47 @@ export const ScanDetails = () => {
     };
   }, []);
 
-  if (isLoading) {
-    return <div>Loading scan {scanId}...</div>;
-  }
+  // if (isLoading) {
+  //   return <div>Loading scan {scanId}...</div>;
+  // }
 
-  if (error) {
-    return <div>{error}</div>;
-  }
+  // if (error) {
+  //   return <div>{error}</div>;
+  // }
 
   return (
-    <div>
-      <div>scan {scanId}</div>
-      {scan && (
+    <Container>
+      <ModuleName text={`SCAN ${scanId}`} enableSearch={false}>
+        <ScanStatus status={status} />
+      </ModuleName>
+      <StyledDiv ref={terminalRef}>
         <pre>
-          {scan.map((line) => {
-            return <div key={line}>{line}</div>;
+          {scan.map((line, index) => {
+            return <div key={index}>{line}</div>;
           })}
         </pre>
-      )}
-    </div>
+      </StyledDiv>
+    </Container>
   );
 };
+
+const StyledDiv = styled.div`
+  padding: 25px;
+  width: 100%;
+  flex-grow: 1;
+  margin: 42px 0 0 0;
+  /* height: 100%; */
+  /* background-color: var(--background-color); */
+  background-color: #000;
+  border-radius: var(--radius);
+  border: 1px solid #191919;
+  box-shadow: 1px 1px 15px 5px #0c0c0c;
+  font-size: 15px;
+  overflow-y: scroll;
+  /* scroll-behavior: smooth; */
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    word-break: break-word;
+  }
+`;

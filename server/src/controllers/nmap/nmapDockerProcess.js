@@ -26,18 +26,19 @@ const handleNmapProcess = async (scanId, reqBody) => {
   logger.info(`starting new process: docker ${argsList.join(" ")}`);
 
   process.stdout.on("data", async (data) => {
-    await updateScanLive(scanId, data);
-    websocketServer.send(data.toString(), scanId);
+    const updatedData = await updateScanLive(scanId, data);
+
+    websocketServer.send(wsMessageSchema(data, updatedData), scanId);
     await sendScansUpdateInterval(userId);
     logger.info(`nmap scan in progress... [scan_id: ${scanId}]`);
   });
 
   process.stdout.on("end", async () => {
-    logger.info("nmap scan ended successfully");
     removeNmapContainer(containerName);
     setScanStatusDone(scanId);
     clearInterval(updateInterval);
     delete containers[containerName];
+    logger.info("nmap scan ended successfully");
   });
 
   process.stderr.on("data", (data) => {
@@ -50,6 +51,10 @@ const handleNmapProcess = async (scanId, reqBody) => {
 
   process.on("exit", async (code) => {
     await quickUpdateSubscribers("done");
+    websocketServer.send(
+      wsMessageSchema("Done!\nThis app created by Andrey (:", "done"),
+      scanId
+    );
     logger.info(`docker nmap process exited [code ${code}]`);
   });
 };
@@ -120,6 +125,7 @@ const updateScanLive = async (scanId, data) => {
 const setScanStatusDone = async (scanId) => {
   const updates = {
     status: "done",
+    $push: { scan: "Done!\nThis app created by Andrey (:" },
     endTime: new Date(),
   };
   try {
@@ -210,4 +216,11 @@ const quickUpdateSubscribers = async (status = "live") => {
       );
     }
   }
+};
+
+export const wsMessageSchema = (data, doc) => {
+  return {
+    stdout: typeof data == "string" ? data : data.toString(),
+    status: doc.status ? doc.status : doc,
+  };
 };

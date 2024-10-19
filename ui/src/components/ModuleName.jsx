@@ -2,15 +2,16 @@ import React from "react";
 import styled from "styled-components";
 import { Search } from "./Search";
 
-export const ModuleName = ({ text, icon }) => {
+export const ModuleName = ({ text, icon, enableSearch = true, children }) => {
   const IconComponent = icon;
   return (
     <StyledDiv>
       <div className="text-and-icon">
-        <IconComponent className="icon" />
+        {icon && <IconComponent className="icon" />}
         <div className="text">{text}</div>
       </div>
-      <Search placeholder="Search scans..." />
+      {enableSearch && <Search placeholder="Search scans..." />}
+      {children && children}
     </StyledDiv>
   );
 };
@@ -21,7 +22,7 @@ const StyledDiv = styled.div`
   justify-content: space-between;
   width: 100%;
   height: 80px;
-  padding: 0 20px;
+  padding: 20px;
   border: 1px solid var(--border-color);
   background-color: var(--background-color);
   border-radius: var(--radius);
@@ -31,7 +32,6 @@ const StyledDiv = styled.div`
     .text {
       color: white;
       font-weight: 600;
-      /* font-family: ""; */
       font-size: 24px;
     }
     .icon {

@@ -37,19 +37,10 @@ export const nmapSlice = createSlice({
     loading: false,
     status: "idle",
     scans: [],
-    // messages: [],
   },
   reducers: {
-    // addMessage: (state, action) => {
-    //   state.messages.push(action.payload);
-    // },
-    // clearMessages: (state) => {
-    //   state.messages = [];
-    // },
     incomingScan: (state, action) => {
       const newScans = JSON.parse(action.payload);
-      console.log(newScans, "XX");
-      
       newScans.forEach((newScan) => {
         const existingScanIndex = state.scans.findIndex(
           (scan) => scan.id === newScan.id
@@ -90,6 +81,9 @@ export const nmapSlice = createSlice({
   },
 });
 
-// export const { addMessage, clearMessages } = nmapSlice.actions;
-export const { incomingScan } = nmapSlice.actions;
+export const getScanById = (state, scanId) => {  
+  return state.nmap.scans.find((scan) => scan.id === scanId);
+};
+
+export const { incomingScan, getScan } = nmapSlice.actions;
 export default nmapSlice.reducer;

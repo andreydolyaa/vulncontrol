@@ -156,8 +156,11 @@ a {
 }
 
 .main-container {
+  display: flex;
+  flex-direction: column;
   max-width: 1400px;
   width: 100%;
+  height: 100%;
 }
 
 .logo-svg {
