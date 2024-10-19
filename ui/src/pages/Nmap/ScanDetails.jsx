@@ -6,6 +6,7 @@ import { BASE_URL, WS_URL } from "../../api/baseUrl";
 import { Container } from "../../components/Container/Container";
 import { ModuleName } from "../../components/ModuleName";
 import { ScanStatus } from "./ScanStatus";
+import { ascii } from "../../utils";
 
 export const ScanDetails = () => {
   const terminalRef = useRef(null);
@@ -15,6 +16,7 @@ export const ScanDetails = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const scanSubscriptionRoute = `${WS_URL}/ws/scan/${scanId}`;
+  const isDone = status === "done";
 
   useEffect(() => {
     if (terminalRef.current) {
@@ -58,11 +60,22 @@ export const ScanDetails = () => {
       <ModuleName text={`SCAN ${scanId}`} enableSearch={false}>
         <ScanStatus status={status} />
       </ModuleName>
+
       <StyledDiv ref={terminalRef}>
         <pre>
+          <div className="ascii">{ascii}</div>
           {scan.map((line, index) => {
             return <div key={index}>{line}</div>;
           })}
+          {isDone && (
+            <>
+              <div>Done!</div>
+              <div>{"\n"}</div>
+              <div className="final-text">
+                * this app was built with love by Andrey (:
+              </div>
+            </>
+          )}
         </pre>
       </StyledDiv>
     </Container>
@@ -73,13 +86,10 @@ const StyledDiv = styled.div`
   padding: 25px;
   width: 100%;
   flex-grow: 1;
-  margin: 42px 0 0 0;
-  /* height: 100%; */
-  /* background-color: var(--background-color); */
   background-color: #000;
   border-radius: var(--radius);
   border: 1px solid #191919;
-  box-shadow: 1px 1px 15px 5px #0c0c0c;
+  box-shadow: 1px 1px 10px 1px #0c0c0c;
   font-size: 15px;
   overflow-y: scroll;
   /* scroll-behavior: smooth; */
@@ -87,5 +97,9 @@ const StyledDiv = styled.div`
     white-space: pre-wrap;
     word-wrap: break-word;
     word-break: break-word;
+  }
+  .final-text {
+    color: #5ca0c4;
+    /* font-size: 14px; */
   }
 `;

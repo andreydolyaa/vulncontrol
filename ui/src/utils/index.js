@@ -39,3 +39,13 @@ export const argsDescriptionMap = {
   "--privileged": "Run as root",
   "--unprivileged": "Run as non-root",
 };
+
+export const ascii = `
+* Vuln Control v1.0
+.
+.
+. 
+.
+.                                           
+
+`;

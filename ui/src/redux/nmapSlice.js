@@ -48,7 +48,7 @@ export const nmapSlice = createSlice({
         if (existingScanIndex >= 0) {
           state.scans[existingScanIndex] = newScan;
         } else {
-          state.scans.push(newScan);
+          state.scans.unshift(newScan);
         }
       });
     },

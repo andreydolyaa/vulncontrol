@@ -6,7 +6,6 @@ import { NmapScan } from "../../models/nmapScanModel.js";
 // TODO: refactor this file
 
 let containers = {}; // TODO: find how to cache (redis maybe)
-let updateInterval;
 
 // initiate new scan
 export const startNmapContainer = async (reqBody) => {
@@ -22,6 +21,7 @@ const handleNmapProcess = async (scanId, reqBody) => {
   const argsList = createArgsList(args, containerName, target);
   containers[containerName] = scanId;
 
+  await scanInitialSettings(scanId, { nmapExecCmd: argsList });
   const process = spawn("docker", argsList);
   logger.info(`starting new process: docker ${argsList.join(" ")}`);
 
@@ -29,14 +29,12 @@ const handleNmapProcess = async (scanId, reqBody) => {
     const updatedData = await updateScanLive(scanId, data);
 
     websocketServer.send(wsMessageSchema(data, updatedData), scanId);
-    // await sendScansUpdateInterval(userId);
     logger.info(`nmap scan in progress... [scan_id: ${scanId}]`);
   });
 
   process.stdout.on("end", async () => {
     removeNmapContainer(containerName);
     setScanStatusDone(scanId);
-    clearInterval(updateInterval);
     delete containers[containerName];
     logger.info("nmap scan ended successfully");
   });
@@ -51,10 +49,7 @@ const handleNmapProcess = async (scanId, reqBody) => {
 
   process.on("exit", async (code) => {
     await quickUpdateSubscribers("done");
-    websocketServer.send(
-      wsMessageSchema("Done!\nThis app created by Andrey (:", "done"),
-      scanId
-    );
+    websocketServer.send(wsMessageSchema("", "done"), scanId);
     logger.info(`docker nmap process exited [code ${code}]`);
   });
 };
@@ -129,7 +124,6 @@ const updateScanLive = async (scanId, data) => {
 const setScanStatusDone = async (scanId) => {
   const updates = {
     status: "done",
-    $push: { scan: "Done!\nThis app created by Andrey (:" },
     endTime: new Date(),
   };
   try {
@@ -197,14 +191,6 @@ const checkForOpenPorts = (stdout) => {
   return parseInt(port);
 };
 
-// timed send scans status
-// const sendScansUpdateInterval = async (userId) => {
-//   clearInterval(updateInterval);
-//   updateInterval = setInterval(async () => {
-//     await quickUpdateSubscribers();
-//   }, 1000);
-// };
-
 // send update on all live scans to all subscribers
 const quickUpdateSubscribers = async (status = "live") => {
   const subscribers = websocketServer.getSubscribers();
@@ -227,4 +213,25 @@ export const wsMessageSchema = (data, doc) => {
     stdout: typeof data == "string" ? data : data.toString(),
     status: doc.status ? doc.status : doc,
   };
+};
+
+export const scanInitialSettings = async (scanId, settings = {}) => {
+  console.log(settings.nmapExecCmd, "#@$@# $@# $#@ $@# $#@ $#@ $#@ $#@$ #@ @# $$#@@#$ ")
+  const data = {
+    $push: {
+      scan: {
+        $each: [
+          "server: starting nmap docker image...",
+          "server: starting nmap scan...",
+          `server: nmap ${settings.nmapExecCmd.slice(4).join(" ")}`,
+        ],
+      },
+    },
+  };
+  try {
+    await NmapScan.findOneAndUpdate(scanId, data);
+    return logger.info(`settings initial settings [scan: ${scanId}]`);
+  } catch (error) {
+    logger.error(`failed to initialize scan [scan: ${scanId}]`);
+  }
 };

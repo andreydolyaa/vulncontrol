@@ -18,7 +18,7 @@ export const startNmap = async (req, res) => {
 // get all the scans
 export const getAllScans = async (req, res) => {
   try {
-    const scans = await NmapScan.find({});
+    const scans = await NmapScan.find({}).sort({ status: -1 });;
     if (!scans) throw new Error();
     return res.status(200).send(scans);
   } catch (error) {
