@@ -14,11 +14,12 @@
     }
     .table-header {
       border-bottom: 1px solid var(--border-color);
-      background-color: var(--purple);
+      background-color: #2e2e41;
       th {
-        font-size: 16px;
-        color: #c2c5ff;
+        
+        color: var(--brighter-color);
         padding: 20px;
+        text-transform: uppercase;
       }
     }
     .table-body {
@@ -26,7 +27,7 @@
       td {
         padding: 20px;
         font-weight: 500;
-        font-size: 14px;
+        /* font-size: 12px; */
       }
       .actions {
         display: flex;

@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Checkbox } from "../../../components/Checkbox";
+import { argsDescriptionMap } from "../../../utils";
 
 export const Args = ({ formData, onFormChange }) => {
   const handleCheckboxChange = (arg) => {
@@ -15,7 +16,7 @@ export const Args = ({ formData, onFormChange }) => {
         return (
           <div key={arg} className="checkbox-wrapper-custom">
             <Checkbox
-              label={arg}
+              label={`${argsDescriptionMap[arg]} [${arg}]`}
               checked={formData.args[arg]}
               onFormChange={() => handleCheckboxChange(arg)}
               name={arg}
@@ -35,7 +36,7 @@ const StyledDiv = styled.div`
   .checkbox-wrapper-custom {
     /* border: 1px solid red; */
     /* margin-bottom:10px; */
-    width: 160px;
+    width: 260px;
     /* padding: 0 0 10px 0; */
     margin-bottom: 10px;
   }

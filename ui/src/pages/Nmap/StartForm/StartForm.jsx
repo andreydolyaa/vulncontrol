@@ -16,7 +16,7 @@ export const StartForm = ({ start, formData, onFormChange }) => {
         </div>
       </StyledDivTarget>
       <StyledDivArgs>
-        <InputLabel text="Scan Arguments" icon={TbSquareLetterA}/>
+        <InputLabel text="Scan Arguments" icon={TbSquareLetterA} />
         <Args formData={formData} onFormChange={onFormChange} />
       </StyledDivArgs>
     </StyledForm>
@@ -28,39 +28,35 @@ const StyledForm = styled.form`
   flex-direction: column;
   padding: 20px;
   width: 100%;
-  /* height: 300px; */
   background-color: var(--background-color);
   border: 1px solid var(--border-color);
   border-radius: var(--radius);
-  `;
+`;
 
 const StyledDivTarget = styled.div`
   display: flex;
   flex-direction: column;
-  /* justify-content: center; */
   height: 100%;
   .target-button {
     display: flex;
   }
 `;
 const StyledDivArgs = styled.div`
-  /* border: 1px solid red; */
   display: flex;
   flex-direction: column;
   margin-top: 30px;
-  /* align-items: center; */
-  /* justify-content: center; */
   height: 100%;
 `;
 
 const StyledButton = styled.button`
-  border: 1px dotted rgba(141, 70, 255, 1);;
-  background-color: rgba(141, 70, 255, .1);
-  color: rgba(141, 70, 255, 1);
-  font-size: 18px;
-  letter-spacing: 1.5px;
-  font-weight: 800;
+  border: 1px solid var(--border-color);
+  /* background-color: var(--action-color); */
+  background: rgb(116,43,225);
+  background: linear-gradient(108deg, rgba(116,43,225,1) 0%, rgba(177,0,255,1) 100%);
+  color: var(--brighter-color);
+  font-size: 16px;
+  font-weight: bold;
   text-transform: uppercase;
-  width:220px;
-  margin-left:20px;
+  width: 150px;
+  margin-left: 20px;
 `;

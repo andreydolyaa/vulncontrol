@@ -33,8 +33,6 @@ export const Nmap = () => {
       "--packet-trace": false,
       "--iflist": false,
       "-6": false,
-      "--privileged": false,
-      "--unprivileged": false,
     },
   });
   const scanSubscriptionRoute = `${WS_URL}/ws/nmap/nmap-updates_${randomNum()}`;

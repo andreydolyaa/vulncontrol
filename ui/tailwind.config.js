@@ -14,9 +14,9 @@ export default {
       },
       colors: {
         grayBg: "#F6F6F6",
-        purpleBg: "#4e03c8",
+        purpleBg: "rgb(116, 43, 225)", // sidebar card active
         purpleText: "#8A8FFF",
-        greenish: "#8d46ff", // logo color
+        greenish: "#00ff99", // logo color
         sidebarAndCardBg: "#171721",
         globalBg: "#23232E",
         border: "#302b45"
