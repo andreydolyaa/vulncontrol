@@ -7,7 +7,7 @@ import { InputLabel } from "../../../components/InputLabel";
 
 export const StartForm = ({ start, formData, onFormChange }) => {
   return (
-    <StyledForm onSubmit={start} className="mt-12">
+    <StyledForm onSubmit={start}>
       <StyledDivTarget>
         <InputLabel text="Target IP Address" icon={TbWorld} />
         <div className="target-button">

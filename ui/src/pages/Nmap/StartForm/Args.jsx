@@ -36,7 +36,7 @@ const StyledDiv = styled.div`
   .checkbox-wrapper-custom {
     /* border: 1px solid red; */
     /* margin-bottom:10px; */
-    width: 260px;
+    width: 210px;
     /* padding: 0 0 10px 0; */
     margin-bottom: 10px;
   }

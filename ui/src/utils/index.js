@@ -33,7 +33,7 @@ export const argsDescriptionMap = {
   "-O": "OS detection",
   "-d": "Debug mode",
   "--reason": "Display reason",
-  "--packet-trace": "Packet trace",
+  "--packet-trace": "PT",
   "--iflist": "Show interfaces",
   "-6": "Use IPv6",
   "--privileged": "Run as root",

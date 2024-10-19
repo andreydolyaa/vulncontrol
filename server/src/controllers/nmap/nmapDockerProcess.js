@@ -29,7 +29,7 @@ const handleNmapProcess = async (scanId, reqBody) => {
     const updatedData = await updateScanLive(scanId, data);
 
     websocketServer.send(wsMessageSchema(data, updatedData), scanId);
-    await sendScansUpdateInterval(userId);
+    // await sendScansUpdateInterval(userId);
     logger.info(`nmap scan in progress... [scan_id: ${scanId}]`);
   });
 
@@ -115,7 +115,11 @@ const updateScanLive = async (scanId, data) => {
   }
 
   try {
-    return await NmapScan.findOneAndUpdate(scanId, updates, { new: true });
+    const updated = await NmapScan.findOneAndUpdate(scanId, updates, {
+      new: true,
+    });
+    await quickUpdateSubscribers();
+    return updated;
   } catch (error) {
     logger.error(`db | failed to update scan ${scanId}`);
   }
@@ -194,12 +198,12 @@ const checkForOpenPorts = (stdout) => {
 };
 
 // timed send scans status
-const sendScansUpdateInterval = async (userId) => {
-  clearInterval(updateInterval);
-  updateInterval = setInterval(async () => {
-    await quickUpdateSubscribers();
-  }, 1000);
-};
+// const sendScansUpdateInterval = async (userId) => {
+//   clearInterval(updateInterval);
+//   updateInterval = setInterval(async () => {
+//     await quickUpdateSubscribers();
+//   }, 1000);
+// };
 
 // send update on all live scans to all subscribers
 const quickUpdateSubscribers = async (status = "live") => {

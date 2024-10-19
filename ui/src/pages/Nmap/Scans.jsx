@@ -19,7 +19,7 @@ export const Scans = ({ scans }) => {
   };
 
   return (
-    <div className="scans mt-12">
+    <div className="scans">
       <table>
         <thead className="">
           <tr className="table-header">

@@ -5,8 +5,8 @@ import { TbRefresh } from "react-icons/tb";
 
 const StyledDiv = styled.div`
   width: 80px;
-  height: 24px;
-  border-radius: 15px;
+  height: 26px;
+  border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
