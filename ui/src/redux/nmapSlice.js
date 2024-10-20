@@ -47,17 +47,9 @@ export const nmapSlice = createSlice({
   },
   reducers: {
     incomingScan: (state, action) => {
-      const newScans = JSON.parse(action.payload);
-      newScans.forEach((newScan) => {
-        const existingScanIndex = state.scans.findIndex(
-          (scan) => scan.id === newScan.id
-        );
-        if (existingScanIndex >= 0) {
-          state.scans[existingScanIndex] = newScan;
-        } else {
-          state.scans.unshift(newScan);
-        }
-      });
+      const updatedScan = JSON.parse(action.payload);
+      state.scans = state.scans.filter((scan) => scan.id !== updatedScan.id);
+      state.scans.push(updatedScan);
     },
   },
   extraReducers: (builder) => {

@@ -11,25 +11,26 @@ import { ascii } from "../../utils";
 export const ScanDetails = () => {
   const terminalRef = useRef(null);
   const { scanId } = useParams();
-  const [scan, setScan] = useState([]);
+  const [stdout, setStdout] = useState([]);
   const [status, setStatus] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const scanSubscriptionRoute = `${WS_URL}/ws/scan/${scanId}`;
-  const isDone = status === "done";
 
   useEffect(() => {
     if (terminalRef.current) {
       terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
     }
-  }, [scan]);
+  }, [stdout]);
+
+  const isDone = () => status === "done";
 
   useEffect(() => {
     setIsLoading(true);
     fetch(`${BASE_URL}/api/nmap/${scanId}`)
       .then((res) => res.json())
       .then((data) => {
-        setScan(data.scan);
+        setStdout(data.stdout);
         setStatus(data.status);
       })
       .catch((error) => setError(error))
@@ -38,7 +39,9 @@ export const ScanDetails = () => {
     const websocket = new WebSocket(scanSubscriptionRoute);
     websocket.onmessage = (event) => {
       const incoming = JSON.parse(event.data);
-      setScan((prevScan) => [...prevScan, incoming.stdout]);
+      console.log(incoming);
+
+      setStdout(incoming.stdout);
       setStatus(incoming.status);
     };
 
@@ -64,10 +67,10 @@ export const ScanDetails = () => {
       <StyledDiv ref={terminalRef}>
         <pre>
           <div className="ascii">{ascii}</div>
-          {scan.map((line, index) => {
+          {stdout.map((line, index) => {
             return <div key={index}>{line}</div>;
           })}
-          {isDone && (
+          {isDone() && (
             <>
               <div>Done!</div>
               <div>{"\n"}</div>

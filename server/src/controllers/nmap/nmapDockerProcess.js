@@ -19,6 +19,8 @@ const handleNmapProcess = async (scanId, reqBody) => {
   const { target, args, userId } = reqBody;
   const containerName = `nmap_${scanId.toString()}`;
   const argsList = createArgsList(args, containerName, target);
+  let finalResult;
+
   containers[containerName] = scanId;
 
   await scanInitialSettings(scanId, { nmapExecCmd: argsList });
@@ -26,15 +28,16 @@ const handleNmapProcess = async (scanId, reqBody) => {
   logger.info(`starting new process: docker ${argsList.join(" ")}`);
 
   process.stdout.on("data", async (data) => {
-    const updatedData = await updateScanLive(scanId, data);
+    await updateScanLive(scanId, data);
 
-    websocketServer.send(wsMessageSchema(data, updatedData), scanId);
     logger.info(`nmap scan in progress... [scan_id: ${scanId}]`);
   });
 
   process.stdout.on("end", async () => {
     removeNmapContainer(containerName);
-    setScanStatusDone(scanId);
+    finalResult = await setScanStatusDone(scanId);
+    await quickUpdateSubscribers(finalResult);
+    websocketServer.send(finalResult, scanId)
     delete containers[containerName];
     logger.info("nmap scan ended successfully");
   });
@@ -48,8 +51,6 @@ const handleNmapProcess = async (scanId, reqBody) => {
   });
 
   process.on("exit", async (code) => {
-    await quickUpdateSubscribers("done");
-    websocketServer.send(wsMessageSchema("", "done"), scanId);
     logger.info(`docker nmap process exited [code ${code}]`);
   });
 };
@@ -83,7 +84,7 @@ const createNewScan = async (reqBody) => {
   try {
     const scan = await NmapScan.create({
       target,
-      scan: [],
+      stdout: [],
       status: "live",
       byUser: userId,
       scanType: setScanType(args),
@@ -102,7 +103,7 @@ const updateScanLive = async (scanId, data) => {
   const isPortDetected = checkForOpenPorts(data);
 
   const updates = {
-    $push: { scan: data.toString() },
+    $push: { stdout: data.toString() },
   };
 
   if (isPortDetected) {
@@ -110,10 +111,12 @@ const updateScanLive = async (scanId, data) => {
   }
 
   try {
-    const updated = await NmapScan.findOneAndUpdate(scanId, updates, {
+    const updated = await NmapScan.findOneAndUpdate({ id: scanId }, updates, {
       new: true,
     });
-    await quickUpdateSubscribers();
+    
+    websocketServer.send(updated, scanId); // send ws update to specific scan subscribers (/nmap/id)
+    await quickUpdateSubscribers(updated); // sends update tp nmap_321 subscribers
     return updated;
   } catch (error) {
     logger.error(`db | failed to update scan ${scanId}`);
@@ -127,7 +130,10 @@ const setScanStatusDone = async (scanId) => {
     endTime: new Date().toISOString(),
   };
   try {
-    return await NmapScan.findOneAndUpdate(scanId, updates);
+    const result = await NmapScan.findOneAndUpdate({ id: scanId }, updates, {
+      new: true,
+    });
+    return result;
   } catch (error) {
     logger.error(`db | failed to update scan status ${scanId}`);
   }
@@ -191,34 +197,22 @@ const checkForOpenPorts = (stdout) => {
   return parseInt(port);
 };
 
-// send update on all live scans to all subscribers
-const quickUpdateSubscribers = async (status = "live") => {
+const quickUpdateSubscribers = async (scan) => {
   const subscribers = websocketServer.getSubscribers();
-  if (Object.keys(subscribers).length === 0) return;
-
-  const scans = await NmapScan.find({ status }).sort({ startTime: 1 });
+  if (Object.keys(subscribers).length === 0 || !scan) return;
 
   for (const subscriber in subscribers) {
     if (subscriber.includes("nmap-updates")) {
-      websocketServer.send(scans, subscriber);
-      logger.info(
-        `sent scans update to subscriber: ${subscriber} [total of ${scans.length} scans]`
-      );
+      websocketServer.send(scan, subscriber);
+      logger.info(`ws | sent scan update to subscriber: ${subscriber}`);
     }
   }
-};
-
-export const wsMessageSchema = (data, doc) => {
-  return {
-    stdout: typeof data == "string" ? data : data.toString(),
-    status: doc.status ? doc.status : doc,
-  };
 };
 
 export const scanInitialSettings = async (scanId, settings = {}) => {
   const data = {
     $push: {
-      scan: {
+      stdout: {
         $each: [
           "server: starting nmap docker image...",
           "server: starting nmap scan...",

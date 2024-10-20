@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const NmapScanSchema = new mongoose.Schema(
   {
-    scan: {
+    stdout: {
       type: [String],
     },
     byUser: {
