@@ -29,15 +29,14 @@ const handleNmapProcess = async (scanId, reqBody) => {
 
   process.stdout.on("data", async (data) => {
     await updateScanLive(scanId, data);
-
     logger.info(`nmap scan in progress... [scan_id: ${scanId}]`);
   });
 
   process.stdout.on("end", async () => {
-    removeNmapContainer(containerName);
     finalResult = await setScanStatusDone(scanId);
     await quickUpdateSubscribers(finalResult);
     websocketServer.send(finalResult, scanId)
+    removeNmapContainer(containerName);
     delete containers[containerName];
     logger.info("nmap scan ended successfully");
   });

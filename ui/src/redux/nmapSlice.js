@@ -49,7 +49,7 @@ export const nmapSlice = createSlice({
     incomingScan: (state, action) => {
       const updatedScan = JSON.parse(action.payload);
       state.scans = state.scans.filter((scan) => scan.id !== updatedScan.id);
-      state.scans.push(updatedScan);
+      state.scans.unshift(updatedScan);
     },
   },
   extraReducers: (builder) => {

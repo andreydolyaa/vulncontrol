@@ -54,7 +54,7 @@ const StyledForm = styled.form`
 const StyledArgsContent = styled.div`
   max-height: ${({ $isOpen }) => ($isOpen ? "500px" : "0")};
   opacity: ${({ $isOpen }) => ($isOpen ? "1" : "0")};
-  transition: all 0.2s ease-in-out;
+  transition: all 0.3s ease-in-out;
 `;
 
 const StyledIcon = styled.div`
@@ -88,7 +88,7 @@ const StyledDivArgs = styled.div`
     width: fit-content;
     cursor: pointer;
     .title {
-      transition: all 0.2s ease-in-out;
+      transition: all 0.3s ease-in-out;
       margin-bottom: ${({ $isOpen }) => ($isOpen ? "20px" : "0")};
     }
   }

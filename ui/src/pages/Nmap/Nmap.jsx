@@ -16,7 +16,7 @@ export const Nmap = () => {
   const { user } = useSelector((state) => state.user);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const limit = 3;
+  const limit = 4;
   const [formData, setFormData] = useState({
     target: "",
     userId: user.id,
@@ -93,7 +93,7 @@ export const Nmap = () => {
         formData={formData}
         onFormChange={onFormChange}
       />
-      {loading ? <div>Loading</div> : <Scans scans={scans} />}
+      <Scans scans={scans} />
       <Pagination
         current={currentPage}
         total={totalPages}

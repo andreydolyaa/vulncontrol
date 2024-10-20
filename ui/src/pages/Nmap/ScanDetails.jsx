@@ -39,8 +39,6 @@ export const ScanDetails = () => {
     const websocket = new WebSocket(scanSubscriptionRoute);
     websocket.onmessage = (event) => {
       const incoming = JSON.parse(event.data);
-      console.log(incoming);
-
       setStdout(incoming.stdout);
       setStatus(incoming.status);
     };
