@@ -1,6 +1,6 @@
 import React from "react";
 import moment from "moment";
-import { TbAlignBoxLeftBottom, TbFileExport } from "react-icons/tb";
+import { TbWindowMaximize, TbFileDownload } from "react-icons/tb";
 import { ScanStatus } from "./ScanStatus";
 
 export const ScanItem = ({ scan, onClick }) => {
@@ -20,12 +20,12 @@ export const ScanItem = ({ scan, onClick }) => {
         <ScanStatus status={scan.status} />
       </td>
       <td className="actions text-center" onClick={(e) => e.stopPropagation()}>
-        <TbAlignBoxLeftBottom
+        <TbWindowMaximize
           className="icon"
           data-tooltip-id="tooltip1"
           data-tooltip-content="View"
         />
-        <TbFileExport
+        <TbFileDownload
           className="icon"
           data-tooltip-id="tooltip1"
           data-tooltip-content="Export"

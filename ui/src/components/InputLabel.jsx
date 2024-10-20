@@ -15,14 +15,13 @@ const StyledDiv = styled.div`
   text-transform: uppercase;
   color: var(--brighter-color);
   font-weight: 500;
-  /* font-size: 14px; */
   display: flex;
   align-items: center;
   margin: 0 0 20px 0;
+  gap:10px;
   .icon {
     stroke-width: 1.5;
     font-size: 18px;
-    margin-right: 6px;
     color:var(--icon-color);
   }
 `;

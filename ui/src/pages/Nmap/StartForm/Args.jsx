@@ -37,6 +37,6 @@ const StyledDiv = styled.div`
   flex-wrap: wrap;
   .checkbox-wrapper-custom {
     width: 235px;
-    margin-bottom: 10px;
+    margin-bottom: 7px;
   }
 `;
