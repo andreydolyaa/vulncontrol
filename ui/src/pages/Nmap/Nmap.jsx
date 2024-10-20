@@ -8,11 +8,15 @@ import { WS_URL } from "../../api/baseUrl";
 import { randomNum } from "../../utils";
 import { ModuleName } from "../../components/ModuleName";
 import { TbRadar2 as Radar } from "react-icons/tb";
+import { Pagination } from "../../components/Pagination/Pagination";
 
 export const Nmap = () => {
   const dispatch = useDispatch();
   const { scans, loading } = useSelector((state) => state.nmap);
   const { user } = useSelector((state) => state.user);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const limit = 3;
   const [formData, setFormData] = useState({
     target: "",
     userId: user.id,
@@ -86,6 +90,11 @@ export const Nmap = () => {
         onFormChange={onFormChange}
       />
       {loading ? <div>Loading</div> : <Scans scans={scans} />}
+      <Pagination
+        current={currentPage}
+        total={totalPages}
+        onPageChange={setCurrentPage}
+      />
     </Container>
   );
 };
