@@ -42,8 +42,12 @@ export const Nmap = () => {
   const scanSubscriptionRoute = `${WS_URL}/ws/nmap/nmap-updates_${randomNum()}`;
 
   useEffect(() => {
-    dispatch(getScans());
-  }, []);
+    dispatch(getScans({ currentPage, limit }))
+      .unwrap()
+      .then((data) => {
+        setTotalPages(data.totalPages)
+      });
+  }, [currentPage]);
 
   useEffect(() => {
     const websocket = new WebSocket(scanSubscriptionRoute);

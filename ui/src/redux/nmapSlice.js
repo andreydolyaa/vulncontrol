@@ -18,10 +18,17 @@ export const startScan = createAsyncThunk(
 
 export const getScans = createAsyncThunk(
   "nmap/getScans",
-  async (_, { rejectWithValue }) => {
+  async ({ currentPage, limit }, { rejectWithValue }) => {
     try {
-      const response = await api.get("/api/nmap/scans");
-      return response.data;
+      const response = await api.get(
+        `/api/nmap/scans?page=${currentPage}&limit=${limit}`
+      );
+      // return response.data;
+      return {
+        scans: response.data.scans,
+        totalPages: response.data.totalPages,
+        currentPage: response.data.currentPage,
+      };
     } catch (error) {
       if (error.response?.data) {
         return rejectWithValue(error.response?.data);
@@ -72,7 +79,7 @@ export const nmapSlice = createSlice({
       .addCase(getScans.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.loading = false;
-        state.scans = action.payload;
+        state.scans = action.payload.scans;
       })
       .addCase(getScans.rejected, (state, action) => {
         state.status = "failed";
@@ -81,7 +88,7 @@ export const nmapSlice = createSlice({
   },
 });
 
-export const getScanById = (state, scanId) => {  
+export const getScanById = (state, scanId) => {
   return state.nmap.scans.find((scan) => scan.id === scanId);
 };
 
