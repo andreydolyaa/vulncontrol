@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import JWT from "jsonwebtoken";
 import { userMsg } from "../constants/messages.js";
 import { User } from "../models/userModel.js";
-import { sleep } from "../utils/index.js";
+// import { sleep } from "../utils/index.js";
 
 // TODO: make the rest response messages constants
 
@@ -10,7 +10,6 @@ export const login = async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
-    await sleep (2000)
     const user = await User.findOne({ email });
     if (!user) {
       throw new Error(userMsg.LOGIN_FAILED);
@@ -110,6 +109,6 @@ export const getLoggedUser = async (req, res) => {
       .status(200)
       .send({ message: "Retrieved user successfully", user });
   } catch (error) {
-    return res.status(500).send({ message: "Could not get user", error });
+    return res.status(500).send({ message: "Login failed", error });
   }
 };

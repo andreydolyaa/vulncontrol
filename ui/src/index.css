@@ -180,7 +180,14 @@ a {
 .ascii {
   /* font-family: monospace; */
   font-size: 16px;
-  background: linear-gradient(180deg, #ff6f61,#00ff95,#ffdd00,#6f00ff, #6000e7);
+  background: linear-gradient(
+    180deg,
+    #ff6f61,
+    #00ff95,
+    #ffdd00,
+    #6f00ff,
+    #6000e7
+  );
   -webkit-background-clip: text;
   color: transparent;
 }
