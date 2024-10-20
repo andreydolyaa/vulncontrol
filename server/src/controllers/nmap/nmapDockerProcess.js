@@ -87,7 +87,7 @@ const createNewScan = async (reqBody) => {
       status: "live",
       byUser: userId,
       scanType: setScanType(args),
-      startTime: new Date(),
+      startTime: new Date().toISOString(),
     });
     return scan._id;
   } catch (error) {
@@ -124,7 +124,7 @@ const updateScanLive = async (scanId, data) => {
 const setScanStatusDone = async (scanId) => {
   const updates = {
     status: "done",
-    endTime: new Date(),
+    endTime: new Date().toISOString(),
   };
   try {
     return await NmapScan.findOneAndUpdate(scanId, updates);
@@ -196,7 +196,7 @@ const quickUpdateSubscribers = async (status = "live") => {
   const subscribers = websocketServer.getSubscribers();
   if (Object.keys(subscribers).length === 0) return;
 
-  const scans = await NmapScan.find({ status });
+  const scans = await NmapScan.find({ status }).sort({ startTime: 1 });
 
   for (const subscriber in subscribers) {
     if (subscriber.includes("nmap-updates")) {
@@ -216,7 +216,6 @@ export const wsMessageSchema = (data, doc) => {
 };
 
 export const scanInitialSettings = async (scanId, settings = {}) => {
-  console.log(settings.nmapExecCmd, "#@$@# $@# $#@ $@# $#@ $#@ $#@ $#@$ #@ @# $$#@@#$ ")
   const data = {
     $push: {
       scan: {

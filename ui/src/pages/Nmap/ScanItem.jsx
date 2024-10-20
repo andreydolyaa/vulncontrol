@@ -7,7 +7,7 @@ export const ScanItem = ({ scan, onClick }) => {
   const parseDate = (date) => {
     if (!date) return "TBD";
     const time = moment(date);
-    return time.format("hh:mm:ss A DD/MM/YY");
+    return time.format("HH:mm:ss DD/MM/YY");
   };
   return (
     <tr key={scan.id} className={`table-body`} onClick={onClick}>

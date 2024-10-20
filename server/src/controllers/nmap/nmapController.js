@@ -22,7 +22,7 @@ export const getAllScans = async (req, res) => {
     const scans = await NmapScan.find()
       .skip(skip)
       .limit(limit)
-      .sort({ endTime: 1 });
+      .sort({ startTime: -1 });
     if (!scans) throw new Error();
     const totalScans = await NmapScan.countDocuments();
     const totalPages = Math.ceil(totalScans / limit);
