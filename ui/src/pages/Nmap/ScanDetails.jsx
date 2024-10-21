@@ -95,8 +95,8 @@ const StyledDiv = styled.div`
   border: 1px solid #191919;
   box-shadow: 1px 1px 10px 1px #0c0c0c;
   font-size: 15px;
-  overflow-y: scroll;
-  /* scroll-behavior: smooth; */
+  overflow-y: auto;
+  scroll-behavior: smooth;
   pre {
     white-space: pre-wrap;
     word-wrap: break-word;

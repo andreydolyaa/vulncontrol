@@ -1,7 +1,7 @@
-import React from "react";
+import React, { memo } from "react";
 import { Status } from "../../components/Status";
 
-export const ScanStatus = ({ status }) => {
+export const ScanStatus = memo(({ status }) => {
   const checkStatus = (status) => {
     return status === "done"
       ? "rgba(8, 189, 255, 0.1)"
@@ -17,4 +17,4 @@ export const ScanStatus = ({ status }) => {
       spin={status === "live" ? true : false}
     />
   );
-};
+});
