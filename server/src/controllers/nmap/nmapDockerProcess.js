@@ -6,6 +6,7 @@ import {
   createNewScan,
   parseArgs,
   checkForOpenPorts,
+  sendFinalToastMessage
 } from "./nmapHelpers.js";
 import {
   removeAllContainers,
@@ -65,12 +66,13 @@ const handleNmapProcess = async (scanId, reqBody) => {
   });
 
   process.stdout.on("end", async () => {
-    await updateScanInDb(scanId, {
+    const scan = await updateScanInDb(scanId, {
       status: isError ? "failed" : "done",
       endTime: new Date().toISOString(),
     });
     await removeDockerContainer(containerName);
     delete containers[containerName];
+    sendFinalToastMessage(isError, scan);
     isError = false;
     logger.info("nmap scan ended successfully");
   });

@@ -85,7 +85,7 @@ input:-webkit-autofill:focus {
 
 /* scrollbar container */
 ::-webkit-scrollbar {
-  width: 8px;  /* Width of the scrollbar */
+  width: 8px; /* Width of the scrollbar */
 }
 
 /* scrollbar track (the background of the scrollbar) */
@@ -93,7 +93,6 @@ input:-webkit-autofill:focus {
   background-color: var(--main-background-color);
   border-top-right-radius: var(--radius);
   border-bottom-right-radius: var(--radius);
- 
 }
 
 /* scrollbar thumb (the draggable part) */
@@ -112,7 +111,6 @@ input:-webkit-autofill:focus {
 ::-webkit-scrollbar-corner {
   background-color: #f1f1f1;
 }
-
 
 .sign-button {
   margin-top: 25px !important;
@@ -226,8 +224,7 @@ a {
   background: linear-gradient(
     184deg,
     #ff6f61,
-    /* #00ff95, */
-    #ffdd00,
+    /* #00ff95, */ #ffdd00,
     #6f00ff,
     #6000e7
   );

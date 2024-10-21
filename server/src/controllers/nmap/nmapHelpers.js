@@ -80,3 +80,11 @@ export const parseArgs = (args) => {
   }
   return newArgsList;
 };
+
+export const sendFinalToastMessage = (isError, scan) => {
+  const wrapper = {
+    type: isError ? "failed" : "done",
+    scan,
+  };
+  websocketServer.sendToAll(wrapper);
+};

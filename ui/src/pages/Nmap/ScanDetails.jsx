@@ -7,9 +7,12 @@ import { Container } from "../../components/Container/Container";
 import { ModuleName } from "../../components/ModuleName";
 import { ScanStatus } from "./ScanStatus";
 import { ascii, randomNum } from "../../utils";
+import { useDispatch } from "react-redux";
+import { incomingToast } from "../../redux/toastSlice";
 
 export const ScanDetails = () => {
   const terminalRef = useRef(null);
+  const dispatch = useDispatch();
   const { scanId } = useParams();
   const [stdout, setStdout] = useState([]);
   const [status, setStatus] = useState(null);
@@ -40,8 +43,12 @@ export const ScanDetails = () => {
     const websocket = new WebSocket(scanSubscriptionRoute);
     websocket.onmessage = (event) => {
       const incoming = JSON.parse(event.data);
-      setStdout(incoming.stdout);
-      setStatus(incoming.status);
+      if (incoming?.type) {
+        dispatch(incomingToast(incoming));
+      } else {
+        setStdout(incoming.stdout);
+        setStatus(incoming.status);
+      }
     };
 
     return () => {

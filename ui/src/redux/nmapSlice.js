@@ -47,7 +47,7 @@ export const nmapSlice = createSlice({
   },
   reducers: {
     incomingScan: (state, action) => {
-      const updatedScan = JSON.parse(action.payload);
+      const updatedScan = action.payload;
       state.scans = state.scans.filter((scan) => scan.id !== updatedScan.id);
       state.scans.unshift(updatedScan);
     },

@@ -9,6 +9,7 @@ import { randomNum } from "../../utils";
 import { ModuleName } from "../../components/ModuleName";
 import { TbRadar2 as Radar } from "react-icons/tb";
 import { Pagination } from "../../components/Pagination/Pagination";
+import { incomingToast } from "../../redux/toastSlice";
 
 export const Nmap = () => {
   const dispatch = useDispatch();
@@ -52,7 +53,12 @@ export const Nmap = () => {
   useEffect(() => {
     const websocket = new WebSocket(scanSubscriptionRoute);
     websocket.onmessage = (event) => {
-      dispatch(incomingScan(event.data));
+      const incoming = JSON.parse(event.data);
+      if (incoming?.type) {
+        dispatch(incomingToast(incoming));
+      } else {
+        dispatch(incomingScan(incoming));
+      }
     };
 
     return () => {
@@ -86,7 +92,7 @@ export const Nmap = () => {
   };
 
   return (
-    <Container style={{backgroundColor: "red"}}>
+    <Container style={{ backgroundColor: "red" }}>
       <ModuleName text="Nmap" icon={Radar} />
       <StartForm
         start={start}

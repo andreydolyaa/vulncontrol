@@ -15,7 +15,8 @@ import { ProtectedRoutes } from "./layout/ProtectedRoutes";
 import { PublicRoutes } from "./layout/PublicRoutes";
 import { Loading } from "./components/Loading";
 import { Tooltip } from "react-tooltip";
-import 'react-tooltip/dist/react-tooltip.css'
+import "react-tooltip/dist/react-tooltip.css";
+import { Toast } from "./components/Toast";
 
 export const App = () => {
   const dispatch = useDispatch();
@@ -49,6 +50,7 @@ export const App = () => {
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Route>
       </Routes>
+      <Toast />
       <Tooltip id="tooltip" className="tooltip lg:hidden" />
       <Tooltip id="tooltip1" className="tooltip" />
     </BrowserRouter>

@@ -57,14 +57,13 @@ export class WsServer {
     }
   }
   updateBySubscriptionType(scan, subscribersCategory) {
+    const data = JSON.stringify(scan);
     try {
       for (const subscriber in this.subscribers) {
         if (subscriber.includes(subscribersCategory)) {
-          this.subscribers[subscriber].send(JSON.stringify(scan));
+          this.subscribers[subscriber].send(data);
           logger.info(
-            `ws | update sended to subscriber [${subscriber}] [${JSON.stringify(
-              scan
-            )}]`
+            `ws | update sended to subscriber [${subscriber}] [${data}]`
           );
         }
       }
@@ -74,13 +73,13 @@ export class WsServer {
   }
   sendToAll(message) {
     const data = JSON.stringify(message);
-    for (const client of Object.values(this.subscribers)) {
-      try {
+    try {
+      for (const client of Object.values(this.subscribers)) {
         client.send(data);
-      } catch (error) {
-        // TODO: fix (need subscriber id and resend)
-        logger.error(`ws | error occurred during broadcasting: ${error}`);
       }
+      logger.info(`ws | message broadcasting: ${data}`);
+    } catch (error) {
+      logger.error(`ws | error occurred during broadcasting: ${error}`);
     }
   }
   getProcessId(request) {
