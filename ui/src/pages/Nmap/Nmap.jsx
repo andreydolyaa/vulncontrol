@@ -45,7 +45,7 @@ export const Nmap = () => {
     dispatch(getScans({ currentPage, limit }))
       .unwrap()
       .then((data) => {
-        setTotalPages(data.totalPages)
+        setTotalPages(data.totalPages);
       });
   }, [currentPage]);
 
@@ -86,7 +86,7 @@ export const Nmap = () => {
   };
 
   return (
-    <Container>
+    <Container style={{backgroundColor: "red"}}>
       <ModuleName text="Nmap" icon={Radar} />
       <StartForm
         start={start}

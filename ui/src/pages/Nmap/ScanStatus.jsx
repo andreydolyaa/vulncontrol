@@ -14,7 +14,6 @@ export const ScanStatus = memo(({ status }) => {
     <Status
       text={status}
       background={checkStatus(status)}
-      spin={status === "live" ? true : false}
     />
   );
 });

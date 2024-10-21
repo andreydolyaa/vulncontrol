@@ -72,11 +72,8 @@ export const ScanDetails = () => {
           {isDone() && (
             <>
               <div>
+                server:{" "}
                 {status == "failed" ? "Scan failed!" : "Scan completed!"}
-              </div>
-              <div>{"\n"}</div>
-              <div className="final-text">
-                * this app was built with love by Andrey (:
               </div>
             </>
           )}
@@ -87,23 +84,19 @@ export const ScanDetails = () => {
 };
 
 const StyledDiv = styled.div`
-  padding: 25px;
+  padding: 20px;
   width: 100%;
   flex-grow: 1;
-  background-color: #000;
+  background-color: #000000;
   border-radius: var(--radius);
-  border: 1px solid #191919;
-  box-shadow: 1px 1px 10px 1px #0c0c0c;
-  font-size: 15px;
+  /* border: 1px solid #191919; */
+  box-shadow: 1px 1px 15px 1px #0c0c0c;
   overflow-y: auto;
   scroll-behavior: smooth;
+  font-size: 16px;
   pre {
     white-space: pre-wrap;
     word-wrap: break-word;
     word-break: break-word;
-  }
-  .final-text {
-    color: #5ca0c4;
-    /* font-size: 14px; */
   }
 `;

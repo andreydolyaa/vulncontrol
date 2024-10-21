@@ -19,7 +19,7 @@ export const Pagination = ({ current, total, onPageChange }) => {
       <StyledButtonPagination onClick={previous} disabled={current === 1}>
         Previous
       </StyledButtonPagination>
-      <StyledDivCounter>{`${current}/${total}`}</StyledDivCounter>
+      <StyledDivCounter>{`${current} / ${total}`}</StyledDivCounter>
       <StyledButtonPagination onClick={next} disabled={current === total}>
         Next
       </StyledButtonPagination>
@@ -27,8 +27,42 @@ export const Pagination = ({ current, total, onPageChange }) => {
   );
 };
 
-const StyledDivPagination = styled.div``;
+const StyledDivPagination = styled.div`
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  background-color: var(--background-color);
+  width: 320px;
+  & > * {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 45px;
+    font-weight: 500;
+    /* color: var(--brighter-color); */
+  }
+`;
 
-const StyledDivCounter = styled.div``;
+const StyledDivCounter = styled.div`
+  flex-grow: 1;
+  border-left: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
+`;
 
-const StyledButtonPagination = styled.div``;
+const StyledButtonPagination = styled.div`
+  width: 100px;
+  cursor: pointer;
+  transition: all 0.3s;
+  &:first-child {
+    border-top-left-radius: var(--radius);
+    border-bottom-left-radius: var(--radius);
+  }
+  &:last-child {
+    border-top-right-radius: var(--radius);
+    border-bottom-right-radius: var(--radius);
+  }
+  &:hover {
+    background-color: var(--background-color-hover);
+  }
+`;

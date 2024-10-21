@@ -3,6 +3,7 @@
   border-radius: 10px;
   background-color: #1e1e2b;
   overflow-y: auto;
+  width:100%;
   table {
     width: 100%;
     border-collapse: collapse;
@@ -17,6 +18,7 @@
       background-color: #2e2e41;
       position: sticky;
       top: 0;
+      z-index: 1;
       th {
         color: var(--brighter-color);
         padding: 20px;
