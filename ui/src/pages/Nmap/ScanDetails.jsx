@@ -6,7 +6,7 @@ import { BASE_URL, WS_URL } from "../../api/baseUrl";
 import { Container } from "../../components/Container/Container";
 import { ModuleName } from "../../components/ModuleName";
 import { ScanStatus } from "./ScanStatus";
-import { ascii } from "../../utils";
+import { ascii, randomNum } from "../../utils";
 
 export const ScanDetails = () => {
   const terminalRef = useRef(null);
@@ -16,6 +16,7 @@ export const ScanDetails = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const scanSubscriptionRoute = `${WS_URL}/ws/scan/${scanId}`;
+  // const scanSubscriptionRoute = `${WS_URL}/ws/nmap/nmap-updates_${randomNum()}`;
 
   useEffect(() => {
     if (terminalRef.current) {
@@ -23,7 +24,7 @@ export const ScanDetails = () => {
     }
   }, [stdout]);
 
-  const isDone = () => status === "done";
+  const isDone = () => status === "done" || status === "failed";
 
   useEffect(() => {
     setIsLoading(true);
@@ -70,7 +71,9 @@ export const ScanDetails = () => {
           })}
           {isDone() && (
             <>
-              <div>Done!</div>
+              <div>
+                {status == "failed" ? "Scan failed!" : "Scan completed!"}
+              </div>
               <div>{"\n"}</div>
               <div className="final-text">
                 * this app was built with love by Andrey (:

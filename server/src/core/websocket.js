@@ -10,6 +10,8 @@ export class WsServer {
     logger.info("Websocket server listening...");
     this.websocketServer.on("connection", (websocket, request) => {
       const subscriber = this.getProcessId(request);
+      console.log(subscriber); // 24
+
       this.handleNewConnection(websocket, subscriber);
       this.handleActions(websocket, subscriber);
     });
@@ -52,6 +54,22 @@ export class WsServer {
           `ws | failed to send message to subscriber: ${subscriber} error: ${error}`
         );
       }
+    }
+  }
+  updateBySubscriptionType(scan, subscribersCategory) {
+    try {
+      for (const subscriber in this.subscribers) {
+        if (subscriber.includes(subscribersCategory)) {
+          this.subscribers[subscriber].send(JSON.stringify(scan));
+          logger.info(
+            `ws | update sended to subscriber [${subscriber}] [${JSON.stringify(
+              scan
+            )}]`
+          );
+        }
+      }
+    } catch (error) {
+      logger.error(`ws | failed to update subscribers | error: ${error}`);
     }
   }
   sendToAll(message) {
