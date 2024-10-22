@@ -1,0 +1,51 @@
+version: "3.8"
+
+services:
+  ui:
+    build:
+      context: ./ui
+      dockerfile: Dockerfile
+    container_name: vulncontrol-ui
+    ports:
+      - 80:80
+    environment:
+      VITE_BASE_URL: http://server:3000
+      VITE_WEBSOCKET_URL: ws://server:3000
+    networks:
+      - vuln-control-network
+  
+  server:
+    # platform: linux/arm64
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: vulncontrol-server
+    ports:
+      - 3000:3000
+    environment:
+      DB_URL: mongodb://mongo:27017/vuln-control
+      SERVER_PORT: 3000
+      JWT_SECRET: "!!zzzzzzzzzzzzzzz&&^"
+    networks:
+      - vuln-control-network
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo
+    container_name: vulncontrol-mongodb
+    ports:
+      - 27017:27017
+    networks:
+      - vuln-control-network
+    volumes:
+      - mongo-data:/data/db
+  
+networks:
+  vuln-control-network:
+    driver: bridge
+
+volumes:
+  mongo-data:

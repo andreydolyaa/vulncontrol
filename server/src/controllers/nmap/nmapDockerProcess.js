@@ -1,4 +1,4 @@
-import { spawn } from "child_process";
+import { exec, spawn } from "child_process";
 import logger from "../../core/logger.js";
 
 import {
@@ -6,7 +6,7 @@ import {
   createNewScan,
   parseArgs,
   checkForOpenPorts,
-  sendFinalToastMessage
+  sendFinalToastMessage,
 } from "./nmapHelpers.js";
 import {
   removeAllContainers,
@@ -30,6 +30,8 @@ const handleNmapProcess = async (scanId, reqBody) => {
   let isError = false;
 
   containers[containerName] = scanId;
+
+  getDockerVersion();
 
   await updateScanInDb(scanId, {
     $push: {
@@ -114,4 +116,21 @@ const createArgsList = (args, containerName, target) => {
     "-v",
     ...userSelectedArgs,
   ];
+};
+
+const getDockerVersion = () => {
+  exec("docker --version", (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error: ${error.message}`);
+      return;
+    }
+    if (stderr) {
+      console.error(`Stderr: ${stderr}`);
+      return;
+    }
+
+    // Use a structured log format if needed
+    const logMessage = `Docker version: ${stdout.trim()}`;
+    logger.warn(logMessage);
+  });
 };

@@ -10,7 +10,6 @@ export class WsServer {
     logger.info("Websocket server listening...");
     this.websocketServer.on("connection", (websocket, request) => {
       const subscriber = this.getProcessId(request);
-      console.log(subscriber); // 24
 
       this.handleNewConnection(websocket, subscriber);
       this.handleActions(websocket, subscriber);
