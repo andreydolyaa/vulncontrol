@@ -7,7 +7,7 @@
   table {
     width: 100%;
     border-collapse: collapse;
-    /* table-layout: fixed; */
+    table-layout: fixed;
     tr {
       text-align: left;
     }
@@ -24,6 +24,7 @@
         color: var(--brighter-color);
         padding: 20px;
         text-transform: uppercase;
+        white-space: nowrap;
       }
     }
     .table-body {
@@ -31,6 +32,9 @@
       td {
         padding: 15px;
         font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       .actions {
         .icons {
@@ -44,6 +48,22 @@
             margin: 0 5px;
           }
         }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .scans {
+    table {
+      table-layout: auto;
+    }
+  }
+
+  .scans {
+    .table-body {
+      td {
+        white-space: normal;
       }
     }
   }
