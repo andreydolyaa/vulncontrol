@@ -41,11 +41,7 @@ export const argsDescriptionMap = {
 };
 
 export const ascii = `
-* Vuln Control v1.0 By Andrey ;)
-.
-.
-. 
-.
-.                                           
+* VulnControl v1.0 By Andrey
+. . . . . . . . . . . . . . . .                                            
 
 `;

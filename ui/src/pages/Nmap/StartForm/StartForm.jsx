@@ -1,8 +1,13 @@
 import React, { useState } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { Args } from "./Args";
 import { Target } from "./Target";
-import { TbWorld, TbAssembly, TbCircleChevronDown } from "react-icons/tb";
+import {
+  TbWorld,
+  TbAssembly,
+  TbCircleChevronDown,
+  TbBolt,
+} from "react-icons/tb";
 import { InputLabel } from "../../../components/InputLabel";
 
 export const StartForm = ({ start, formData, onFormChange }) => {
@@ -18,7 +23,10 @@ export const StartForm = ({ start, formData, onFormChange }) => {
         <InputLabel text="Target IP Address" icon={TbWorld} />
         <div className="target-button">
           <Target onFormChange={onFormChange} />
-          <StyledButton>Start</StyledButton>
+          <StyledButton>
+            <TbBolt className="icon" />
+            <div className="start-button">Start</div>
+          </StyledButton>
         </div>
       </StyledDivTarget>
       <StyledDivArgs $isOpen={isOpen}>
@@ -95,9 +103,25 @@ const StyledDivArgs = styled.div`
   }
 `;
 
+const start = keyframes`
+   0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+`;
+
 const StyledButton = styled.button`
-  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
   background: rgb(116, 43, 225);
+  box-shadow: 1px 1px 1px 2px #510a8b;
   background: linear-gradient(
     108deg,
     rgba(116, 43, 225, 1) 0%,
@@ -109,4 +133,15 @@ const StyledButton = styled.button`
   text-transform: uppercase;
   width: 150px;
   margin-left: 20px;
+  transition: .3s;
+  .icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 3px;
+    stroke-width: 1.5;
+  }
+  &:hover {
+    animation: ${start} .4s ease-in-out 1;
+  }
 `;
+
