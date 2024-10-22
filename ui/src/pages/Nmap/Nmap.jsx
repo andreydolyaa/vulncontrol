@@ -10,6 +10,7 @@ import { ModuleName } from "../../components/ModuleName";
 import { TbRadar2 as Radar } from "react-icons/tb";
 import { Pagination } from "../../components/Pagination/Pagination";
 import { incomingToast } from "../../redux/toastSlice";
+import { Empty } from "../../components/Empty";
 
 export const Nmap = () => {
   const dispatch = useDispatch();
@@ -17,7 +18,7 @@ export const Nmap = () => {
   const { user } = useSelector((state) => state.user);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const limit = 4;
+  const limit = 8;
   const [formData, setFormData] = useState({
     target: "",
     userId: user.id,
@@ -92,19 +93,27 @@ export const Nmap = () => {
   };
 
   return (
-    <Container style={{ backgroundColor: "red" }}>
+    <Container>
       <ModuleName text="Nmap" icon={Radar} />
       <StartForm
         start={start}
         formData={formData}
         onFormChange={onFormChange}
       />
-      <Scans scans={scans} />
-      <Pagination
-        current={currentPage}
-        total={totalPages}
-        onPageChange={setCurrentPage}
-      />
+      {loading ? (
+        <Empty text="fetching data..." loading={true} />
+      ) : scans.length === 0 ? (
+        <Empty text="no scans yet" />
+      ) : (
+        <>
+          <Scans scans={scans} />
+          <Pagination
+            current={currentPage}
+            total={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        </>
+      )}
     </Container>
   );
 };

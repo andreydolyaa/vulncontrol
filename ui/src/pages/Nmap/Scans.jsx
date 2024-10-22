@@ -7,9 +7,9 @@ export const Scans = ({ scans }) => {
   const items = [
     "Target",
     "Scan Type",
+    "Open Ports",
     "Start Time",
     "End Time",
-    "Open Ports",
     "Status",
     "Actions",
   ];

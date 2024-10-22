@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import React, { useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -90,17 +90,28 @@ export const ScanDetails = () => {
   );
 };
 
+const show = keyframes`
+  0% {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+`
+
 const StyledDiv = styled.div`
   padding: 20px;
   width: 100%;
   flex-grow: 1;
   background-color: #000000;
   border-radius: var(--radius);
-  /* border: 1px solid #191919; */
   box-shadow: 1px 1px 15px 1px #0c0c0c;
   overflow-y: auto;
   scroll-behavior: smooth;
   font-size: 16px;
+  animation: ${show} .3s ease-in-out 1;
   pre {
     white-space: pre-wrap;
     word-wrap: break-word;

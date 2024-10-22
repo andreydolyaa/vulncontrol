@@ -66,7 +66,7 @@ export const nmapSlice = createSlice({
         state.loading = false;
       })
       .addCase(getScans.pending, (state) => {
-        state.loading = true;
+        if (!state.scans.length) state.loading = true;
       })
       .addCase(getScans.fulfilled, (state, action) => {
         state.status = "succeeded";

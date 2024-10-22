@@ -1,5 +1,6 @@
 import logger from "../../core/logger.js";
 import { NmapScan } from "../../models/nmapScanModel.js";
+import { sleep } from "../../utils/index.js";
 import { startNmapContainer } from "./nmapDockerProcess.js";
 
 // start new scan
@@ -31,6 +32,7 @@ export const getAllScans = async (req, res) => {
       totalPages,
       currentPage: page,
     };
+    // await sleep(2000)
     return res.status(200).send(responseData);
   } catch (error) {
     logger.error(`Failed to get scans: ${error}`);
