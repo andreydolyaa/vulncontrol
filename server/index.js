@@ -46,4 +46,8 @@ const shutdown = (code) => {
 setupErrorHandler(httpServer, logger, shutdown)
   .then(startServers)
   .then(connectToDatabase)
-  .then(websocketServer.init());
+  .then(() => websocketServer.init())
+  .catch((err) => {
+    logger.error(`Initialization error: ${err.message}`);
+    shutdown(1);
+  });

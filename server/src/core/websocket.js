@@ -7,7 +7,7 @@ export class WsServer {
     this.subscribers = {};
   }
   init() {
-    logger.info("Websocket server listening...");
+    logger.info("Websocket server started");
     this.websocketServer.on("connection", (websocket, request) => {
       const subscriber = this.getProcessId(request);
 
@@ -92,7 +92,7 @@ export class WsServer {
       if (err) {
         logger.error(`error closing websocket server: ${err}`);
       } else {
-        logger.info("webSocket server shut down gracefully");
+        logger.info("Websocket server shut down...");
       }
     });
   }

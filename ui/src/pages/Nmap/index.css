@@ -3,10 +3,11 @@
   border-radius: 10px;
   background-color: #1e1e2b;
   overflow-y: auto;
-  width:100%;
+  width: 100%;
   table {
     width: 100%;
     border-collapse: collapse;
+    /* table-layout: fixed; */
     tr {
       text-align: left;
     }
@@ -28,18 +29,20 @@
     .table-body {
       cursor: pointer;
       td {
-        padding: 20px;
+        padding: 15px;
         font-weight: 500;
       }
       .actions {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        .icon {
-          height: 22px;
-          width: 22px;
-          stroke-width: 1.2;
-          margin: 0 5px;
+        .icons {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          .icon {
+            height: 22px;
+            width: 22px;
+            stroke-width: 1.2;
+            margin: 0 5px;
+          }
         }
       }
     }

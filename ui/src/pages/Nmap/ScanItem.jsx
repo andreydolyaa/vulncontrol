@@ -10,7 +10,7 @@ export const ScanItem = ({ scan, onClick }) => {
     return time.format("HH:mm:ss DD/MM/YY");
   };
   return (
-    <tr key={scan.id} className={`table-body`} onClick={onClick}>
+    <tr key={scan.id} className="table-body" onClick={onClick}>
       <td>{scan.target}</td>
       <td>{scan.scanType}</td>
       <td>{parseDate(scan.startTime)}</td>
@@ -19,7 +19,8 @@ export const ScanItem = ({ scan, onClick }) => {
       <td>
         <ScanStatus status={scan.status} />
       </td>
-      <td className="actions text-center" onClick={(e) => e.stopPropagation()}>
+      <td className="actions" onClick={(e) => e.stopPropagation()}>
+        <div className="icons">
         <TbWindowMaximize
           className="icon"
           data-tooltip-id="tooltip1"
@@ -29,7 +30,8 @@ export const ScanItem = ({ scan, onClick }) => {
           className="icon"
           data-tooltip-id="tooltip1"
           data-tooltip-content="Export"
-        />{" "}
+        />
+        </div>
       </td>
     </tr>
   );

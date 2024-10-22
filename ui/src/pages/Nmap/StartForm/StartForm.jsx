@@ -52,6 +52,7 @@ const StyledForm = styled.form`
 `;
 
 const StyledArgsContent = styled.div`
+  visibility: ${({ $isOpen }) => ($isOpen ? "visible" : "hidden")};
   max-height: ${({ $isOpen }) => ($isOpen ? "500px" : "0")};
   opacity: ${({ $isOpen }) => ($isOpen ? "1" : "0")};
   transition: all 0.3s ease-in-out;
