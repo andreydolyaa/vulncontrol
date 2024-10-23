@@ -1,11 +1,17 @@
 import React from "react";
 import styled from "styled-components";
 
-export const Target = ({ onFormChange }) => {
+export const Target = ({ onFormChange, isEasyMode }) => {
+
+  const placeholderText = () => {
+    return isEasyMode
+      ? "Enter IPv4 or IPv6 address..."
+      : "Enter a valid nmap command (example: nmap -sV -A -p 3000,445,80 <ip>)";
+  };
   return (
     <StyledInput
       type="text"
-      placeholder="Enter IPv4 or IPv6 address..."
+      placeholder={placeholderText()}
       name="target"
       onChange={onFormChange}
     ></StyledInput>
@@ -14,5 +20,5 @@ export const Target = ({ onFormChange }) => {
 
 const StyledInput = styled.input`
   width: 100%;
-  height: 50px;
+  height: 55px;
 `;

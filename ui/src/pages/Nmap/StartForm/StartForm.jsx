@@ -1,16 +1,27 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import styled, { keyframes } from "styled-components";
 import { Args } from "./Args";
 import { Target } from "./Target";
+import { InputLabel } from "../../../components/InputLabel";
+import { Mode } from "./Mode";
+import { UIModes } from "../../../constants";
 import {
   TbWorld,
   TbAssembly,
   TbCircleChevronDown,
   TbBolt,
+  TbTerminal2,
 } from "react-icons/tb";
-import { InputLabel } from "../../../components/InputLabel";
 
-export const StartForm = ({ start, formData, onFormChange }) => {
+export const StartForm = ({
+  start,
+  formData,
+  isEasyMode,
+  onFormChange,
+  onFormChangeCommand,
+}) => {
+  const uiMode = useSelector((state) => state.nmap.uiMode);
   const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => {
@@ -20,31 +31,45 @@ export const StartForm = ({ start, formData, onFormChange }) => {
   return (
     <StyledForm onSubmit={start}>
       <StyledDivTarget>
-        <InputLabel text="Target IP Address" icon={TbWorld} />
-        <div className="target-button">
-          <Target onFormChange={onFormChange} />
+        <div className="top">
+          <InputLabel
+            text={isEasyMode ? "Target IP Address" : "Shell Command"}
+            icon={isEasyMode ? TbWorld : TbTerminal2}
+          />
+          <Mode />
+        </div>
+        <div
+          className="target-button"
+          style={{ margin: !isEasyMode ? "0px 0 20px 0" : "0px" }}
+        >
+          <Target
+            onFormChange={isEasyMode ? onFormChange : onFormChangeCommand}
+            isEasyMode={isEasyMode}
+          />
           <StyledButton>
             <TbBolt className="icon" />
             <div className="start-button">Start</div>
           </StyledButton>
         </div>
       </StyledDivTarget>
-      <StyledDivArgs $isOpen={isOpen}>
-        <div
-          className="title-args"
-          onClick={toggle}
-          data-tooltip-id="tooltip1"
-          data-tooltip-content="Press to toggle scan arguments"
-        >
-          <InputLabel text="Scan Arguments" icon={TbAssembly} />
-          <StyledIcon $isOpen={isOpen}>
-            <TbCircleChevronDown className="icon-toggle" />
-          </StyledIcon>
-        </div>
-        <StyledArgsContent $isOpen={isOpen}>
-          <Args formData={formData} onFormChange={onFormChange} />
-        </StyledArgsContent>
-      </StyledDivArgs>
+      {isEasyMode && (
+        <StyledDivArgs $isOpen={isOpen}>
+          <div
+            className="title-args"
+            onClick={toggle}
+            data-tooltip-id="tooltip1"
+            data-tooltip-content="Press to toggle scan arguments"
+          >
+            <InputLabel text="Scan Arguments" icon={TbAssembly} />
+            <StyledIcon $isOpen={isOpen}>
+              <TbCircleChevronDown className="icon-toggle" />
+            </StyledIcon>
+          </div>
+          <StyledArgsContent $isOpen={isOpen}>
+            <Args formData={formData} onFormChange={onFormChange} />
+          </StyledArgsContent>
+        </StyledDivArgs>
+      )}
     </StyledForm>
   );
 };
@@ -57,6 +82,16 @@ const StyledForm = styled.form`
   background-color: var(--background-color);
   border: 1px solid var(--border-color);
   border-radius: var(--radius);
+  .top {
+    display: flex;
+    justify-content: space-between;
+    .input-label {
+      width: calc(50% - 150px);
+    }
+    .mode {
+      margin-right: auto;
+    }
+  }
 `;
 
 const StyledArgsContent = styled.div`
@@ -71,10 +106,10 @@ const StyledIcon = styled.div`
   transform: ${({ $isOpen }) => ($isOpen ? "rotate(-180deg)" : "rotate(0)")};
   margin-left: 8px;
   .icon-toggle {
-    stroke-width: 1.2;
+    stroke-width: 1.5;
     width: 22px;
     height: 22px;
-    color: #ffd900;
+    color: var(--action-color-2);
   }
 `;
 
@@ -133,7 +168,7 @@ const StyledButton = styled.button`
   text-transform: uppercase;
   width: 150px;
   margin-left: 20px;
-  transition: .3s;
+  transition: 0.3s;
   .icon {
     width: 18px;
     height: 18px;
@@ -141,7 +176,6 @@ const StyledButton = styled.button`
     stroke-width: 1.5;
   }
   &:hover {
-    animation: ${start} .4s ease-in-out 1;
+    animation: ${start} 0.4s ease-in-out 1;
   }
 `;
-

@@ -1,6 +1,7 @@
 import { websocketServer } from "../../../index.js";
 import logger from "../../core/logger.js";
 import { NmapScan } from "../../models/nmapScanModel.js";
+import { extractIP } from "../../utils/index.js";
 
 export const updateScanInDb = async (id, updates) => {
   try {
@@ -21,15 +22,22 @@ export const updateScanInDb = async (id, updates) => {
 
 // create new scan document in db
 export const createNewScan = async (reqBody) => {
-  const { target, args, userId } = reqBody;
+  const { target, args, userId, command } = reqBody;
+  let ipAddress;
+
+  if (command) {
+    ipAddress = extractIP(command);
+  }
+
   try {
     const scan = await NmapScan.create({
-      target,
+      target: command ? ipAddress : target,
       stdout: [],
       status: "live",
       byUser: userId,
-      scanType: setScanType(args),
+      scanType: command ? "Shell Command" : setScanType(args),
       startTime: new Date().toISOString(),
+      command: reqBody.command ? reqBody.command : "put easy mode command",
     });
     return scan._id;
   } catch (error) {

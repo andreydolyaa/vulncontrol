@@ -11,14 +11,19 @@ import { TbRadar2 as Radar } from "react-icons/tb";
 import { Pagination } from "../../components/Pagination/Pagination";
 import { incomingToast } from "../../redux/toastSlice";
 import { Empty } from "../../components/Empty";
+import { UIModes } from "../../constants";
 
 export const Nmap = () => {
   const dispatch = useDispatch();
-  const { scans, loading } = useSelector((state) => state.nmap);
+  const { scans, loading, uiMode } = useSelector((state) => state.nmap);
   const { user } = useSelector((state) => state.user);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const limit = 8;
+  const [formDataCommandMode, setFormDataCommandMode] = useState({
+    command: "",
+    userId: user.id,
+  });
   const [formData, setFormData] = useState({
     target: "",
     userId: user.id,
@@ -41,6 +46,7 @@ export const Nmap = () => {
       "-6": false,
     },
   });
+
   const scanSubscriptionRoute = `${WS_URL}/ws/nmap/nmap-updates_${randomNum()}`;
 
   useEffect(() => {
@@ -67,6 +73,16 @@ export const Nmap = () => {
     };
   }, []);
 
+  const isEasyMode = () => uiMode === UIModes.EASY;
+
+  const onFormChangeCommand = (e) => {
+    setFormDataCommandMode({
+      ...formDataCommandMode,
+      command: e.target.value,
+      uiMode,
+    });
+  };
+
   const onFormChange = (e) => {
     const { name, value, type, checked } = e.target;
 
@@ -88,7 +104,9 @@ export const Nmap = () => {
 
   const start = async (e) => {
     e.preventDefault();
-    await dispatch(startScan(formData)).unwrap();
+    await dispatch(
+      startScan(isEasyMode() ? formData : formDataCommandMode)
+    ).unwrap();
     dispatch(getScans());
   };
 
@@ -98,7 +116,9 @@ export const Nmap = () => {
       <StartForm
         start={start}
         formData={formData}
+        isEasyMode={isEasyMode()}
         onFormChange={onFormChange}
+        onFormChangeCommand={onFormChangeCommand}
       />
       {loading ? (
         <Empty text="fetching data..." loading={true} />

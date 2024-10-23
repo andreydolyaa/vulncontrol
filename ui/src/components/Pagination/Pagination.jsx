@@ -54,6 +54,7 @@ const StyledButtonPagination = styled.div`
   width: 100px;
   cursor: pointer;
   transition: all 0.3s;
+  color: var(--brighter-color);
   &:first-child {
     border-top-left-radius: var(--radius);
     border-bottom-left-radius: var(--radius);

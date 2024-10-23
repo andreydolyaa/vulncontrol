@@ -24,9 +24,9 @@ export const startNmapContainer = async (reqBody) => {
 
 // start nmap container and nmap scan & handle stdout and stderr
 const handleNmapProcess = async (scanId, reqBody) => {
-  const { target, args, userId } = reqBody;
+  const { target, args, userId, command, uiMode } = reqBody;
   const containerName = `nmap_${scanId.toString()}`;
-  const argsList = createArgsList(args, containerName, target);
+  const argsList = createArgsList(args, containerName, target, command, uiMode);
   let isError = false;
 
   containers[containerName] = scanId;
@@ -46,7 +46,11 @@ const handleNmapProcess = async (scanId, reqBody) => {
   });
 
   const process = spawn("docker", argsList);
-  logger.info(`starting new process: docker ${argsList.join(" ")}`);
+  logger.info(
+    `starting new process: -------------------------------- docker ${argsList.join(
+      " "
+    )}`
+  );
 
   process.stdout.on("data", async (data) => {
     const line = data.toString();
@@ -105,7 +109,18 @@ const handleNmapProcess = async (scanId, reqBody) => {
 };
 
 // handle docker and nmap arguments
-const createArgsList = (args, containerName, target) => {
+const createArgsList = (args, containerName, target, command, uiMode) => {
+  if (uiMode === "command" && command) {
+    const fullShellCommand = command.replace("nmap", "").trim().split(" ");
+    return [
+      "run",
+      "--name",
+      containerName,
+      "instrumentisto/nmap",
+      ...fullShellCommand,
+      "-v"
+    ];
+  }
   const userSelectedArgs = parseArgs(args);
   return [
     "run",
@@ -128,8 +143,6 @@ const getDockerVersion = () => {
       console.error(`Stderr: ${stderr}`);
       return;
     }
-
-    // Use a structured log format if needed
     const logMessage = `Docker version: ${stdout.trim()}`;
     logger.warn(logMessage);
   });

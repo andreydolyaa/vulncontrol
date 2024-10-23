@@ -4,7 +4,7 @@ import styled from "styled-components";
 export const InputLabel = ({ text, icon }) => {
   const IconComponent = icon;
   return (
-    <StyledDiv className="title">
+    <StyledDiv className="input-label title">
       <IconComponent className="icon" />
       <div>{text}</div>
     </StyledDiv>
@@ -13,7 +13,7 @@ export const InputLabel = ({ text, icon }) => {
 
 const StyledDiv = styled.div`
   text-transform: uppercase;
-  color: var(--brighter-color);
+  /* color: var(--brighter-color); */
   font-weight: 500;
   display: flex;
   align-items: center;

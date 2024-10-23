@@ -31,6 +31,7 @@ const NmapScanSchema = new mongoose.Schema(
     endTime: {
       type: Date,
     },
+    command: String,
     openPorts: [Number],
     id: {
       type: String,

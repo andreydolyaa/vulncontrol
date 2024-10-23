@@ -44,12 +44,16 @@ export const nmapSlice = createSlice({
     loading: false,
     status: "idle",
     scans: [],
+    uiMode: "easy",
   },
   reducers: {
     incomingScan: (state, action) => {
       const updatedScan = action.payload;
       state.scans = state.scans.filter((scan) => scan.id !== updatedScan.id);
       state.scans.unshift(updatedScan);
+    },
+    setUiMode: (state, action) => {
+      state.uiMode = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -84,5 +88,5 @@ export const getScanById = (state, scanId) => {
   return state.nmap.scans.find((scan) => scan.id === scanId);
 };
 
-export const { incomingScan, getScan } = nmapSlice.actions;
+export const { incomingScan, getScan, setUiMode } = nmapSlice.actions;
 export default nmapSlice.reducer;

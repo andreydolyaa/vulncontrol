@@ -27,16 +27,19 @@ html,
   color: #9898a1;
   --brighter-color: #e9e9e9;
   --brighter-color-2: #bdbdbd;
+  --action-button-color: #ffffff;
   --border-color: #363637;
   --icon-color: #9898a1;
   --border-color-2: rgb(100, 100, 100);
   --background-color: #1e1e2b;
   --background-color-hover: #262637;
   --main-background-color: #171721;
+  --main-background-color-2: #1d1d2a;
   --radius: 10px;
   --purple: rgb(78, 3, 200);
   --purple-2: rgb(0, 255, 153);
   --action-color: rgb(116, 43, 225);
+  --action-color-2: #c08a2e;
   /* --purple-2: rgb(23, 135, 200); */
   --orange: rgb(16 185 129);
   --greenish: rgb(0, 255, 166);
@@ -221,12 +224,7 @@ a {
 .ascii {
   /* font-family: ; */
   font-size: 15px;
-  background: linear-gradient(
-    133deg,
-    #ff0b50,
-    #6f00ff,
-    #6000e7
-  );
+  background: linear-gradient(133deg, #ff0b50, #6f00ff, #6000e7);
   -webkit-background-clip: text;
   color: transparent;
 }
