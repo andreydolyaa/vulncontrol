@@ -3,7 +3,7 @@ import { styled } from "styled-components";
 import { TbTerminal2, TbAlignBoxRightBottom } from "react-icons/tb";
 import { useDispatch } from "react-redux";
 import { setUiMode } from "../../../redux/nmapSlice";
-import { UIModes } from '../../../constants/index';
+import { UIModes } from "../../../constants/index";
 
 export const Mode = () => {
   const dispatch = useDispatch();
@@ -50,6 +50,11 @@ const StyledDivMode = styled.div`
   div:first-child {
     border-right: 1px solid var(--border-color);
   }
+  @media (max-width: 570px) {
+    flex-direction: column;
+    height: 70px;
+    width: 100%;
+  }
 `;
 
 const StyledButtonMode = styled.div`
@@ -81,5 +86,17 @@ const StyledButtonMode = styled.div`
     background-color: ${({ $isActive }) =>
       $isActive ? "none" : "var(--background-color-hover)"};
     cursor: ${({ $isActive }) => ($isActive ? "default" : "pointer")};
+  }
+  @media (max-width: 570px) {
+    &:first-child {
+      border-top-left-radius: var(--radius);
+      border-top-right-radius: var(--radius);
+      border-bottom-left-radius: unset;
+    }
+    &:last-child {
+      border-bottom-right-radius: var(--radius);
+      border-bottom-left-radius: var(--radius);
+      border-top-right-radius: unset;
+    }
   }
 `;

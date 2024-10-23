@@ -39,10 +39,12 @@ html,
   --purple: rgb(78, 3, 200);
   --purple-2: rgb(0, 255, 153);
   --action-color: rgb(116, 43, 225);
-  --action-color-2: #c08a2e;
+  /* --action-color-2: #c08a2e; */
+  --action-color-2: #b88342;
   /* --purple-2: rgb(23, 135, 200); */
   --orange: rgb(16 185 129);
   --greenish: rgb(0, 255, 166);
+  --padding: 30px;
 
   /* --secondary-color: #2ecc71;
   --accent-color: #e74c3c;
@@ -73,7 +75,7 @@ input {
   outline: none;
 }
 
-button {
+.button {
   border: 1px solid rgb(199, 199, 199);
   padding: 10px;
   border-radius: 10px;
@@ -117,6 +119,7 @@ input:-webkit-autofill:focus {
 
 .sign-button {
   margin-top: 25px !important;
+  border-radius: var(--radius);
 }
 
 .full-page-centered {

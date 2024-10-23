@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Search } from "./Search";
 
-export const ModuleName = ({ text, icon, enableSearch = true, children }) => {
+export const ModuleName = ({ text, icon, enableSearch = true, onSearch, children }) => {
   const IconComponent = icon;
   return (
     <StyledDiv>
@@ -10,7 +10,7 @@ export const ModuleName = ({ text, icon, enableSearch = true, children }) => {
         {icon && <IconComponent className="icon" />}
         <div className="text">{text}</div>
       </div>
-      {enableSearch && <Search placeholder="Search scans..." />}
+      {enableSearch && <Search onSearch={onSearch} placeholder="Search scans..." />}
       {children && children}
     </StyledDiv>
   );
@@ -22,7 +22,7 @@ const StyledDiv = styled.div`
   justify-content: space-between;
   width: 100%;
   height: 80px;
-  padding: 20px;
+  padding: var(--padding);
   border: 1px solid var(--border-color);
   background-color: var(--background-color);
   border-radius: var(--radius);
@@ -40,6 +40,22 @@ const StyledDiv = styled.div`
       width: 24px;
       color: white;
       margin-right: 5px;
+    }
+  }
+  @media (max-width: 570px) {
+    .search {
+      width: 100%;
+      min-width: 100px;
+    }
+    .text-and-icon {
+      margin-right: 10px;
+      .text {
+        font-size: 18px;
+      }
+      .icon {
+        height: 18px;
+        width: 18px;
+      }
     }
   }
 `;

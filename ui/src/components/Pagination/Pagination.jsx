@@ -40,7 +40,6 @@ const StyledDivPagination = styled.div`
     justify-content: center;
     height: 45px;
     font-weight: 500;
-    /* color: var(--brighter-color); */
   }
 `;
 
@@ -50,11 +49,12 @@ const StyledDivCounter = styled.div`
   border-right: 1px solid var(--border-color);
 `;
 
-const StyledButtonPagination = styled.div`
+const StyledButtonPagination = styled.button`
   width: 100px;
   cursor: pointer;
   transition: all 0.3s;
   color: var(--brighter-color);
+  border: none;
   &:first-child {
     border-top-left-radius: var(--radius);
     border-bottom-left-radius: var(--radius);

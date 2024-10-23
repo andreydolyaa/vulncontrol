@@ -48,7 +48,7 @@ export const StartForm = ({
           />
           <StyledButton>
             <TbBolt className="icon" />
-            <div className="start-button">Start</div>
+            <div className="start-button-text">Start</div>
           </StyledButton>
         </div>
       </StyledDivTarget>
@@ -77,7 +77,7 @@ export const StartForm = ({
 const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: var(--padding);
   width: 100%;
   background-color: var(--background-color);
   border: 1px solid var(--border-color);
@@ -120,6 +120,23 @@ const StyledDivTarget = styled.div`
   .target-button {
     display: flex;
   }
+  @media (max-width: 768px) {
+    .top {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      .input-label {
+        width: 100%;
+        order: 1;
+      }
+      .mode {
+        margin: 0 0 30px 0;
+      }
+    }
+    .target-button {
+      flex-direction: column;
+    }
+  }
 `;
 const StyledDivArgs = styled.div`
   display: flex;
@@ -155,6 +172,7 @@ const StyledButton = styled.button`
   align-items: center;
   justify-content: center;
   border: none;
+  border-radius: var(--radius);
   background: rgb(116, 43, 225);
   box-shadow: 1px 1px 1px 2px #510a8b;
   background: linear-gradient(
@@ -177,5 +195,9 @@ const StyledButton = styled.button`
   }
   &:hover {
     animation: ${start} 0.4s ease-in-out 1;
+  }
+  @media (max-width: 768px) {
+    margin: 20px 0 0 0;
+    width: 100%;
   }
 `;

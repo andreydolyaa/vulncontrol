@@ -17,6 +17,7 @@ export const Nmap = () => {
   const dispatch = useDispatch();
   const { scans, loading, uiMode } = useSelector((state) => state.nmap);
   const { user } = useSelector((state) => state.user);
+  const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const limit = 8;
@@ -50,7 +51,7 @@ export const Nmap = () => {
   const scanSubscriptionRoute = `${WS_URL}/ws/nmap/nmap-updates_${randomNum()}`;
 
   useEffect(() => {
-    dispatch(getScans({ currentPage, limit }))
+    dispatch(getScans({ currentPage, limit })) // TODO: add search to request
       .unwrap()
       .then((data) => {
         setTotalPages(data.totalPages);
@@ -74,6 +75,10 @@ export const Nmap = () => {
   }, []);
 
   const isEasyMode = () => uiMode === UIModes.EASY;
+
+  const handleSearch = (data) => {
+    setSearch(data);
+  };
 
   const onFormChangeCommand = (e) => {
     setFormDataCommandMode({
@@ -112,7 +117,8 @@ export const Nmap = () => {
 
   return (
     <Container>
-      <ModuleName text="Nmap" icon={Radar} />
+      <div>{search}</div>
+      <ModuleName text="Nmap" icon={Radar} onSearch={handleSearch} />
       <StartForm
         start={start}
         formData={formData}
