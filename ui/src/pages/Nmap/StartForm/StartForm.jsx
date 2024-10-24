@@ -199,5 +199,6 @@ const StyledButton = styled.button`
   @media (max-width: 768px) {
     margin: 20px 0 0 0;
     width: 100%;
+    height:50px;
   }
 `;

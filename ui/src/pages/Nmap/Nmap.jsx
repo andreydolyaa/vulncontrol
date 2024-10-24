@@ -20,7 +20,7 @@ export const Nmap = () => {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const limit = 8;
+  const limit = 2;
   const [formDataCommandMode, setFormDataCommandMode] = useState({
     command: "",
     userId: user.id,
@@ -51,12 +51,12 @@ export const Nmap = () => {
   const scanSubscriptionRoute = `${WS_URL}/ws/nmap/nmap-updates_${randomNum()}`;
 
   useEffect(() => {
-    dispatch(getScans({ currentPage, limit })) // TODO: add search to request
+    dispatch(getScans({ currentPage, limit, search })) // TODO: add search to request
       .unwrap()
       .then((data) => {
         setTotalPages(data.totalPages);
       });
-  }, [currentPage]);
+  }, [currentPage, search]);
 
   useEffect(() => {
     const websocket = new WebSocket(scanSubscriptionRoute);
@@ -117,7 +117,6 @@ export const Nmap = () => {
 
   return (
     <Container>
-      <div>{search}</div>
       <ModuleName text="Nmap" icon={Radar} onSearch={handleSearch} />
       <StartForm
         start={start}
@@ -129,7 +128,7 @@ export const Nmap = () => {
       {loading ? (
         <Empty text="fetching data..." loading={true} />
       ) : scans.length === 0 ? (
-        <Empty text="no scans yet" />
+        <Empty text={search ? "no search results" : "no scans yet"} />
       ) : (
         <>
           <Scans scans={scans} />

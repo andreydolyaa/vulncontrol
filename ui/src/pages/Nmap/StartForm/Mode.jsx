@@ -89,14 +89,14 @@ const StyledButtonMode = styled.div`
   }
   @media (max-width: 570px) {
     &:first-child {
+      border-radius: unset;
       border-top-left-radius: var(--radius);
       border-top-right-radius: var(--radius);
-      border-bottom-left-radius: unset;
     }
     &:last-child {
+      border-radius: unset;
       border-bottom-right-radius: var(--radius);
       border-bottom-left-radius: var(--radius);
-      border-top-right-radius: unset;
     }
   }
 `;

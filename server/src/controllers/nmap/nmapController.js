@@ -19,13 +19,25 @@ export const getAllScans = async (req, res) => {
   const page = parseInt(req.query.page);
   const limit = parseInt(req.query.limit);
   const skip = (page - 1) * limit;
-  try {
-    const scans = await NmapScan.find()
+
+  const searchQuery = {};
+
+  if (req.query.search) {
+    const searchRegex = { $regex: req.query.search, $options: "i" };
+    searchQuery.$or = [
+      { target: searchRegex },
+      { scanType: searchRegex },
+      { states: searchRegex },
+    ];
+  }
+
+  try {    
+    const scans = await NmapScan.find(searchQuery)
       .skip(skip)
       .limit(limit)
       .sort({ startTime: -1 });
     if (!scans) throw new Error();
-    const totalScans = await NmapScan.countDocuments();
+    const totalScans = await NmapScan.countDocuments(searchQuery);
     const totalPages = Math.ceil(totalScans / limit);
     const responseData = {
       scans,

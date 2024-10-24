@@ -47,7 +47,7 @@ const handleNmapProcess = async (scanId, reqBody) => {
 
   const process = spawn("docker", argsList);
   logger.info(
-    `starting new process: -------------------------------- docker ${argsList.join(
+    `starting new process: docker ${argsList.join(
       " "
     )}`
   );
@@ -59,7 +59,7 @@ const handleNmapProcess = async (scanId, reqBody) => {
       $push: { stdout: line },
     };
 
-    const isPortDetected = checkForOpenPorts(data);
+    const isPortDetected = await checkForOpenPorts(data);
 
     if (isPortDetected) {
       updates.$push = {

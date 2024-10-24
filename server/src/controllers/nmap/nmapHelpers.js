@@ -64,7 +64,7 @@ const setScanType = (args) => {
 };
 
 // identify and store open ports which found during scan
-export const checkForOpenPorts = (stdout) => {
+export const checkForOpenPorts = async (stdout) => {
   const line = stdout.toString();
   const searchStr = "Discovered open port";
   if (!line.includes(searchStr)) return;

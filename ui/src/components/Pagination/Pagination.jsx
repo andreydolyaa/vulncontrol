@@ -41,12 +41,22 @@ const StyledDivPagination = styled.div`
     height: 45px;
     font-weight: 500;
   }
+  @media (max-width: 570px) {
+    flex-direction: column;
+    width: 100%;
+  }
 `;
 
 const StyledDivCounter = styled.div`
   flex-grow: 1;
   border-left: 1px solid var(--border-color);
   border-right: 1px solid var(--border-color);
+  @media (max-width: 570px) {
+    border: unset;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    width: 100%;
+  }
 `;
 
 const StyledButtonPagination = styled.button`
@@ -65,5 +75,18 @@ const StyledButtonPagination = styled.button`
   }
   &:hover {
     background-color: var(--background-color-hover);
+  }
+  @media (max-width: 570px) {
+    width: 100%;
+    &:first-child {
+      border-radius: unset;
+      border-top-left-radius: var(--radius);
+      border-top-right-radius: var(--radius);
+    }
+    &:last-child {
+      border-radius: unset;
+      border-bottom-right-radius: var(--radius);
+      border-bottom-left-radius: var(--radius);
+    }
   }
 `;

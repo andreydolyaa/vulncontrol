@@ -79,8 +79,7 @@ export const ScanDetails = () => {
           {isDone() && (
             <>
               <div>
-                server:{" "}
-                {status == "failed" ? "Scan failed!" : "Scan completed!"}
+                server: {status == "failed" ? "Scan failed!" : "Scan completed!"}
               </div>
             </>
           )}

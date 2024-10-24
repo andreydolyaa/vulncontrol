@@ -18,10 +18,12 @@ export const startScan = createAsyncThunk(
 
 export const getScans = createAsyncThunk(
   "nmap/getScans",
-  async ({ currentPage, limit }, { rejectWithValue }) => {
+  async ({ currentPage, limit, search }, { rejectWithValue }) => {
     try {
       const response = await api.get(
-        `/api/nmap/scans?page=${currentPage}&limit=${limit}`
+        `/api/nmap/scans?page=${currentPage}&limit=${limit}&search=${encodeURIComponent(
+          search
+        )}`
       );
       // return response.data;
       return {
