@@ -79,7 +79,8 @@ export const ScanDetails = () => {
           {isDone() && (
             <>
               <div>
-                server: {status == "failed" ? "Scan failed!" : "Scan completed!"}
+                server:{" "}
+                {status == "failed" ? "Scan failed!" : "Scan completed!"}
               </div>
             </>
           )}
@@ -92,13 +93,11 @@ export const ScanDetails = () => {
 const show = keyframes`
   0% {
     opacity: 0;
-    transform: translateX(40px);
   }
   100% {
     opacity: 1;
-    transform: translateX(0);
   }
-`
+`;
 
 const StyledDiv = styled.div`
   padding: 20px;
@@ -110,7 +109,7 @@ const StyledDiv = styled.div`
   overflow-y: auto;
   scroll-behavior: smooth;
   font-size: 16px;
-  animation: ${show} .3s ease-in-out 1;
+  animation: ${show} 0.3s ease-in-out 1;
   pre {
     white-space: pre-wrap;
     word-wrap: break-word;

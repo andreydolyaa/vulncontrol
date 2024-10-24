@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import moment from "moment";
 import { TbWindowMaximize, TbFileDownload } from "react-icons/tb";
 import { ScanStatus } from "./ScanStatus";
 import { useNavigate } from "react-router-dom";
+import { downloadBlob } from "../../utils";
 
 export const ScanItem = ({ scan, onClick }) => {
   const navigate = useNavigate();
@@ -11,6 +12,21 @@ export const ScanItem = ({ scan, onClick }) => {
     if (!date) return "TBD";
     const time = moment(date);
     return time.format("HH:mm:ss DD/MM");
+  };
+
+  const exportScan = (scan) => {
+    const fileName = `scan_${scan.id}_${scan.startTime}.txt`;
+    const content =
+      `Scan ID: ${scan.id}\n` +
+      `Executed by: ${scan.byUser}\n` +
+      `Started: ${scan.startTime}\n` +
+      `Ended: ${scan.endTime}\n` +
+      `Status: ${scan.status}\n` +
+      `Executed command: ${scan.command}\n` +
+      `Target: ${scan.target}\n` +
+      `Found Ports: ${scan.openPorts.length ? scan.openPorts : "None"}\n` +
+      `\nstdout:\n\n${scan.stdout.join("")}`;
+    downloadBlob(content, fileName);
   };
 
   const goToScan = (id) => navigate(`/nmap/${id}`);
@@ -37,6 +53,7 @@ export const ScanItem = ({ scan, onClick }) => {
             className="icon"
             data-tooltip-id="tooltip1"
             data-tooltip-content="Export"
+            onClick={() => exportScan(scan)}
           />
         </div>
       </td>

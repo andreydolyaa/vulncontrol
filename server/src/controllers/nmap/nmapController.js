@@ -31,7 +31,7 @@ export const getAllScans = async (req, res) => {
     ];
   }
 
-  try {    
+  try {
     const scans = await NmapScan.find(searchQuery)
       .skip(skip)
       .limit(limit)
