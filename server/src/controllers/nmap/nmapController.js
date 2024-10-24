@@ -1,7 +1,7 @@
 import logger from "../../core/logger.js";
 import { NmapScan } from "../../models/nmapScanModel.js";
 import { sleep } from "../../utils/index.js";
-import { startNmapContainer } from "./nmapDockerProcess.js";
+import { sendKillProcess, startNmapContainer } from "./nmapDockerProcess.js";
 
 // start new scan
 export const startNmap = async (req, res) => {
@@ -48,7 +48,7 @@ export const getAllScans = async (req, res) => {
     return res.status(200).send(responseData);
   } catch (error) {
     logger.error(`Failed to get scans: ${error}`);
-    return res.status(400).send({ message: "No scans found" });
+    return res.status(400).send({ message: "No scans found", error });
   }
 };
 
@@ -59,6 +59,15 @@ export const getScanById = async (req, res) => {
     return res.status(200).send(scan);
   } catch (error) {
     logger.error(`Failed to get scan by id: ${error}`);
-    return res.status(400).send({ message: "Could not find user" });
+    return res.status(400).send({ message: "Could not find user", error });
+  }
+};
+
+export const abortScan = async (req, res) => {
+  try {
+    await sendKillProcess(req.params.id);
+    return res.status(200).send({ message: "Process aborted" });
+  } catch (error) {
+    return res.status(400).send({ message: "Failed to abort process", error });
   }
 };

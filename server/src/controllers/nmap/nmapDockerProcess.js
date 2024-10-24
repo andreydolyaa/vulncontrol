@@ -13,7 +13,9 @@ import {
   removeDockerContainer,
 } from "./nmapStopDocker.js";
 
-let containers = {}; // TODO: find how to cache (redis maybe)
+// TODO: find how to cache (redis maybe)
+export let containers = {};
+export let processes = {};
 
 // initiate new scan
 export const startNmapContainer = async (reqBody) => {
@@ -29,28 +31,26 @@ const handleNmapProcess = async (scanId, reqBody) => {
   const argsList = createArgsList(args, containerName, target, command, uiMode);
   let isError = false;
 
-  containers[containerName] = scanId;
-
   getDockerVersion();
 
   await updateScanInDb(scanId, {
     $push: {
       stdout: {
         $each: [
-          "server: starting nmap docker image...",
-          "server: starting nmap scan...",
-          `server: nmap ${argsList.slice(4).join(" ")}`,
+          "server: starting nmap docker image...\n",
+          "server: starting nmap scan...\n",
+          `server: nmap ${argsList.slice(4).join(" ")}\n`,
         ],
       },
     },
   });
 
   const process = spawn("docker", argsList);
-  logger.info(
-    `starting new process: docker ${argsList.join(
-      " "
-    )}`
-  );
+
+  containers[containerName] = scanId;
+  processes[scanId] = process;
+
+  logger.info(`starting new process: docker ${argsList.join(" ")}`);
 
   process.stdout.on("data", async (data) => {
     const line = data.toString();
@@ -59,14 +59,15 @@ const handleNmapProcess = async (scanId, reqBody) => {
       $push: { stdout: line },
     };
 
-    const isPortDetected = await checkForOpenPorts(data);
+    const detectedOpenPort = await checkForOpenPorts(data);
 
-    if (isPortDetected) {
+    if (detectedOpenPort) {
       updates.$push = {
         stdout: line,
-        openPorts: isPortDetected,
+        openPorts: detectedOpenPort,
       };
     }
+
     await updateScanInDb(scanId, updates);
     logger.info(`cp | nmap scan in progress... [scan_id: ${scanId}]`);
   });
@@ -78,6 +79,7 @@ const handleNmapProcess = async (scanId, reqBody) => {
     });
     await removeDockerContainer(containerName);
     delete containers[containerName];
+    delete processes[containerName];
     sendFinalToastMessage(isError, scan);
     isError = false;
     logger.info("nmap scan ended successfully");
@@ -85,6 +87,8 @@ const handleNmapProcess = async (scanId, reqBody) => {
 
   process.stderr.on("data", async (data) => {
     const message = data.toString();
+    console.log(message, "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ 444444");
+    
     if (message.includes("QUITTING")) {
       isError = true;
     }
@@ -94,7 +98,7 @@ const handleNmapProcess = async (scanId, reqBody) => {
     logger.error(`stderr: ${message}`);
   });
 
-  process.on("exit", async (code) => {
+  process.on("exit", (code, signal) => {
     logger.info(`docker nmap process exited [code ${code}]`);
   });
 
@@ -106,6 +110,10 @@ const handleNmapProcess = async (scanId, reqBody) => {
     logger.warn(`docker process | caught interrupt signal (CTRL+C)`);
     containers = await removeAllContainers(containers);
   });
+
+  process.stdin.on("data", data => {
+    logger.warn(`received stdin: ${data}`)
+  })
 };
 
 // handle docker and nmap arguments
@@ -118,7 +126,7 @@ const createArgsList = (args, containerName, target, command, uiMode) => {
       containerName,
       "instrumentisto/nmap",
       ...fullShellCommand,
-      "-v"
+      "-v",
     ];
   }
   const userSelectedArgs = parseArgs(args);
@@ -146,4 +154,27 @@ const getDockerVersion = () => {
     const logMessage = `Docker version: ${stdout.trim()}`;
     logger.warn(logMessage);
   });
+};
+
+export const sendKillProcess = async (scanId) => {
+  const process = processes[scanId];
+  if (!process) {
+    return `Failed to kill process`;
+  }
+  process.kill("SIGTERM");
+  logger.warn(`cp | user request to abort process ${scanId}`);
+  // TODO: need to update db
+
+
+
+
+  // const updates = {
+  //   status: "aborted",
+  //   $push: {
+  //     stdout: "server: scan aborted by user!\n",
+  //   },
+  // };
+  // const scan = await updateScanInDb(scanId, updates);
+  // sendFinalToastMessage(isError, scan);
+  // delete processes[scanId];
 };

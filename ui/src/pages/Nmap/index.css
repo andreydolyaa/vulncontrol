@@ -37,19 +37,23 @@
         overflow: hidden;
         text-overflow: ellipsis;
       }
-      .ports {
-        /* text-align: center; */
-      }
       .actions {
         .icons {
           display: flex;
           align-items: center;
           justify-content: center;
+          width: 130px;
           .icon {
             height: 22px;
             width: 22px;
             stroke-width: 1.2;
             margin: 0 5px;
+            outline: none;
+          }
+          .stop-icon {
+            height: 24px;
+            width: 24px;
+            color:rgb(249, 72, 72);
           }
         }
       }

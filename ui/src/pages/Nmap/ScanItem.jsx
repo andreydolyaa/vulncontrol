@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import moment from "moment";
-import { TbWindowMaximize, TbFileDownload } from "react-icons/tb";
+import { TbAlignBoxLeftMiddle, TbFileDownload } from "react-icons/tb";
+import { PiStopCircleLight } from "react-icons/pi";
+
 import { ScanStatus } from "./ScanStatus";
 import { useNavigate } from "react-router-dom";
 import { downloadBlob } from "../../utils";
+import { useDispatch } from "react-redux";
+import { abortScan } from "../../redux/nmapSlice";
 
 export const ScanItem = ({ scan, onClick }) => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const parseDate = (date) => {
@@ -31,6 +36,12 @@ export const ScanItem = ({ scan, onClick }) => {
 
   const goToScan = (id) => navigate(`/nmap/${id}`);
 
+  const abort = (id) => {
+    dispatch(abortScan(id));
+  };
+
+  const isLive = () => scan.status === "live";
+
   return (
     <tr key={scan.id} className="table-body" onClick={onClick}>
       <td>{scan.target}</td>
@@ -43,18 +54,28 @@ export const ScanItem = ({ scan, onClick }) => {
       </td>
       <td className="actions" onClick={(e) => e.stopPropagation()}>
         <div className="icons">
-          <TbWindowMaximize
+          {isLive() && (
+            <PiStopCircleLight
+              className="icon stop-icon"
+              data-tooltip-id="tooltip1"
+              data-tooltip-content="Abort Scan"
+              onClick={() => abort(scan.id)}
+            />
+          )}
+          <TbAlignBoxLeftMiddle
             className="icon"
             data-tooltip-id="tooltip1"
             data-tooltip-content="View"
             onClick={() => goToScan(scan.id)}
           />
-          <TbFileDownload
-            className="icon"
-            data-tooltip-id="tooltip1"
-            data-tooltip-content="Export"
-            onClick={() => exportScan(scan)}
-          />
+          {!isLive() && (
+            <TbFileDownload
+              className="icon"
+              data-tooltip-id="tooltip1"
+              data-tooltip-content="Export"
+              onClick={() => exportScan(scan)}
+            />
+          )}
         </div>
       </td>
     </tr>

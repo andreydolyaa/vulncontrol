@@ -40,6 +40,21 @@ export const getScans = createAsyncThunk(
   }
 );
 
+export const abortScan = createAsyncThunk(
+  "nmap/abortScan",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await api.post(`/api/nmap/abort/${id}`);
+      return response.data;
+    } catch (error) {
+      if (error.response?.data) {
+        return rejectWithValue(error.response?.data);
+      }
+      return rejectWithValue({ message: "An error occurred" });
+    }
+  }
+);
+
 export const nmapSlice = createSlice({
   name: "nmap",
   initialState: {

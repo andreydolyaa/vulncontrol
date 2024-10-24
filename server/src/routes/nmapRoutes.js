@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  abortScan,
   getAllScans,
   getScanById,
   startNmap,
@@ -12,5 +13,6 @@ const router = express.Router();
 router.post("/nmap", startNmap);
 router.get("/nmap/scans", getAllScans);
 router.get("/nmap/:id", getScanById);
+router.post("/nmap/abort/:id", abortScan);
 
 export default router;
