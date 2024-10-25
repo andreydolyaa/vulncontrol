@@ -7,13 +7,10 @@ export const ScanStatus = memo(({ status }) => {
       ? "rgba(8, 189, 255, 0.1)"
       : status === "live"
       ? "rgba(8, 255, 139,.1)"
-      : "rgba(255, 8, 115, 0.1)";
+      : status === "aborted"
+      ? "rgba(255, 8, 70, 0.1)"
+      : "rgba(172, 160, 132, 0.1)";
   };
 
-  return (
-    <Status
-      text={status}
-      background={checkStatus(status)}
-    />
-  );
+  return <Status text={status} background={checkStatus(status)} />;
 });

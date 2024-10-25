@@ -33,6 +33,7 @@ const NmapScanSchema = new mongoose.Schema(
     },
     command: String,
     openPorts: [Number],
+    processPid: Number,
     id: {
       type: String,
       default: function () {

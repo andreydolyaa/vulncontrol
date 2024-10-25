@@ -1,7 +1,12 @@
 import React from "react";
 import styled from "styled-components";
 import { capitalize, changeRgbaAlpha } from "../utils";
-import { TbRefresh, TbCircleX, TbCircleCheck } from "react-icons/tb";
+import {
+  TbRefresh,
+  TbCircleX,
+  TbCircleCheck,
+  TbExclamationCircle,
+} from "react-icons/tb";
 
 export const Status = ({ text, background }) => {
   const IconComponent = () => {
@@ -9,20 +14,25 @@ export const Status = ({ text, background }) => {
       return <TbRefresh className="icon animate-spin mr-2" />;
     } else if (text === "done") {
       return <TbCircleCheck className="icon mr-2" />;
+    } else if (text === "aborted") {
+      return <TbExclamationCircle className="icon mr-2" />;
     } else {
       return <TbCircleX className="icon mr-2" />;
     }
   };
+
+  const checkText = (text) => (text === "aborted" ? "halted" : text);
+
   return (
     <StyledDiv $background={background}>
       <IconComponent />
-      <div>{capitalize(text)}</div>
+      <div>{capitalize(checkText(text))}</div>
     </StyledDiv>
   );
 };
 
 const StyledDiv = styled.div`
-  width: 85px;
+  width: 95px;
   height: 26px;
   border-radius: 20px;
   display: flex;

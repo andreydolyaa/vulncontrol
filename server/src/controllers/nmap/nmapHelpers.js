@@ -89,9 +89,9 @@ export const parseArgs = (args) => {
   return newArgsList;
 };
 
-export const sendFinalToastMessage = (isError, scan) => {
+export const sendFinalToastMessage = (isError, isAborted, scan) => {
   const wrapper = {
-    type: isError ? "failed" : "done",
+    type: isError ? "failed" : isAborted ? "aborted" : "done",
     scan,
   };
   websocketServer.sendToAll(wrapper);

@@ -15,7 +15,7 @@ export const removeAllContainers = async (containers) => {
 
 export const stopDockerContainer = (containerName) => {
   return new Promise((resolve, reject) => {
-    const stop = spawn("docker", [stop, containerName]);
+    const stop = spawn("docker", ["stop", containerName]);
 
     stop.stdout.on("data", (data) => {
       logger.info(`docker stop ${containerName} | stdout: ${data}`);

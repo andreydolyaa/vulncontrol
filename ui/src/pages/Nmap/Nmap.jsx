@@ -20,7 +20,7 @@ export const Nmap = () => {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const limit = 2;
+  const limit = 6;
   const [formDataCommandMode, setFormDataCommandMode] = useState({
     command: "",
     userId: user.id,

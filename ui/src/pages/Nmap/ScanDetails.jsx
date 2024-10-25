@@ -76,14 +76,6 @@ export const ScanDetails = () => {
           {stdout.map((line, index) => {
             return <div key={index}>{line}</div>;
           })}
-          {isDone() && (
-            <>
-              <div>
-                server:{" "}
-                {status == "failed" ? "Scan failed!" : "Scan completed!"}
-              </div>
-            </>
-          )}
         </pre>
       </StyledDiv>
     </Container>

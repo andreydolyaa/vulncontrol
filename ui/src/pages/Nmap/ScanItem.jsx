@@ -36,8 +36,8 @@ export const ScanItem = ({ scan, onClick }) => {
 
   const goToScan = (id) => navigate(`/nmap/${id}`);
 
-  const abort = (id) => {
-    dispatch(abortScan(id));
+  const abort = (pid) => {
+    dispatch(abortScan(pid));
   };
 
   const isLive = () => scan.status === "live";
@@ -59,7 +59,7 @@ export const ScanItem = ({ scan, onClick }) => {
               className="icon stop-icon"
               data-tooltip-id="tooltip1"
               data-tooltip-content="Abort Scan"
-              onClick={() => abort(scan.id)}
+              onClick={() => abort(scan.processPid)}
             />
           )}
           <TbAlignBoxLeftMiddle

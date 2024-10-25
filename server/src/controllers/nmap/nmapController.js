@@ -65,7 +65,7 @@ export const getScanById = async (req, res) => {
 
 export const abortScan = async (req, res) => {
   try {
-    await sendKillProcess(req.params.id);
+    await sendKillProcess(req.params.pid);
     return res.status(200).send({ message: "Process aborted" });
   } catch (error) {
     return res.status(400).send({ message: "Failed to abort process", error });

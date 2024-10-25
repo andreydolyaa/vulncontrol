@@ -1,5 +1,6 @@
 import { exec, spawn } from "child_process";
 import logger from "../../core/logger.js";
+import mainProcess from "node:process";
 
 import {
   updateScanInDb,
@@ -11,6 +12,7 @@ import {
 import {
   removeAllContainers,
   removeDockerContainer,
+  stopDockerContainer,
 } from "./nmapStopDocker.js";
 
 // TODO: find how to cache (redis maybe)
@@ -47,8 +49,10 @@ const handleNmapProcess = async (scanId, reqBody) => {
 
   const process = spawn("docker", argsList);
 
+  await updateScanInDb(scanId, { processPid: process.pid });
+
   containers[containerName] = scanId;
-  processes[scanId] = process;
+  processes[process.pid] = process;
 
   logger.info(`starting new process: docker ${argsList.join(" ")}`);
 
@@ -73,48 +77,71 @@ const handleNmapProcess = async (scanId, reqBody) => {
   });
 
   process.stdout.on("end", async () => {
-    const scan = await updateScanInDb(scanId, {
-      status: isError ? "failed" : "done",
-      endTime: new Date().toISOString(),
-    });
-    await removeDockerContainer(containerName);
-    delete containers[containerName];
-    delete processes[containerName];
-    sendFinalToastMessage(isError, scan);
-    isError = false;
     logger.info("nmap scan ended successfully");
   });
 
   process.stderr.on("data", async (data) => {
     const message = data.toString();
-    console.log(message, "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ 444444");
-    
+
     if (message.includes("QUITTING")) {
       isError = true;
     }
+
     await updateScanInDb(scanId, {
       $push: { stdout: message },
     });
     logger.error(`stderr: ${message}`);
   });
 
-  process.on("exit", (code, signal) => {
-    logger.info(`docker nmap process exited [code ${code}]`);
+  process.on("exit", async (code, signal) => {
+    let isAborted = false;
+
+    if (code === null && signal === "SIGKILL") {
+      isAborted = true;
+    }
+
+    const scan = await updateScanInDb(scanId, {
+      status: isError ? "failed" : isAborted ? "aborted" : "done",
+      endTime: new Date().toISOString(),
+    });
+
+    if (isAborted) {
+      await updateScanInDb(scanId, {
+        $push: { stdout: "server: scan aborted by user!" },
+      });
+      await stopDockerContainer(containerName);
+    }
+
+    if (isError) {
+      await updateScanInDb(scanId, {
+        $push: { stdout: "server: scan failed!" },
+      });
+    }
+
+    await removeDockerContainer(containerName);
+    delete containers[containerName];
+    delete processes[process.pid];
+
+    sendFinalToastMessage(isError, isAborted, scan);
+    isError = false;
+    isAborted = false;
+
+    logger.info(
+      `docker nmap process exited ${
+        code ? "[code " + code + "]" : "[signal " + signal + "]"
+      }`
+    );
   });
 
-  process.on("close", async (code) => {
+  process.on("close", async (code, signal) => {
     logger.info(`docker nmap process is closed [code ${code}]`);
   });
-
-  process.on("SIGINT", async () => {
-    logger.warn(`docker process | caught interrupt signal (CTRL+C)`);
-    containers = await removeAllContainers(containers);
-  });
-
-  process.stdin.on("data", data => {
-    logger.warn(`received stdin: ${data}`)
-  })
 };
+
+mainProcess.on("SIGINT", async () => {
+  logger.warn(`docker process | caught interrupt signal (CTRL+C)`);
+  containers = await removeAllContainers(containers);
+});
 
 // handle docker and nmap arguments
 const createArgsList = (args, containerName, target, command, uiMode) => {
@@ -156,25 +183,11 @@ const getDockerVersion = () => {
   });
 };
 
-export const sendKillProcess = async (scanId) => {
-  const process = processes[scanId];
-  if (!process) {
-    return `Failed to kill process`;
+export const sendKillProcess = async (pid) => {
+  const process = processes[pid];
+  if (process) {
+    process.kill("SIGKILL");
+    logger.warn(`cp | user request to abort process PID:${pid}`);
   }
-  process.kill("SIGTERM");
-  logger.warn(`cp | user request to abort process ${scanId}`);
-  // TODO: need to update db
-
-
-
-
-  // const updates = {
-  //   status: "aborted",
-  //   $push: {
-  //     stdout: "server: scan aborted by user!\n",
-  //   },
-  // };
-  // const scan = await updateScanInDb(scanId, updates);
-  // sendFinalToastMessage(isError, scan);
-  // delete processes[scanId];
+  logger.error(`cp | PID not found: ${pid}`);
 };
