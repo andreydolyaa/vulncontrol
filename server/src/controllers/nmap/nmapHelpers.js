@@ -46,7 +46,7 @@ export const createNewScan = async (reqBody) => {
 };
 
 // create scan type
-const setScanType = (args) => {
+export const setScanType = (args) => {
   const list = parseArgs(args);
   const types = {
     "-sn": "Network Discovery",

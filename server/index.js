@@ -9,6 +9,9 @@ import { serverMsg } from "./src/constants/messages.js";
 import { connectToDatabase } from "./src/core/database.js";
 import { httpLoggerMiddleware } from "./src/middleware/httpLogger.js";
 import { WsServer } from "./src/core/websocket.js";
+import { Nmap } from "./src/modules/Nmap/Nmap.js";
+import mongoose from "mongoose";
+import { ResourceManager } from "./src/modules/ResourceManager/ResourceManager.js";
 
 dotenv.config();
 
@@ -32,6 +35,9 @@ const startServers = async () => {
     }
   });
 };
+
+export const processes = new ResourceManager("processes");
+export const containers = new ResourceManager("containers");
 
 const shutdown = (code) => {
   logger.error(serverMsg.SHUT_DOWN_IN_PROGRESS);

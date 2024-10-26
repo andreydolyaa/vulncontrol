@@ -1,18 +1,42 @@
 import logger from "../../core/logger.js";
 import { NmapScan } from "../../models/nmapScanModel.js";
+import { Nmap } from "../../modules/Nmap/Nmap.js";
 import { sleep } from "../../utils/index.js";
 import { sendKillProcess, startNmapContainer } from "./nmapDockerProcess.js";
 
-// start new scan
+const run = async (target, args, userId, command, uiMode) => {
+  const nmap = new Nmap(target, args, userId, command, uiMode);
+  const scanId = await nmap.createNewScan();
+  await nmap.startProcess();
+  return scanId;
+};
+
+// start new scan TEST
 export const startNmap = async (req, res) => {
+  const { target, args, userId, command = null, uiMode = null } = req.body;
+
   try {
-    const scanId = await startNmapContainer(req.body);
+    const scanId = await run(target, args, userId, command, uiMode);
+    // const scanId = await startNmapContainer(req.body);
     return res.status(200).send({ message: "Nmap scan started", scanId });
   } catch (error) {
     logger.error(`Failed to start nmap scan: ${error}`);
-    return res.status(400).send({ message: "Failed to start Nmap scan" });
+    return res
+      .status(400)
+      .send({ message: "Failed to start Nmap scan", error });
   }
 };
+
+// // start new scan
+// export const startNmap = async (req, res) => {
+//   try {
+//     const scanId = await startNmapContainer(req.body);
+//     return res.status(200).send({ message: "Nmap scan started", scanId });
+//   } catch (error) {
+//     logger.error(`Failed to start nmap scan: ${error}`);
+//     return res.status(400).send({ message: "Failed to start Nmap scan" });
+//   }
+// };
 
 // get all the scans
 export const getAllScans = async (req, res) => {
