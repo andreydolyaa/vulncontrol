@@ -44,10 +44,16 @@ export class WsServer {
     // TODO: TBD
     logger.error(`ws | error occurred during subscription: ${error}`);
   }
-  send(message, subscriber) {
+  async send(message, subscriber) {
+    console.log(message, "MESSAGE");
+    console.log(subscriber, "SUBSCRIBER");
+    console.log(JSON.stringify(this.subscribers), "SUBSCRIBERS");
+    
+    
     if (this.subscribers[subscriber]) {
       try {
         this.subscribers[subscriber].send(JSON.stringify(message));
+        logger.info(`ws | send message to subscriber: ${subscriber}`);
       } catch (error) {
         logger.error(
           `ws | failed to send message to subscriber: ${subscriber} error: ${error}`
@@ -55,7 +61,7 @@ export class WsServer {
       }
     }
   }
-  updateBySubscriptionType(scan, subscribersCategory) {
+  async updateBySubscriptionType(scan, subscribersCategory) {
     const data = JSON.stringify(scan);
     try {
       for (const subscriber in this.subscribers) {

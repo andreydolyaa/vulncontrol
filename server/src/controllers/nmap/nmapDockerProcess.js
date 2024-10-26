@@ -30,7 +30,7 @@ export const startNmapContainer = async (reqBody) => {
 const handleNmapProcess = async (scanId, reqBody) => {
   const { target, args, userId, command, uiMode } = reqBody;
   const containerName = `nmap_${scanId.toString()}`;
-  const argsList = createArgsList(args, containerName, target, command, uiMode);
+  const argsList = parseArguments(args, containerName, target, command, uiMode);
   let isError = false;
 
   getDockerVersion();
@@ -139,12 +139,12 @@ const handleNmapProcess = async (scanId, reqBody) => {
 };
 
 mainProcess.on("SIGINT", async () => {
-  logger.warn(`docker process | caught interrupt signal (CTRL+C)`);
+  logger.warn(`docker process | caught interrupt signal (CTRL+C)`); // <!--------------------------------------------- use
   containers = await removeAllContainers(containers);
 });
 
 // handle docker and nmap arguments
-const createArgsList = (args, containerName, target, command, uiMode) => {
+export const parseArguments = (args, containerName, target, command, uiMode) => {  
   if (uiMode === "command" && command) {
     const fullShellCommand = command.replace("nmap", "").trim().split(" ");
     return [
