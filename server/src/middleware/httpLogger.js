@@ -6,7 +6,7 @@ export const httpLoggerMiddleware = (req, res, next) => {
   res.on("finish", () => {
     const { statusCode } = res;
     logger.info(
-      `http | Incoming [${method}] Request; Status: [${statusCode}]; To Path: [${originalUrl}]; Payload: ${JSON.stringify(
+      `HTTP | Incoming [${method}] Request; Status: [${statusCode}]; To Path: [${originalUrl}]; Payload: ${JSON.stringify(
         req?.body || "None"
       )} Headers: ${JSON.stringify(headers)}`
     );

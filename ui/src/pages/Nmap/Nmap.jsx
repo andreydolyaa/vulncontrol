@@ -48,7 +48,7 @@ export const Nmap = () => {
     },
   });
 
-  const scanSubscriptionRoute = `${WS_URL}/ws/nmap/nmap-updates_${randomNum()}`;
+  const scanSubscriptionRoute = `${WS_URL}/ws/nmap/nmap-updates-${randomNum()}`;
 
   useEffect(() => {
     dispatch(getScans({ currentPage, limit, search })) // TODO: add search to request

@@ -2,7 +2,7 @@ import logger from "../../core/logger.js";
 import { NmapScan } from "../../models/nmapScanModel.js";
 import { Nmap } from "../../modules/Nmap/Nmap.js";
 import { sleep } from "../../utils/index.js";
-import { sendKillProcess, startNmapContainer } from "./nmapDockerProcess.js";
+// import { sendKillProcess, startNmapContainer } from "./nmapDockerProcess.js";
 
 const run = async (target, args, userId, command, uiMode) => {
   const nmap = new Nmap(target, args, userId, command, uiMode);
@@ -89,7 +89,7 @@ export const getScanById = async (req, res) => {
 
 export const abortScan = async (req, res) => {
   try {
-    await sendKillProcess(req.params.pid);
+    await Nmap.sendKill(req.params.pid);
     return res.status(200).send({ message: "Process aborted" });
   } catch (error) {
     return res.status(400).send({ message: "Failed to abort process", error });
