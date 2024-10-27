@@ -24,7 +24,7 @@ export class Nmap {
   };
 
   constructor(target, args, userId, command, uiMode) {
-    this.nmapProcess = null;
+    this.nmap = null;
     this.target = target;
     this.args = args;
     this.userId = userId;
@@ -33,8 +33,8 @@ export class Nmap {
     this.ipAddress = null;
     this.scan = null;
     this.containerName = null;
-    this.isError = false;
-    this.isAborted = false;
+    this.error = false;
+    this.aborted = false;
     this.arguments = null;
 
     if (this.command) {
@@ -78,43 +78,39 @@ export class Nmap {
     };
     await this.updateDb(data);
 
-    this.nmapProcess = new DockerProcess(this.arguments, this.containerName);
+    this.nmap = new DockerProcess(this.arguments, this.containerName);
 
-    await this.nmapProcess.create();
-    await this.nmapProcess.run();
+    await this.nmap.run();
 
-    this.nmapProcess.on("stdout", this.handleStdout);
-    this.nmapProcess.on("stdout-end", this.handleStdoutEnd);
-    this.nmapProcess.on("stderr", this.handleStderr);
-    this.nmapProcess.on("exit", this.handleExit);
-    this.nmapProcess.on("close", this.handleClose);
+    this.nmap.on("stdout", this.stdout);
+    this.nmap.on("stderr", this.stderr);
+    this.nmap.on("exit", this.exit);
+    this.nmap.on("close", this.close);
 
     containers.add(this.containerName, this.scan.id);
-    processes.add(this.nmapProcess.pid, this.nmapProcess);
+    processes.add(this.nmap.docker?.pid, this.nmap);
 
-    await this.updateDb({ processPid: this.nmapProcess.pid });
+    await this.updateDb({ processPid: this.nmap.docker?.pid });
   }
 
-  handleStdout = async (data) => {
+  stdout = async (data) => {
     await this.updateStdout(data);
     Logger.NM.info(`scan in progress... [scan id: ${this.scan.id}]`);
   };
 
-  handleStdoutEnd = async () => {
-    Logger.NM.info(`scan ended successfully`);
-  };
-
-  handleStderr = async (data) => {
+  stderr = async (data) => {
     if (data.includes("QUITTING")) {
-      this.isError = true;
+      this.error = true;
     }
-    await this.updateDb(data);
+    await this.updateStdout(data);
     Logger.NM.error(`stderr: ${data}`);
   };
 
-  handleExit = async (code, signal) => {
+  exit = async (code, signal) => {
     if (code == null && signal == Nmap.SIGKILL) {
-      this.isAborted = true;
+      this.aborted = true;
+      await this.updateStdout("server: scan aborted by user!");
+      await this.nmap.stop();
     }
 
     this.scan = await this.updateDb({
@@ -122,40 +118,37 @@ export class Nmap {
       endTime: this.setTime(),
     });
 
-    if (this.isAborted) {
-      await this.updateDb({
-        $push: { stdout: "server: scan aborted by user!" },
-      });
+    if (this.error) {
+      await this.updateStdout("server: scan failed!");
     }
 
-    await this.nmapProcess.stop();
+    await this.nmap.remove();
 
-    if (this.isError) {
-      await this.updateDb({ $push: { stdout: "server: scan failed!" } });
+    if (!this.error && !this.aborted) {
+      await this.updateStdout("server: scan completed!");
     }
-
-    await this.nmapProcess.remove();
 
     containers.remove(this.containerName);
-    processes.remove(this.nmapProcess.pid);
+    processes.remove(this.nmap.pid);
 
     this.sendToast();
 
-    this.isError = false;
-    this.isAborted = false;
+    this.error = false;
+    this.aborted = false;
 
-    const message = code ? "[code " + code + "]" : "[signal " + signal + "]";
+    const message =
+      code == 0 || code ? "[code " + code + "]" : "[signal " + signal + "]";
     Logger.NM.info(`process exited ${message}`);
   };
 
-  async handleClose(code) {
+  async close(code, signal) {
     Logger.NM.info(`process is closed [code: ${code}]`);
   }
 
   setStatus() {
-    return this.isError
+    return this.error
       ? Nmap.STATUS.FAILED
-      : this.isAborted
+      : this.aborted
       ? Nmap.STATUS.ABORTED
       : Nmap.STATUS.DONE;
   }
@@ -181,7 +174,7 @@ export class Nmap {
     );
     Logger.NM.info(`update scan [id: ${this.scan.id}]`);
     websocketServer.send(doc, this.scan.id);
-    websocketServer.updateBySubscriptionType(doc, "nmap_updates");
+    websocketServer.updateBySubscriptionType(doc, "nmap-updates");
     return doc;
   }
 
@@ -198,7 +191,7 @@ export class Nmap {
   }
 
   static async sendKill(pid) {
-    const process = processes[pid];
+    const process = processes.getResource(pid);
     if (process) {
       process.kill(Nmap.SIGKILL);
       Logger.NM.warn(`user request to abort process [pid: ${pid}]`);

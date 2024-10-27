@@ -18,7 +18,7 @@ export class WsServer {
   handleNewConnection(websocket, subscriber) {
     this.subscribers[subscriber] = websocket;
     logger.info(
-      `ws | new client subscribed to process updates: ${subscriber} | [subscribers: ${JSON.stringify(
+      `WEBSOCKET | new client subscribed to process updates: ${subscriber} | [subscribers: ${JSON.stringify(
         Object.keys(this.subscribers)
       )}`
     );
@@ -35,45 +35,44 @@ export class WsServer {
   handleDisconnection(subscriber) {
     delete this.subscribers[subscriber];
     logger.info(
-      `ws | client unsubscribed from process: ${subscriber} | [subscribers: ${JSON.stringify(
+      `WEBSOCKET | client unsubscribed from process: ${subscriber} | [subscribers: ${JSON.stringify(
         this.subscribers
       )}]`
     );
   }
   handleError(error) {
     // TODO: TBD
-    logger.error(`ws | error occurred during subscription: ${error}`);
+    logger.error(`WEBSOCKET | error occurred during subscription: ${error}`);
   }
   async send(message, subscriber) {
-    console.log(message, "MESSAGE");
-    console.log(subscriber, "SUBSCRIBER");
-    console.log(JSON.stringify(this.subscribers), "SUBSCRIBERS");
-    
-    
     if (this.subscribers[subscriber]) {
       try {
         this.subscribers[subscriber].send(JSON.stringify(message));
-        logger.info(`ws | send message to subscriber: ${subscriber}`);
+        logger.info(`WEBSOCKET | send message to subscriber: ${subscriber}`);
       } catch (error) {
         logger.error(
-          `ws | failed to send message to subscriber: ${subscriber} error: ${error}`
+          `WEBSOCKET | failed to send message to subscriber: ${subscriber} error: ${error}`
         );
       }
     }
   }
   async updateBySubscriptionType(scan, subscribersCategory) {
     const data = JSON.stringify(scan);
+    
+    
     try {
       for (const subscriber in this.subscribers) {
         if (subscriber.includes(subscribersCategory)) {
           this.subscribers[subscriber].send(data);
           logger.info(
-            `ws | update sended to subscriber [${subscriber}] [${data}]`
+            `WEBSOCKET | update sended to subscriber [${subscriber}]`
           );
         }
       }
     } catch (error) {
-      logger.error(`ws | failed to update subscribers | error: ${error}`);
+      logger.error(
+        `WEBSOCKET | failed to update subscribers | error: ${error}`
+      );
     }
   }
   sendToAll(message) {
@@ -82,9 +81,9 @@ export class WsServer {
       for (const client of Object.values(this.subscribers)) {
         client.send(data);
       }
-      logger.info(`ws | message broadcasting: ${data}`);
+      logger.info(`WEBSOCKET | message broadcasting: ${data}`);
     } catch (error) {
-      logger.error(`ws | error occurred during broadcasting: ${error}`);
+      logger.error(`WEBSOCKET | error occurred during broadcasting: ${error}`);
     }
   }
   getProcessId(request) {
