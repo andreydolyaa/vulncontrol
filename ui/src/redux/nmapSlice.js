@@ -55,6 +55,21 @@ export const abortScan = createAsyncThunk(
   }
 );
 
+export const deleteScan = createAsyncThunk(
+  "nmap/deleteScan",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await api.delete(`/api/nmap/${id}`);
+      return response.data;
+    } catch (error) {
+      if (error.response?.data) {
+        return rejectWithValue(error.response?.data);
+      }
+      return rejectWithValue({ message: "An error occurred" });
+    }
+  }
+);
+
 export const nmapSlice = createSlice({
   name: "nmap",
   initialState: {
@@ -97,6 +112,11 @@ export const nmapSlice = createSlice({
       .addCase(getScans.rejected, (state, action) => {
         state.status = "failed";
         state.loading = false;
+      })
+      .addCase(deleteScan.fulfilled, (state, action) => {
+        state.scans = state.scans.filter(
+          (scan) => scan.id !== action.payload.id
+        );
       });
   },
 });
