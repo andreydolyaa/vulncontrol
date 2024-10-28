@@ -14,9 +14,7 @@ export class ResourceManager {
   removeAll() {
     this[this.resourceName] = {};
   }
-  getResource(id) {
-    console.log(JSON.stringify(this[this.resourceName][id]));
-    
+  getResource(id) {    
     return this[this.resourceName][id];
   }
   getInfo() {
