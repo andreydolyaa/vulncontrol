@@ -76,3 +76,13 @@ export const abortScan = async (req, res) => {
     return res.status(400).send({ message: "Failed to abort process", error });
   }
 };
+
+export const deleteScan = async (req, res) => {
+  try {
+    const scan = await NmapScan.findOneAndDelete(req.params.id);
+    return res.status(200).send({ message: "Scan deleted", id: scan.id });
+  } catch (error) {
+    logger.error(`Failed to delete scan: ${error}`);
+    return res.status(400).send({ message: "Failed to delete scan", error });
+  }
+};

@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import moment from "moment";
-import { TbAlignBoxLeftMiddle, TbFileDownload } from "react-icons/tb";
+import { TbAlignBoxLeftMiddle, TbFileDownload, TbTrash } from "react-icons/tb";
 import { PiStopCircleLight } from "react-icons/pi";
 
 import { ScanStatus } from "./ScanStatus";
 import { useNavigate } from "react-router-dom";
 import { downloadBlob } from "../../utils";
 import { useDispatch } from "react-redux";
-import { abortScan } from "../../redux/nmapSlice";
+import { abortScan, deleteScan } from "../../redux/nmapSlice";
 
 export const ScanItem = ({ scan, onClick }) => {
   const dispatch = useDispatch();
@@ -40,6 +40,10 @@ export const ScanItem = ({ scan, onClick }) => {
     dispatch(abortScan(pid));
   };
 
+  const remove = (id) => {
+    dispatch(deleteScan(id));
+  };
+
   const isLive = () => scan.status === "live";
 
   return (
@@ -69,12 +73,20 @@ export const ScanItem = ({ scan, onClick }) => {
             onClick={() => goToScan(scan.id)}
           />
           {!isLive() && (
-            <TbFileDownload
-              className="icon"
-              data-tooltip-id="tooltip1"
-              data-tooltip-content="Export"
-              onClick={() => exportScan(scan)}
-            />
+            <>
+              <TbTrash
+                className="icon"
+                data-tooltip-id="tooltip1"
+                data-tooltip-content="Delete"
+                onClick={() => remove(scan.id)}
+              />
+              <TbFileDownload
+                className="icon"
+                data-tooltip-id="tooltip1"
+                data-tooltip-content="Export"
+                onClick={() => exportScan(scan)}
+              />
+            </>
           )}
         </div>
       </td>
