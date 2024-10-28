@@ -84,7 +84,6 @@ export const Nmap = () => {
     setFormDataCommandMode({
       ...formDataCommandMode,
       command: e.target.value,
-      uiMode,
     });
   };
 

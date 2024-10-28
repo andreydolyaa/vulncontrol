@@ -1,15 +1,10 @@
-import { exec, spawn } from "child_process";
-import { parseArguments } from "../../controllers/nmap/nmapDockerProcess.js";
-import {
-  checkForOpenPorts,
-  setScanType,
-} from "../../controllers/nmap/nmapHelpers.js";
 import { Logger } from "../../core/logger2.js";
 import { NmapScan } from "../../models/nmapScanModel.js";
 import { extractIP } from "../../utils/index.js";
-import { DatabaseActions } from "../DatabaseActions/DatabaseActions.js";
+import { createDocument, updateDocument } from "../DatabaseActions/index.js";
 import { DockerProcess } from "../DockerProcess/DockerProcess.js";
 import { containers, processes, websocketServer } from "../../../index.js";
+import { scanTypes } from "../../constants/common.js";
 
 export class Nmap {
   static SIGKILL = "SIGKILL";
@@ -23,60 +18,50 @@ export class Nmap {
     SHELL: "Shell Command",
   };
 
-  constructor(target, args, userId, command, uiMode) {
-    this.nmap = null;
+  constructor(target, args, userId, command) {
     this.target = target;
     this.args = args;
     this.userId = userId;
     this.command = command;
-    this.uiMode = uiMode;
-    this.ipAddress = null;
+    this.ip = null;
     this.scan = null;
-    this.containerName = null;
+    this.nmap = null;
     this.error = false;
     this.aborted = false;
     this.arguments = null;
+    this.containerName = null;
+    this.imageName = "instrumentisto/nmap";
 
     if (this.command) {
-      this.ipAddress = extractIP(this.command);
+      this.ip = extractIP(this.command);
+      this.target = this.ip;
     }
   }
 
-  async createNewScan() {
-    this.scan = await DatabaseActions.createNewDocument(NmapScan, {
-      target: this.ipAddress ? this.ipAddress : this.target,
+  async init() {
+    this.scan = await createDocument(NmapScan, {
+      target: this.target,
       stdout: [],
       status: Nmap.STATUS.LIVE,
       byUser: this.userId,
-      scanType: this.command ? Nmap.TYPE.SHELL : setScanType(this.args),
+      scanType: this.command ? Nmap.TYPE.SHELL : this.setScanType(this.args),
       startTime: this.setTime(),
-      command: this.command ? this.command : "X",
+      command: this.command,
     });
     const scanId = this.scan._id.toString();
     this.containerName = "nmap_" + scanId;
-    this.arguments = parseArguments(
-      this.args,
-      this.containerName,
-      this.target,
-      this.command,
-      this.uiMode
-    );
+    this.arguments = this.argumentsListForDockerChildProcess();
     return scanId;
   }
 
-  async startProcess() {
-    const data = {
-      $push: {
-        stdout: {
-          $each: [
-            "server: starting nmap docker image...\n",
-            "server: starting nmap scan...\n",
-            `server: nmap ${this.arguments.slice(4).join(" ")}\n`,
-          ],
-        },
-      },
-    };
-    await this.updateDb(data);
+  async start() {
+    await this.handleStandardStream({
+      $each: [
+        "server: starting nmap docker image...\n",
+        "server: starting nmap scan...\n",
+        `server: nmap ${this.arguments.slice(4).join(" ")}\n`,
+      ],
+    });
 
     this.nmap = new DockerProcess(this.arguments, this.containerName);
 
@@ -94,7 +79,8 @@ export class Nmap {
   }
 
   stdout = async (data) => {
-    await this.updateStdout(data);
+    const port = await this.isOpenPort(data);
+    await this.handleStandardStream(data, port);
     Logger.NM.info(`scan in progress... [scan id: ${this.scan.id}]`);
   };
 
@@ -102,14 +88,14 @@ export class Nmap {
     if (data.includes("QUITTING")) {
       this.error = true;
     }
-    await this.updateStdout(data);
+    await this.handleStandardStream(data);
     Logger.NM.error(`stderr: ${data}`);
   };
 
   exit = async (code, signal) => {
     if (code == null && signal == Nmap.SIGKILL) {
       this.aborted = true;
-      await this.updateStdout("server: scan aborted by user!");
+      await this.handleStandardStream("server: scan aborted by user!");
       await this.nmap.stop();
     }
 
@@ -119,13 +105,13 @@ export class Nmap {
     });
 
     if (this.error) {
-      await this.updateStdout("server: scan failed!");
+      await this.handleStandardStream("server: scan failed!");
     }
 
     await this.nmap.remove();
 
     if (!this.error && !this.aborted) {
-      await this.updateStdout("server: scan completed!");
+      await this.handleStandardStream("server: scan completed!");
     }
 
     containers.remove(this.containerName);
@@ -157,9 +143,8 @@ export class Nmap {
     return new Date().toISOString();
   }
 
-  async updateStdout(data) {
+  async handleStandardStream(data, port) {
     const updates = { $push: { stdout: data } };
-    const port = await this.isOpenPort(data);
     if (port) {
       updates.$push = { stdout: data, openPorts: port };
     }
@@ -167,19 +152,11 @@ export class Nmap {
   }
 
   async updateDb(updates) {
-    const doc = await DatabaseActions.updateDocument(
-      NmapScan,
-      updates,
-      this.scan._id
-    );
+    const doc = await updateDocument(NmapScan, updates, this.scan._id);
     Logger.NM.info(`update scan [id: ${this.scan.id}]`);
     websocketServer.send(doc, this.scan.id);
     websocketServer.updateBySubscriptionType(doc, "nmap-updates");
     return doc;
-  }
-
-  async isOpenPort(data) {
-    return await checkForOpenPorts(data);
   }
 
   sendToast() {
@@ -193,9 +170,35 @@ export class Nmap {
   static async sendKill(pid) {
     const process = processes.getResource(pid);
     if (process) {
-      process.kill(Nmap.SIGKILL);
+      process.docker.kill(Nmap.SIGKILL);
       Logger.NM.warn(`user request to abort process [pid: ${pid}]`);
+    } else {
+      Logger.NM.error(`pid not found [pid: ${pid}]`);
     }
-    Logger.NM.error(`pid not found [pid: ${pid}]`);
+  }
+
+  setScanType() {
+    const list = Object.keys(this).filter((arg) => this[arg] === true);
+    const type =
+      list.find((arg) => Object.keys(scanTypes).includes(arg)) || "-st";
+    return scanTypes[type];
+  }
+
+  argumentsListForDockerChildProcess() {
+    const parsed = this.command
+      ? this.command.replace("nmap", "").trim().split(" ")
+      : Object.keys(this.args).filter((arg) => this.args[arg] === true);
+    const cmd = ["run", "--name", this.containerName, this.imageName];
+    return [...cmd, ...(!this.command ? [this.target] : []), ...parsed, "-v"];
+  }
+
+  async isOpenPort(stdout) {
+    const line = stdout.toString();
+    const portInfo = line.includes("Discovered open port")
+      ? line
+          .split(" ")
+          .find((part) => part.includes("/tcp") || part.includes("/udp"))
+      : null;
+    return portInfo ? parseInt(portInfo) : undefined;
   }
 }
