@@ -8,8 +8,8 @@ import {
   TbRadar2 as Radar,
   TbBug as Bug,
   TbSettings as Settings,
-  TbReportSearch as Report,
   TbLogout as Logout,
+  TbWorldSearch as World
 } from "react-icons/tb";
 
 export const Sidebar = () => {
@@ -22,12 +22,12 @@ export const Sidebar = () => {
         <Item icon={Home} title={"Home"} link="/" />
         <Item icon={Project} title={"Overview"} link="overview" />
 
-        <Section title={"Port Scanners"} />
+        <Section title={"Enumeration"} />
         <Item icon={Radar} title={"Nmap"} link="nmap" />
-
-        <Section title={"Vulnerability Scanners"} />
+        <Item icon={World} title={"Sublist3r"} link="sublister" />
         <Item icon={Bug} title={"Nikto"} link="nikto" />
-        <Item icon={Report} title={"WPScan"} link="wpscan" />
+
+        {/* <Section title={"Vulnerability Scanners"} /> */}
 
         <Section title={"System"} />
         <Item icon={Settings} title={"Settings"} link="settings" />

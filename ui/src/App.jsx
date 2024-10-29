@@ -7,7 +7,6 @@ import { Overview } from "./pages/Overview/Overview";
 import { Nmap } from "./pages/Nmap/Nmap";
 import { ScanDetails } from "./pages/Nmap/ScanDetails";
 import { Nikto } from "./pages/Nikto/Nikto";
-import { WPScan } from "./pages/WPScan/WPScan";
 import { Settings } from "./pages/Settings/Settings";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
@@ -17,6 +16,7 @@ import { Loading } from "./components/Loading";
 import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 import { Toast } from "./components/Toast";
+import { Sublister } from "./pages/Sublister/Sublister";
 
 export const App = () => {
   const dispatch = useDispatch();
@@ -39,8 +39,8 @@ export const App = () => {
           <Route path="/nmap" element={<Nmap />} />
           <Route path="/nmap/:scanId" element={<ScanDetails />} />
           <Route path="/nikto" element={<Nikto />} />
-          <Route path="/wpscan" element={<WPScan />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/sublister" element={<Sublister />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
 

@@ -6,7 +6,7 @@ import { BASE_URL, WS_URL } from "../../api/baseUrl";
 import { Container } from "../../components/Container/Container";
 import { ModuleName } from "../../components/ModuleName";
 import { ScanStatus } from "./ScanStatus";
-import { ascii, randomNum } from "../../utils";
+import { ascii } from "../../utils";
 import { useDispatch } from "react-redux";
 import { incomingToast } from "../../redux/toastSlice";
 
@@ -19,15 +19,12 @@ export const ScanDetails = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const scanSubscriptionRoute = `${WS_URL}/ws/scan/${scanId}`;
-  // const scanSubscriptionRoute = `${WS_URL}/ws/nmap/nmap-updates_${randomNum()}`;
 
   useEffect(() => {
     if (terminalRef.current) {
       terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
     }
   }, [stdout]);
-
-  const isDone = () => status === "done" || status === "failed";
 
   useEffect(() => {
     setIsLoading(true);
@@ -55,14 +52,6 @@ export const ScanDetails = () => {
       websocket.close();
     };
   }, []);
-
-  // if (isLoading) {
-  //   return <div>Loading scan {scanId}...</div>;
-  // }
-
-  // if (error) {
-  //   return <div>{error}</div>;
-  // }
 
   return (
     <Container>

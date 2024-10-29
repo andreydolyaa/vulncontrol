@@ -117,6 +117,9 @@ export const nmapSlice = createSlice({
         state.scans = state.scans.filter(
           (scan) => scan.id !== action.payload.id
         );
+        console.log("ID: ", action.payload.id)
+        console.log("Scans: ", state.scans);
+        
       });
   },
 });
