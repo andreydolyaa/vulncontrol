@@ -25,9 +25,13 @@ server
     const nmap = new Nmap({
       userId: "670f918c18444c7f0002e09e",
       scanType: "X",
-      args: ["-sV", "192.168.178.241"],
+      args: ["-sn", "-A", "192.168.178.241"],
     });
-    // await nmap.start();
+    // const proc = await nmap.start();
+    // setTimeout(() => {
+    //   console.log('Main process will now send SIGKILL to itself...');
+    //   proc.kill('SIGKILL'); // This kills the main process with SIGKILL
+    // }, 2000);
     // await removeAll(NmapScan);
   });
 
