@@ -1,204 +1,111 @@
-import { Logger } from "../../core/logger2.js";
-import { NmapScan } from "../../models/nmapScanModel.js";
+import logger from "../../core/logger.js";
+import { NmapScan } from "../../models/nmap-model.js";
 import { extractIP } from "../../utils/index.js";
-import { createDocument, updateDocument } from "../DatabaseActions/index.js";
-import { DockerProcess } from "../DockerProcess/DockerProcess.js";
-import { containers, processes, websocketServer } from "../../../index.js";
-import { scanTypes } from "../../constants/common.js";
+import { create, update } from "../db-actions/db-actions.js";
+import { Docker } from "../docker/docker.js";
 
-export class Nmap {
-  static SIGKILL = "SIGKILL";
-  static STATUS = {
-    LIVE: "live",
-    DONE: "done",
-    FAILED: "failed",
-    ABORTED: "aborted",
-  };
-  static TYPE = {
-    SHELL: "Shell Command",
-  };
-
-  constructor(target, args, userId, command) {
-    this.target = target;
-    this.args = args;
-    this.userId = userId;
-    this.command = command;
-    this.ip = null;
-    this.scan = null;
+export class Nmap extends Docker {
+  constructor(request) {
+    super("instrumentisto/nmap");
     this.nmap = null;
-    this.error = false;
-    this.aborted = false;
-    this.arguments = null;
-    this.containerName = null;
-    this.imageName = "instrumentisto/nmap";
-
-    if (this.command) {
-      this.ip = extractIP(this.command);
-      this.target = this.ip;
-    }
+    this.scan = null;
+    this.request = request;
   }
 
-  async init() {
-    this.scan = await createDocument(NmapScan, {
-      target: this.target,
-      stdout: [],
-      status: Nmap.STATUS.LIVE,
-      byUser: this.userId,
-      scanType: this.command ? Nmap.TYPE.SHELL : this.setScanType(this.args),
-      startTime: this.setTime(),
-      command: this.command,
+  async _init() {
+    const args = this.request.args.join(" ");
+    this.scan = await create(NmapScan, {
+      command: args,
+      userId: this.request.userId,
+      scanType: this.request.scanType,
+      status: "live",
+      startTime: this._setTime(),
+      target: extractIP(args),
     });
-    const scanId = this.scan._id.toString();
-    this.containerName = "nmap_" + scanId;
-    this.arguments = this.argumentsListForDockerChildProcess();
-    return scanId;
   }
 
   async start() {
-    await this.handleStandardStream({
-      $each: [
-        "server: starting nmap docker image...\n",
-        "server: starting nmap scan...\n",
-        `server: nmap ${this.arguments.slice(4).join(" ")}\n`,
-      ],
-    });
-
-    this.nmap = new DockerProcess(this.arguments, this.containerName);
-
-    await this.nmap.run();
-
-    this.nmap.on("stdout", this.stdout);
-    this.nmap.on("stderr", this.stderr);
-    this.nmap.on("exit", this.exit);
-    this.nmap.on("close", this.close);
-
-    containers.add(this.containerName, this.scan.id);
-    processes.add(this.nmap.docker?.pid, this.nmap);
-
-    await this.updateDb({ processPid: this.nmap.docker?.pid });
+    try {
+      await this._init();
+      await this.insertServerMessage("nmap scan initiated");
+      await this.insertServerMessage("starting nmap docker container...");
+      await this.insertServerMessage(`nmap ${this.request.args.join(" ")} -v`);
+      this.nmap = await this.run(this.request.args, this._createContainerName());
+      this._handleEvents();
+      logger.warn(`nmap | scan started`);
+    } catch (error) {
+      logger.error(`nmap | error starting scan [${error}]`);
+    }
   }
 
-  stdout = async (data) => {
-    const port = await this.isOpenPort(data);
-    await this.handleStandardStream(data, port);
-    Logger.NM.info(`scan in progress... [scan id: ${this.scan.id}]`);
-  };
-
-  stderr = async (data) => {
-    if (data.includes("QUITTING")) {
-      this.error = true;
-    }
-    await this.handleStandardStream(data);
-    Logger.NM.error(`stderr: ${data}`);
-  };
-
-  exit = async (code, signal) => {
-    if (code == null && signal == Nmap.SIGKILL) {
-      this.aborted = true;
-      await this.handleStandardStream("server: scan aborted by user!");
-      await this.nmap.stop();
-    }
-
-    this.scan = await this.updateDb({
-      status: this.setStatus(),
-      endTime: this.setTime(),
-    });
-
-    if (this.error) {
-      await this.handleStandardStream("server: scan failed!");
-    }
-
-    await this.nmap.remove();
-
-    if (!this.error && !this.aborted) {
-      await this.handleStandardStream("server: scan completed!");
-    }
-
-    containers.remove(this.containerName);
-    processes.remove(this.nmap.pid);
-
-    this.sendToast();
-
-    this.error = false;
-    this.aborted = false;
-
-    const message =
-      code == 0 || code ? "[code " + code + "]" : "[signal " + signal + "]";
-    Logger.NM.info(`process exited ${message}`);
-  };
-
-  async close(code, signal) {
-    Logger.NM.info(`process is closed [code: ${code}]`);
+  _handleEvents() {
+    const p = this.process;
+    p.stdout.on("data", (data) => this._stdout(data.toString()));
+    p.stderr.on("data", (data) => this._stderr(data.toString()));
+    p.on("exit", (code, signal) => this._exit(code, signal));
+    p.on("close", (code, signal) => this._close(code, signal));
   }
 
-  setStatus() {
-    return this.error
-      ? Nmap.STATUS.FAILED
-      : this.aborted
-      ? Nmap.STATUS.ABORTED
-      : Nmap.STATUS.DONE;
+  async _stdout(data) {
+    const port = await this._isOpenPort(data);
+
+    if (port) {
+      const update = { $push: { openPorts: port } };
+      await this._updateScanInDatabase(update);
+    }
+
+    const stream = { $push: { stdout: data } };
+    await this._updateScanInDatabase(stream);
   }
 
-  setTime() {
+  async _stderr(data) {
+    await this._updateScanInDatabase(data);
+  }
+
+  _exit(code, signal) {
+    console.log("exit");
+    console.log(code);
+    console.log(signal);
+  }
+
+  _close(code, signal) {
+    console.log("close");
+    console.log(code);
+    console.log(signal);
+  }
+
+  _setTime() {
     return new Date().toISOString();
   }
 
-  async handleStandardStream(data, port) {
-    const updates = { $push: { stdout: data } };
-    if (port) {
-      updates.$push = { stdout: data, openPorts: port };
-    }
-    await this.updateDb(updates);
+  _createContainerName() {
+    return "nmap_" + this.scan.id;
   }
 
-  async updateDb(updates) {
-    const doc = await updateDocument(NmapScan, updates, this.scan._id);
-    Logger.NM.info(`update scan [id: ${this.scan.id}]`);
-    websocketServer.send(doc, this.scan.id);
-    websocketServer.updateBySubscriptionType(doc, "nmap-updates");
-    return doc;
-  }
-
-  sendToast() {
-    const wrapper = {
-      type: this.setStatus(),
-      scan: this.scan,
-    };
-    websocketServer.sendToAll(wrapper);
-  }
-
-  static async sendKill(pid) {
-    const process = processes.getResource(pid);
-    if (process) {
-      process.docker.kill(Nmap.SIGKILL);
-      Logger.NM.warn(`user request to abort process [pid: ${pid}]`);
-    } else {
-      Logger.NM.error(`pid not found [pid: ${pid}]`);
+  async _updateScanInDatabase(data) {
+    try {
+      this.scan = await update(NmapScan, data, this.scan._id);
+      logger.info(`nmap | updating db...`);
+    } catch (error) {
+      logger.error(`nmap | failed to update db`);
     }
   }
 
-  setScanType() {
-    const list = Object.keys(this).filter((arg) => this[arg] === true);
-    const type =
-      list.find((arg) => Object.keys(scanTypes).includes(arg)) || "-st";
-    return scanTypes[type];
-  }
-
-  argumentsListForDockerChildProcess() {
-    const parsed = this.command
-      ? this.command.replace("nmap", "").trim().split(" ")
-      : Object.keys(this.args).filter((arg) => this.args[arg] === true);
-    const cmd = ["run", "--name", this.containerName, this.imageName];
-    return [...cmd, ...(!this.command ? [this.target] : []), ...parsed, "-v"];
-  }
-
-  async isOpenPort(stdout) {
-    const line = stdout.toString();
-    const portInfo = line.includes("Discovered open port")
-      ? line
+  async _isOpenPort(stdout) {
+    const port = stdout.includes("Discovered open port")
+      ? stdout
           .split(" ")
           .find((part) => part.includes("/tcp") || part.includes("/udp"))
       : null;
-    return portInfo ? parseInt(portInfo) : undefined;
+    return port ? parseInt(port) : undefined;
+  }
+
+  async insertServerMessage(message) {
+    const update = { $push: { stdout: `server: ${message}\n` } };
+    try {
+      await this._updateScanInDatabase(update);
+    } catch (error) {
+      logger.error("failed to insert server message");
+    }
   }
 }

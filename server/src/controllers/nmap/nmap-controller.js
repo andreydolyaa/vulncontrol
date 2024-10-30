@@ -1,15 +1,15 @@
 import logger from "../../core/logger.js";
-import { NmapScan } from "../../models/nmapScanModel.js";
-import { Nmap } from "../../modules/Nmap/Nmap.js";
+import { NmapScan } from "../../models/nmap-model.js";
+// import { Nmap } from "../../modules/Nmap/Nmap.js";
 import { sleep } from "../../utils/index.js";
 
 // start new scan TEST
 export const startNmap = async (req, res) => {
   const { target, args, userId, command = null } = req.body;
   try {
-    const nmap = new Nmap(target, args, userId, command);
-    const scanId = await nmap.init();
-    await nmap.start();
+    // const nmap = new Nmap(target, args, userId, command);
+    // const scanId = await nmap.init();
+    // await nmap.start();
     return res.status(200).send({ message: "Nmap scan started", scanId });
   } catch (error) {
     logger.error(`Failed to start nmap scan: ${error}`);
