@@ -5,22 +5,18 @@ const NmapScanSchema = new mongoose.Schema(
     stdout: {
       type: [String],
     },
-    byUser: {
+    userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
     target: {
       type: String,
-      required: true,
     },
     scanType: {
       type: String,
       required: true,
     },
-    // duration: {
-    //   type: String,
-    // },
     status: {
       type: String,
       required: true,
@@ -33,7 +29,6 @@ const NmapScanSchema = new mongoose.Schema(
     },
     command: String,
     openPorts: [Number],
-    processPid: Number,
     id: {
       type: String,
       default: function () {

@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import JWT from "jsonwebtoken";
 import { userMsg } from "../constants/messages.js";
-import { User } from "../models/userModel.js";
+import { User } from "../models/user-model.js";
 // import { sleep } from "../utils/index.js";
 
 // TODO: make the rest response messages constants

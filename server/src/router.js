@@ -1,6 +1,6 @@
 import express from "express";
-import authRoutes from "./routes/authRoutes.js";
-import nmapRoutes from "./routes/nmapRoutes.js";
+import authRoutes from "./routes/auth.js";
+import nmapRoutes from "./routes/nmap.js";
 
 const router = express.Router();
 
