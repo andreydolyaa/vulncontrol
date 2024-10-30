@@ -27,12 +27,16 @@ export class Nmap extends Docker {
   async start() {
     try {
       await this._init();
-      await this.insertServerMessage("nmap scan initiated");
-      await this.insertServerMessage("starting nmap docker container...");
-      await this.insertServerMessage(`nmap ${this.request.args.join(" ")} -v`);
-      this.nmap = await this.run(this.request.args, this._createContainerName());
+      await this._insertServerMessage("starting nmap docker image...");
+      await this._insertServerMessage("starting nmap scan...");
+      await this._insertServerMessage(`nmap ${this.request.args.join(" ")} -v`);
+      this.nmap = await this.run(
+        this.request.args,
+        this._createContainerName()
+      );
       this._handleEvents();
       logger.warn(`nmap | scan started`);
+      return this.process;
     } catch (error) {
       logger.error(`nmap | error starting scan [${error}]`);
     }
@@ -47,6 +51,7 @@ export class Nmap extends Docker {
   }
 
   async _stdout(data) {
+    setTimeout(() => {}, 2000);
     const port = await this._isOpenPort(data);
 
     if (port) {
@@ -59,19 +64,27 @@ export class Nmap extends Docker {
   }
 
   async _stderr(data) {
-    await this._updateScanInDatabase(data);
+    const stream = { $push: { stdout: data } };
+    await this._updateScanInDatabase(stream);
   }
 
-  _exit(code, signal) {
-    console.log("exit");
-    console.log(code);
-    console.log(signal);
+  async _exit(code, signal) {
+    if (code === 0) {
+      await this._handleExitStatus("done");
+    } else if (code === 1) {
+      await this._handleExitStatus("failed");
+    } else if (code === null && signal === "SIGKILL") {
+      await this._handleExitStatus("aborted");
+    }
+  }
+  async _handleExitStatus(status) {
+    logger.info(`nmap | scan ${status}`);
+    await this._insertServerMessage(`scan ${status}!`);
+    await this._updateScanInDatabase({ status });
   }
 
   _close(code, signal) {
     console.log("close");
-    console.log(code);
-    console.log(signal);
   }
 
   _setTime() {
@@ -100,7 +113,7 @@ export class Nmap extends Docker {
     return port ? parseInt(port) : undefined;
   }
 
-  async insertServerMessage(message) {
+  async _insertServerMessage(message) {
     const update = { $push: { stdout: `server: ${message}\n` } };
     try {
       await this._updateScanInDatabase(update);
