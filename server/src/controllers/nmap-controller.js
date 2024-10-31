@@ -1,10 +1,8 @@
 import logger from "../core/logger.js";
 import { NmapScan } from "../models/nmap-model.js";
 import { Nmap } from "../modules/Nmap/Nmap.js";
-// import { Nmap } from "../../modules/Nmap/Nmap.js";
-import { sleep } from "../utils/index.js";
 
-// start new scan TEST
+
 export const startNmap = async (req, res) => {
   const { args, userId, scanType = "default" } = req.body;
   try {
@@ -41,7 +39,9 @@ export const getAllScans = async (req, res) => {
       .skip(skip)
       .limit(limit)
       .sort({ startTime: -1 });
+
     if (!scans) throw new Error();
+    
     const totalScans = await NmapScan.countDocuments(searchQuery);
     const totalPages = Math.ceil(totalScans / limit);
     const responseData = {
@@ -49,7 +49,7 @@ export const getAllScans = async (req, res) => {
       totalPages,
       currentPage: page,
     };
-    // await sleep(2000)
+
     return res.status(200).send(responseData);
   } catch (error) {
     logger.error(`Failed to get scans: ${error}`);

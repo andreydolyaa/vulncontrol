@@ -7,18 +7,20 @@ import { Container } from "../../components/Container/Container";
 import { ModuleName } from "../../components/ModuleName";
 import { ScanStatus } from "./ScanStatus";
 import { ascii } from "../../utils";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { incomingToast } from "../../redux/toastSlice";
 
 export const ScanDetails = () => {
-  const terminalRef = useRef(null);
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
+  const terminalRef = useRef(null);
   const { scanId } = useParams();
   const [stdout, setStdout] = useState([]);
   const [status, setStatus] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const scanSubscriptionRoute = `${WS_URL}/ws/scan/${scanId}`;
+  // const scanSubscriptionRoute = `${WS_URL}/ws/scan/${scanId}`;
+  const scanSubscriptionRoute = `${WS_URL}/ws/nmap/${scanId}?userId=${user.id}`;
 
   useEffect(() => {
     if (terminalRef.current) {
