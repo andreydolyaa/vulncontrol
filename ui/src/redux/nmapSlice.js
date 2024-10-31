@@ -70,13 +70,19 @@ export const deleteScan = createAsyncThunk(
   }
 );
 
+const upsertScan = (scans, newScan) => {
+  const updated = scans.filter((scan) => scan.id !== newScan.id);
+  updated.push(newScan);
+  return updated;
+};
+
 export const nmapSlice = createSlice({
   name: "nmap",
   initialState: {
     loading: false,
     status: "idle",
     scans: [],
-    uiMode: "easy",
+    uiMode: "command",
   },
   reducers: {
     incomingScan: (state, action) => {
@@ -96,6 +102,7 @@ export const nmapSlice = createSlice({
       .addCase(startScan.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.loading = false;
+        state.scans = upsertScan(state.scans, action.payload.scan);
       })
       .addCase(startScan.rejected, (state, action) => {
         state.status = "failed";
@@ -117,9 +124,8 @@ export const nmapSlice = createSlice({
         state.scans = state.scans.filter(
           (scan) => scan.id !== action.payload.id
         );
-        console.log("ID: ", action.payload.id)
+        console.log("ID: ", action.payload.id);
         console.log("Scans: ", state.scans);
-        
       });
   },
 });

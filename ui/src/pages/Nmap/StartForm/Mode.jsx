@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { styled } from "styled-components";
 import { TbTerminal2, TbAlignBoxRightBottom } from "react-icons/tb";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setUiMode } from "../../../redux/nmapSlice";
 import { UIModes } from "../../../constants/index";
 
 export const Mode = () => {
   const dispatch = useDispatch();
-  const [mode, setMode] = useState(UIModes.EASY);
+  const uiMode = useSelector(state => state.nmap.uiMode);
+  const [mode, setMode] = useState(uiMode);
 
   const toggleMode = (selected) => {
     setMode(selected);

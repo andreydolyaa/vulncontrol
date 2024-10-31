@@ -15,7 +15,6 @@ const NmapScanSchema = new mongoose.Schema(
     },
     scanType: {
       type: String,
-      required: true,
     },
     status: {
       type: String,

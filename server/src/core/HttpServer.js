@@ -18,9 +18,9 @@ export class HttpServer {
 
   _init() {
     this.app.use(express.json());
-    this.app.use(this.router);
     this.app.use(cors());
     this.app.use(httpLoggerMiddleware);
+    this.app.use(this.router);
   }
 
   async run() {
