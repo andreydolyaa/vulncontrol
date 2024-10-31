@@ -42,9 +42,9 @@ export const getScans = createAsyncThunk(
 
 export const abortScan = createAsyncThunk(
   "nmap/abortScan",
-  async (pid, { rejectWithValue }) => {
+  async (scanId, { rejectWithValue }) => {
     try {
-      const response = await api.post(`/api/nmap/abort/${pid}`);
+      const response = await api.post(`/api/nmap/abort/${scanId}`);
       return response.data;
     } catch (error) {
       if (error.response?.data) {

@@ -14,7 +14,7 @@ const router = express.Router();
 router.post("/nmap", startNmap);
 router.get("/nmap/scans", getAllScans);
 router.get("/nmap/:id", getScanById);
-router.post("/nmap/abort/:pid", abortScan);
+router.post("/nmap/abort/:id", abortScan);
 router.delete("/nmap/:id", deleteScan);
 
 export default router;
