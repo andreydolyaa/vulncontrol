@@ -9,7 +9,7 @@ import { NmapScan } from "./src/models/nmap-model.js";
 
 dotenv.config();
 
-const server = new HttpServer({
+export const server = new HttpServer({
   port: Number(process.env.SERVER_PORT),
   router,
 });

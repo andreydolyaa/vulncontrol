@@ -12,7 +12,7 @@ export async function create(model, data = {}) {
 
 export async function update(model, data = {}, id) {
   try {
-    const updated = await model.findOneAndUpdate(id, data);
+    const updated = await model.findOneAndUpdate(id, data, { new: true });
     logger.info(`db | document updated [${id}]`);
     return updated;
   } catch (error) {

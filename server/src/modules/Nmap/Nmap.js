@@ -1,3 +1,5 @@
+import { server } from "../../../index.js";
+import { subscriptionPaths } from "../../constants/common.js";
 import logger from "../../core/logger.js";
 import { NmapScan } from "../../models/nmap-model.js";
 import { extractIP } from "../../utils/index.js";
@@ -83,6 +85,7 @@ export class Nmap extends Docker {
     logger.info(`nmap | scan ${status}`);
   }
 
+  // TODO: handle process close
   _close(code, signal) {
     console.log("close");
   }
@@ -98,6 +101,14 @@ export class Nmap extends Docker {
   async _updateScanInDatabase(data) {
     try {
       this.scan = await update(NmapScan, data, this.scan._id);
+      server.websocketServer.updateSubsAtSubscription(
+        subscriptionPaths.NMAP_ALL,
+        this.scan
+      );
+      server.websocketServer.updateSubsAtSubscription(
+        `/nmap/${this.scan.id}`,
+        this.scan
+      );
       logger.info(`nmap | updating db...`);
     } catch (error) {
       logger.error(`nmap | failed to update db`);

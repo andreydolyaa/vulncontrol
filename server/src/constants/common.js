@@ -9,3 +9,8 @@ export const scanTypes = {
   "-F": "Fast Scan",
   "-st": "Standard Scan",
 };
+
+export const subscriptionPaths = {
+  NMAP_ALL: "/nmap/updates",
+  NMAP_SCAN: "/nmap/scan/:id"
+};

@@ -71,9 +71,10 @@ export const deleteScan = createAsyncThunk(
 );
 
 const upsertScan = (scans, newScan) => {
-  const updated = scans.filter((scan) => scan.id !== newScan.id);
-  updated.push(newScan);
-  return updated;
+  const index = scans.findIndex((scan) => scan.id === newScan.id);
+  if (index !== -1) scans[index] = newScan;
+  else scans.unshift(newScan);
+  return scans;
 };
 
 export const nmapSlice = createSlice({
@@ -87,8 +88,9 @@ export const nmapSlice = createSlice({
   reducers: {
     incomingScan: (state, action) => {
       const updatedScan = action.payload;
-      state.scans = state.scans.filter((scan) => scan.id !== updatedScan.id);
-      state.scans.unshift(updatedScan);
+      const index = state.scans.findIndex((scan) => scan.id === updatedScan.id);
+      if (index !== -1) state.scans[index] = updatedScan;
+      else state.scans.unshift(updatedScan);
     },
     setUiMode: (state, action) => {
       state.uiMode = action.payload;
@@ -124,8 +126,6 @@ export const nmapSlice = createSlice({
         state.scans = state.scans.filter(
           (scan) => scan.id !== action.payload.id
         );
-        console.log("ID: ", action.payload.id);
-        console.log("Scans: ", state.scans);
       });
   },
 });
