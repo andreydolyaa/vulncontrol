@@ -2,7 +2,6 @@ import logger from "../core/logger.js";
 import { NmapScan } from "../models/nmap-model.js";
 import { Nmap } from "../modules/Nmap/Nmap.js";
 
-
 export const startNmap = async (req, res) => {
   const { args, userId, scanType = "default" } = req.body;
   try {
@@ -41,7 +40,7 @@ export const getAllScans = async (req, res) => {
       .sort({ startTime: -1 });
 
     if (!scans) throw new Error();
-    
+
     const totalScans = await NmapScan.countDocuments(searchQuery);
     const totalPages = Math.ceil(totalScans / limit);
     const responseData = {
@@ -68,9 +67,10 @@ export const getScanById = async (req, res) => {
   }
 };
 
-export const abortScan = async (req, res) => {
+export const abortScan = async (req, res) => {  
+  const scanId = req.params.id;
   try {
-    await Nmap.sendKill(req.params.pid);
+    await Nmap.abortScan(scanId);
     return res.status(200).send({ message: "Process aborted" });
   } catch (error) {
     return res.status(400).send({ message: "Failed to abort process", error });

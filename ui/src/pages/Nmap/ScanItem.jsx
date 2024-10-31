@@ -36,8 +36,8 @@ export const ScanItem = ({ scan, onClick }) => {
 
   const goToScan = (id) => navigate(`/nmap/${id}`);
 
-  const abort = (pid) => {
-    dispatch(abortScan(pid));
+  const abort = (scanId) => {
+    dispatch(abortScan(scanId));
   };
 
   const remove = (id) => {
@@ -63,7 +63,7 @@ export const ScanItem = ({ scan, onClick }) => {
               className="icon stop-icon"
               data-tooltip-id="tooltip1"
               data-tooltip-content="Abort Scan"
-              onClick={() => abort(scan.processPid)}
+              onClick={() => abort(scan.id)}
             />
           )}
           <TbAlignBoxLeftMiddle
