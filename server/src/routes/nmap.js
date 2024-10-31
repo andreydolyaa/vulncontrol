@@ -5,7 +5,7 @@ import {
   getAllScans,
   getScanById,
   startNmap,
-} from "../controllers/nmap/nmap-controller.js";
+} from "../controllers/nmap-controller.js";
 
 const router = express.Router();
 

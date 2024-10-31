@@ -35,8 +35,8 @@ export class Nmap extends Docker {
         this._createContainerName()
       );
       this._handleEvents();
-      logger.warn(`nmap | scan started`);
-      return this.process;
+      logger.info(`nmap | scan started`);
+      return this.scan;
     } catch (error) {
       logger.error(`nmap | error starting scan [${error}]`);
     }
@@ -78,9 +78,9 @@ export class Nmap extends Docker {
     }
   }
   async _handleExitStatus(status) {
-    logger.info(`nmap | scan ${status}`);
     await this._insertServerMessage(`scan ${status}!`);
     await this._updateScanInDatabase({ status });
+    logger.info(`nmap | scan ${status}`);
   }
 
   _close(code, signal) {

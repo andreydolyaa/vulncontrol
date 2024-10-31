@@ -12,7 +12,7 @@ export const Target = ({ onFormChange, isEasyMode }) => {
     <StyledInput
       type="text"
       placeholder={placeholderText()}
-      name="target"
+      name="command"
       onChange={onFormChange}
     ></StyledInput>
   );

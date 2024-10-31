@@ -14,7 +14,7 @@ export const downloadBlob = (content, fileName) => {
   a.click();
 
   URL.revokeObjectURL(url);
-}
+};
 
 export const randomNum = () => {
   return Math.floor(Math.random() * 10000000) + 1;
@@ -30,6 +30,25 @@ export const changeRgbaAlpha = (rgba, newAlpha) => {
   parts[3] = `${newAlpha})`;
   return parts.join(",");
 };
+
+export const scanOptions = [
+  "-sn",
+  "-sV",
+  "-p-",
+  "-A",
+  "-sS",
+  "-sU",
+  "-T2",
+  "-F",
+  "-r",
+  "-sC",
+  "-O",
+  "-d",
+  "--reason",
+  "--packet-trace",
+  "--iflist",
+  "-6",
+];
 
 export const argsDescriptionMap = {
   "-sn": "Ping scan only",

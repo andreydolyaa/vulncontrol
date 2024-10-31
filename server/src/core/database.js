@@ -13,7 +13,7 @@ export class Database {
   }
 
   async connect() {
-    logger.warn("db | trying to connect...");
+    logger.warn("DB | trying to connect...");
     try {
       await mongoose.connect(this.uri, {
         serverSelectionTimeoutMS: this.CONNECTION_TIMEOUT,
@@ -25,7 +25,7 @@ export class Database {
     try {
       await mongoose.disconnect();
     } catch (error) {
-      logger.error(`db | error disconnecting [error ${error}]`);
+      logger.error(`DB | error disconnecting [error ${error}]`);
     }
   }
 
@@ -36,17 +36,17 @@ export class Database {
 
   setupListeners() {
     mongoose.connection.on("connected", () => {
-      logger.info("db | connection established");
+      logger.info("DB | connection established");
     });
     mongoose.connection.on("disconnected", () => {
-      logger.warn("db | disconnected");
+      logger.warn("DB | disconnected");
       this.reconnect();
     });
     mongoose.connection.on("close", () => {
-      logger.info("db | connection closed");
+      logger.info("DB | connection closed");
     });
     mongoose.connection.on("error", (error) => {
-      logger.error(`db | connection error [error: ${error}]`);
+      logger.error(`DB | connection error [error: ${error}]`);
     });
   }
 }

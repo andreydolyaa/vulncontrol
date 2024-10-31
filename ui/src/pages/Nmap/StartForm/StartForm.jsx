@@ -8,10 +8,10 @@ import { StartButton } from "./StartButton";
 
 export const StartForm = ({
   start,
-  formData,
   isEasyMode,
   onFormChange,
-  onFormChangeCommand,
+  selectedArgs,
+  handleCheckboxChange,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -23,11 +23,7 @@ export const StartForm = ({
     <StyledForm onSubmit={start}>
       <StyledDivTarget>
         <TargetHeader isEasyMode={isEasyMode} />
-        <StartButton
-          isEasyMode={isEasyMode}
-          onFormChange={onFormChange}
-          onFormChangeCommand={onFormChangeCommand}
-        />
+        <StartButton isEasyMode={isEasyMode} onFormChange={onFormChange} />
       </StyledDivTarget>
       {isEasyMode && (
         <StyledDivArgs $isOpen={isOpen}>
@@ -43,7 +39,10 @@ export const StartForm = ({
             </StyledIcon>
           </div>
           <StyledArgsContent $isOpen={isOpen}>
-            <Args formData={formData} onFormChange={onFormChange} />
+            <Args
+              selectedArgs={selectedArgs}
+              handleCheckboxChange={handleCheckboxChange}
+            />
           </StyledArgsContent>
         </StyledDivArgs>
       )}

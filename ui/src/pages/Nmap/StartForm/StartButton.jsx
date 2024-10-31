@@ -6,7 +6,6 @@ import { TbBolt } from "react-icons/tb";
 export const StartButton = ({
   isEasyMode,
   onFormChange,
-  onFormChangeCommand,
 }) => {
   return (
     <div
@@ -14,7 +13,7 @@ export const StartButton = ({
       style={{ margin: !isEasyMode ? "0px 0 20px 0" : "0px" }}
     >
       <Target
-        onFormChange={isEasyMode ? onFormChange : onFormChangeCommand}
+        onFormChange={onFormChange}
         isEasyMode={isEasyMode}
       />
       <StyledButton>

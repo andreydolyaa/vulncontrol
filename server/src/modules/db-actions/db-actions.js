@@ -29,6 +29,7 @@ export async function remove(model, id) {
     logger.error(`db | error deleting document [${id}] [${error}]`);
   }
 }
+
 export async function removeAll(model) {
   try {
     const updated = await model.deleteMany({});
