@@ -1,6 +1,6 @@
 import React from "react";
 import { TbFileDownload } from "react-icons/tb";
-import { downloadBlob } from "../../../utils";
+import { downloadBlob } from "../../../../utils";
 
 export const ScanExport = ({ scan }) => {
   const handleExport = (scan) => {

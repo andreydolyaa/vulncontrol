@@ -8,6 +8,12 @@ const upsertScan = (scans, newScan) => {
   return scans;
 };
 
+const deleteScanFromState = (scans, scanId) => {
+  const index = scans.findIndex((scan) => scan.id === scanId);
+  scans.splice(index, 1);
+  return scans;
+};
+
 const nmapSlice = createSlice({
   name: "nmap",
   initialState: {
@@ -19,9 +25,7 @@ const nmapSlice = createSlice({
   reducers: {
     incomingScan: (state, action) => {
       const updatedScan = action.payload;
-      const index = state.scans.findIndex((scan) => scan.id === updatedScan.id);
-      if (index !== -1) state.scans[index] = updatedScan;
-      else state.scans.unshift(updatedScan);
+      state.scans = upsertScan(state.scans, updatedScan);
     },
     setUiMode: (state, action) => {
       state.uiMode = action.payload;
@@ -54,9 +58,8 @@ const nmapSlice = createSlice({
         state.loading = false;
       })
       .addCase(deleteScan.fulfilled, (state, action) => {
-        state.scans = state.scans.filter(
-          (scan) => scan.id !== action.payload.id
-        );
+        const scanId = action.payload.id;
+        state.scans = deleteScanFromState(state.scans, scanId);
       })
       .addCase(getScanById.pending, (state) => {
         state.loading = true;

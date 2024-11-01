@@ -50,6 +50,7 @@ export const getAllScans = async (req, res) => {
       currentPage: page,
     };
 
+    // await sleep(1000) // TODO: remove
     return res.status(200).send(responseData);
   } catch (error) {
     logger.error(`Failed to get scans: ${error}`);
@@ -61,7 +62,7 @@ export const getAllScans = async (req, res) => {
 export const getScanById = async (req, res) => {
   try {
     const scan = await NmapScan.findOne({ _id: req.params.id });
-    await sleep(2000)
+    // await sleep(1000) // TODO: remove
     return res.status(200).send(scan);
   } catch (error) {
     logger.error(`Failed to get scan by id: ${error}`);
@@ -82,7 +83,7 @@ export const abortScan = async (req, res) => {
 export const deleteScan = async (req, res) => {
   try {
     const scan = await NmapScan.findOneAndDelete(req.params.id);
-    return res.status(200).send({ message: "Scan deleted", id: scan.id });
+    return res.status(200).send({ message: "Scan deleted", id: req.params.id });
   } catch (error) {
     logger.error(`Failed to delete scan: ${error}`);
     return res.status(400).send({ message: "Failed to delete scan", error });

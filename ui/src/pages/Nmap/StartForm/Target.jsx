@@ -1,10 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 
-export const Target = ({ onFormChange, isEasyMode }) => {
+export const Target = ({ onFormChange, easyMode }) => {
 
   const placeholderText = () => {
-    return isEasyMode
+    return easyMode
       ? "Enter IPv4 or IPv6 address..."
       : "Enter a valid nmap command (example: nmap -sV -A -p 3000,445,80 <ip>)";
   };

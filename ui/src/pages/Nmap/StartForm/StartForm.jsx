@@ -8,7 +8,7 @@ import { StartButton } from "./StartButton";
 
 export const StartForm = ({
   start,
-  isEasyMode,
+  easyMode,
   onFormChange,
   selectedArgs,
   handleCheckboxChange,
@@ -22,10 +22,10 @@ export const StartForm = ({
   return (
     <StyledForm onSubmit={start}>
       <StyledDivTarget>
-        <TargetHeader isEasyMode={isEasyMode} />
-        <StartButton isEasyMode={isEasyMode} onFormChange={onFormChange} />
+        <TargetHeader easyMode={easyMode} />
+        <StartButton easyMode={easyMode} onFormChange={onFormChange} />
       </StyledDivTarget>
-      {isEasyMode && (
+      {easyMode && (
         <StyledDivArgs $isOpen={isOpen}>
           <div
             className="title-args"

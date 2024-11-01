@@ -4,17 +4,17 @@ import { Target } from "./Target";
 import { TbBolt } from "react-icons/tb";
 
 export const StartButton = ({
-  isEasyMode,
+  easyMode,
   onFormChange,
 }) => {
   return (
     <div
       className="target-button"
-      style={{ margin: !isEasyMode ? "0px 0 20px 0" : "0px" }}
+      style={{ margin: !easyMode ? "0px 0 20px 0" : "0px" }}
     >
       <Target
         onFormChange={onFormChange}
-        isEasyMode={isEasyMode}
+        easyMode={easyMode}
       />
       <StyledButton>
         <TbBolt className="icon" />

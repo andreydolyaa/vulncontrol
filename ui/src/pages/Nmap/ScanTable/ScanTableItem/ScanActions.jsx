@@ -4,7 +4,7 @@ import { ScanAbort } from "./ScanAbort";
 import { ScanNavigate } from "./ScanNavigate";
 import { ScanDelete } from "./ScanDelete";
 import { ScanExport } from "./ScanExport";
-import { NmapScanStatus } from "../../../constants";
+import { NmapScanStatus } from "../../../../constants";
 
 export const ScanActions = ({ scan }) => {
   const isActiveScan = scan.status === NmapScanStatus.LIVE;
