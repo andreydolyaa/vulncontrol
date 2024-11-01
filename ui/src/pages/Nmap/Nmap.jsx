@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Container } from "../../components/Container/Container";
 import { useDispatch, useSelector } from "react-redux";
-import { getScans, startScan } from "../../redux/nmapSlice";
+import { getScans, startScan } from "../../redux/nmap";
 import { StartForm } from "./StartForm/StartForm";
 import { Scans } from "./Scans";
 import { WS_URL } from "../../api/baseUrl";

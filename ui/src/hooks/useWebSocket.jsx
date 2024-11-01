@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { incomingScan } from "../redux/nmapSlice";
+import { incomingScan } from "../redux/nmap";
 import { incomingToast } from "../redux/toastSlice";
 
 export const useWebSocket = (url) => {

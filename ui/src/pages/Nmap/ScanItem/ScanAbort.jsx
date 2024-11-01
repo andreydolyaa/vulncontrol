@@ -1,7 +1,7 @@
 import React from "react";
 import { PiStopCircleLight } from "react-icons/pi";
 import { useDispatch } from "react-redux";
-import { abortScan } from "../../../redux/nmapSlice";
+import { abortScan } from "../../../redux/nmap";
 
 export const ScanAbort = ({ scan }) => {
   const dispatch = useDispatch();

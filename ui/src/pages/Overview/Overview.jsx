@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getScans } from "../../redux/nmapSlice";
+import { getScans } from "../../redux/nmap";
 
 export const Overview = () => {
   // const dispatch = useDispatch();
