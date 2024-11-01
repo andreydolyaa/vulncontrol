@@ -5,7 +5,7 @@ import { getScans, incomingScan, startScan } from "../../redux/nmapSlice";
 import { StartForm } from "./StartForm/StartForm";
 import { Scans } from "./Scans";
 import { WS_URL } from "../../api/baseUrl";
-import { randomNum } from "../../utils";
+import { randomNum, scanTypes } from "../../utils";
 import { ModuleName } from "../../components/ModuleName";
 import { TbRadar2 as Radar } from "react-icons/tb";
 import { Pagination } from "../../components/Pagination/Pagination";
@@ -24,7 +24,6 @@ export const Nmap = () => {
   const [totalPages, setTotalPages] = useState(1);
   const limit = 6;
 
-  // const scanSubscriptionRoute = `${WS_URL}/ws/nmap/nmap-updates-${randomNum()}`;
   const scanSubscriptionRoute = `${WS_URL}/ws/nmap/updates?userId=${user.id}`;
 
   useEffect(() => {
@@ -85,11 +84,13 @@ export const Nmap = () => {
           .filter((arg) => arg !== "nmap"))
       : (scanArguments = [...selectedArgs, formData.command]);
 
+    const scanType = scanTypes[scanArguments[0]] || scanTypes["-st"];
+
     dispatch(
       startScan({
         args: scanArguments,
         userId: user.id,
-        scanType: "BRO",
+        scanType,
       })
     );
   };

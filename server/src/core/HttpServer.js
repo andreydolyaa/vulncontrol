@@ -3,7 +3,7 @@ import express from "express";
 import cors from "cors";
 import logger from "./logger.js";
 import { httpLoggerMiddleware } from "../middleware/http-logger.js";
-import { WebsocketServer } from "./WebSocketServer.js";
+import { WebsocketServer } from "./websocket-server.js";
 
 export class HttpServer {
   constructor(options) {
