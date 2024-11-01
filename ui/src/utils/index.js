@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export const createBearerToken = (storageName) => {
   const raw = localStorage.getItem(storageName);
   const token = raw.replace(/"/g, "");
@@ -29,6 +31,12 @@ export const changeRgbaAlpha = (rgba, newAlpha) => {
   const parts = rgba.split(",");
   parts[3] = `${newAlpha})`;
   return parts.join(",");
+};
+
+export const parseDate = (date) => {
+  if (!date) return "TBD";
+  const time = moment(date);
+  return time.format("HH:mm:ss DD/MM");
 };
 
 export const scanOptions = [
@@ -69,6 +77,18 @@ export const argsDescriptionMap = {
   "-6": "Use IPv6",
   "--privileged": "Run as root",
   "--unprivileged": "Run as non-root",
+};
+
+export const scanTypes = {
+  "-sn": "Network Discovery",
+  "-sV": "Version Detection",
+  "-p-": "Full Port Scan",
+  "-A": "Aggressive Scan",
+  "-sS": "Stealth Scan",
+  "-sU": "UDP Scan",
+  "-T2": "Slow Scan",
+  "-F": "Fast Scan",
+  "-st": "Standard Scan",
 };
 
 export const ascii = `

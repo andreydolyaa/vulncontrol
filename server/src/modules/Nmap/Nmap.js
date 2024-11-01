@@ -48,7 +48,7 @@ export class Nmap extends Docker {
         this.scan.id
       );
 
-      this._handleEvents();
+      this._handleStandardStream();
       logger.info(`NMAP | scan started`);
       return this.scan;
     } catch (error) {
@@ -56,7 +56,7 @@ export class Nmap extends Docker {
     }
   }
 
-  _handleEvents() {
+  _handleStandardStream() {
     const p = this.process;
     p.stdout.on("data", (data) => this._stdout(data.toString()));
     p.stderr.on("data", (data) => this._stderr(data.toString()));
@@ -90,6 +90,7 @@ export class Nmap extends Docker {
   async _setExitStatus(status) {
     await this._insertServerMessage(`scan ${status}!`);
     await this._updateScanInDatabase({ status, endTime: this._setTime() });
+    this._sendToast(status);
     logger.info(`NMAP | scan ${status}`);
   }
 
@@ -105,14 +106,7 @@ export class Nmap extends Docker {
   async _updateScanInDatabase(data) {
     try {
       this.scan = await update(NmapScan, data, this.scan._id);
-      server.websocketServer.updateSubsAtSubscription(
-        subscriptionPaths.NMAP_ALL,
-        this.scan
-      );
-      server.websocketServer.updateSubsAtSubscription(
-        `/nmap/${this.scan.id}`,
-        this.scan
-      );
+      this._sendNotification(this.scan);
       logger.info(`NMAP | updating db...`);
     } catch (error) {
       logger.error(`NMAP | failed to update db`);
@@ -135,6 +129,25 @@ export class Nmap extends Docker {
     } catch (error) {
       logger.error("failed to insert server message");
     }
+  }
+
+  _sendNotification(data) {
+    server.websocketServer.updateSubsAtSubscription(
+      subscriptionPaths.NMAP_ALL,
+      data
+    );
+    server.websocketServer.updateSubsAtSubscription(
+      `/nmap/${this.scan.id}`,
+      data
+    );
+  }
+
+  _sendToast(status) {
+    const messageWrapper = {
+      type: status,
+      scan: this.scan,
+    };
+    this._sendNotification(messageWrapper);
   }
 
   _wrap(data) {

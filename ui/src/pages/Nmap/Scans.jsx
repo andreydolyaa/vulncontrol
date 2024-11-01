@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ScanItem } from "./ScanItem";
+import { ScanItem } from "./ScanItem/ScanItem";
 
 export const Scans = ({ scans }) => {
   const navigate = useNavigate();

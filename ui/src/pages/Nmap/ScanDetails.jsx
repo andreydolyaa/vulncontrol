@@ -19,7 +19,6 @@ export const ScanDetails = () => {
   const [status, setStatus] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  // const scanSubscriptionRoute = `${WS_URL}/ws/scan/${scanId}`;
   const scanSubscriptionRoute = `${WS_URL}/ws/nmap/${scanId}?userId=${user.id}`;
 
   useEffect(() => {

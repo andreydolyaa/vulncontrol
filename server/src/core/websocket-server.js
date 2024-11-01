@@ -1,6 +1,6 @@
 import { WebSocketServer } from "ws";
 import logger from "./logger.js";
-import { SubscriptionManager } from "./SubscriptionManager.js";
+import { SubscriptionManager } from "./subscription-manager.js";
 
 export class WebsocketServer {
   constructor(httpServer) {
@@ -60,7 +60,6 @@ export class WebsocketServer {
       this.subscriptionManager.subscriptions[subscriptionPath];
 
     if (!subscription) {
-      logger.warn(`WS | subscription not exists [${subscriptionPath}]`);
       return;
     }
 
