@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getLoggedUser } from "./redux/userSlice";
 import { Home } from "./pages/Home";
 import { Overview } from "./pages/Overview/Overview";
 import { Nmap } from "./pages/Nmap/Nmap";
-import { ScanDetails } from "./pages/Nmap/ScanDetails";
+import { ScanDetails } from "./pages/Nmap/ScanDetails/ScanDetails";
 import { Nikto } from "./pages/Nikto/Nikto";
 import { Settings } from "./pages/Settings/Settings";
 import { Login } from "./pages/Login";
