@@ -1,37 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { addMessage } from "../redux/nmapSlice";
+import { incomingScan } from "../redux/nmapSlice";
+import { incomingToast } from "../redux/toastSlice";
 
 export const useWebSocket = (url) => {
-  const [socket, setSocket] = useState(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
     const websocket = new WebSocket(url);
-
-    websocket.onopen = () => {
-      console.log("Connected to WebSocket");
-    };
-
     websocket.onmessage = (event) => {
-      dispatch(addMessage(event.data))
-      // console.log("Message received: ", event.data);
+      const incoming = JSON.parse(event.data);
+      if (incoming?.type) {
+        dispatch(incomingToast(incoming));
+      } else {
+        dispatch(incomingScan(incoming));
+      }
     };
-
-    websocket.onclose = () => {
-      console.log("WebSocket connection closed");
-    };
-
-    websocket.onerror = (error) => {
-      console.error("WebSocket error: ", error);
-    };
-
-    setSocket(websocket);
 
     return () => {
       websocket.close();
     };
-  }, [url]);
-
-  return socket;
+  }, [url, dispatch]);
 };

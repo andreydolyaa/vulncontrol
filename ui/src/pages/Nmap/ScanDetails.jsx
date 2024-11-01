@@ -1,5 +1,5 @@
-import styled, { keyframes } from "styled-components";
 import React, { useRef } from "react";
+import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { BASE_URL, WS_URL } from "../../api/baseUrl";
@@ -8,78 +8,62 @@ import { ModuleName } from "../../components/ModuleName";
 import { ScanStatus } from "./ScanStatus";
 import { ascii } from "../../utils";
 import { useDispatch, useSelector } from "react-redux";
-import { incomingToast } from "../../redux/toastSlice";
+import { incomingScan, selectScanById } from "../../redux/nmapSlice";
+import { Empty } from "../../components/Empty";
+import { useWebSocket } from "../../hooks/useWebSocket";
 
 export const ScanDetails = () => {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.user);
   const terminalRef = useRef(null);
   const { scanId } = useParams();
-  const [stdout, setStdout] = useState([]);
-  const [status, setStatus] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const scan = useSelector((state) => selectScanById(state, scanId));
+  const { user } = useSelector((state) => state.user);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
-  const scanSubscriptionRoute = `${WS_URL}/ws/nmap/${scanId}?userId=${user.id}`;
+
+  const updatesRoute = `${WS_URL}/ws/nmap/${scanId}?userId=${user.id}`;
+  useWebSocket(updatesRoute);
 
   useEffect(() => {
     if (terminalRef.current) {
       terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
     }
-  }, [stdout]);
+  }, [scan]);
 
   useEffect(() => {
-    setIsLoading(true);
     fetch(`${BASE_URL}/api/nmap/${scanId}`)
       .then((res) => res.json())
       .then((data) => {
-        setStdout(data.stdout);
-        setStatus(data.status);
+        dispatch(incomingScan(data));
+        setIsLoading(false);
       })
       .catch((error) => setError(error))
       .finally(() => setIsLoading(false));
-
-    const websocket = new WebSocket(scanSubscriptionRoute);
-    websocket.onmessage = (event) => {
-      const incoming = JSON.parse(event.data);
-      if (incoming?.type) {
-        dispatch(incomingToast(incoming));
-      } else {
-        setStdout(incoming.stdout);
-        setStatus(incoming.status);
-      }
-    };
-
-    return () => {
-      websocket.close();
-    };
   }, []);
 
   return (
     <Container>
       <ModuleName text={`SCAN ${scanId}`} enableSearch={false}>
-        <ScanStatus status={status} />
+        {scan && <ScanStatus status={scan.status} />}
       </ModuleName>
 
       <StyledDiv ref={terminalRef}>
         <pre>
           <div className="ascii">{ascii}</div>
-          {stdout.map((line, index) => {
-            return <div key={index}>{line}</div>;
-          })}
+          {isLoading ? (
+            <Empty text="Loading Scan..." loading={true} />
+          ) : (
+            <>
+              {scan.stdout.map((line, index) => {
+                return <div key={index}>{line}</div>;
+              })}
+            </>
+          )}
         </pre>
       </StyledDiv>
     </Container>
   );
 };
-
-const show = keyframes`
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-`;
 
 const StyledDiv = styled.div`
   padding: 20px;
@@ -91,7 +75,6 @@ const StyledDiv = styled.div`
   overflow-y: auto;
   scroll-behavior: smooth;
   font-size: 16px;
-  animation: ${show} 0.3s ease-in-out 1;
   pre {
     white-space: pre-wrap;
     word-wrap: break-word;

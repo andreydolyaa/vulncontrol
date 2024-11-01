@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Container } from "../../components/Container/Container";
 import { useDispatch, useSelector } from "react-redux";
-import { getScans, incomingScan, startScan } from "../../redux/nmapSlice";
+import { getScans, startScan } from "../../redux/nmapSlice";
 import { StartForm } from "./StartForm/StartForm";
 import { Scans } from "./Scans";
 import { WS_URL } from "../../api/baseUrl";
-import { randomNum, scanTypes } from "../../utils";
+import { scanTypes } from "../../utils";
 import { ModuleName } from "../../components/ModuleName";
 import { TbRadar2 as Radar } from "react-icons/tb";
 import { Pagination } from "../../components/Pagination/Pagination";
-import { incomingToast } from "../../redux/toastSlice";
 import { Empty } from "../../components/Empty";
 import { UIModes } from "../../constants";
+import { useWebSocket } from "../../hooks/useWebSocket";
 
 export const Nmap = () => {
   const dispatch = useDispatch();
@@ -24,7 +24,8 @@ export const Nmap = () => {
   const [totalPages, setTotalPages] = useState(1);
   const limit = 6;
 
-  const scanSubscriptionRoute = `${WS_URL}/ws/nmap/updates?userId=${user.id}`;
+  const updatesRoute = `${WS_URL}/ws/nmap/updates?userId=${user.id}`;
+  useWebSocket(updatesRoute);
 
   useEffect(() => {
     dispatch(getScans({ currentPage, limit, search }))
@@ -33,22 +34,6 @@ export const Nmap = () => {
         setTotalPages(data.totalPages);
       });
   }, [currentPage, search]);
-
-  useEffect(() => {
-    const websocket = new WebSocket(scanSubscriptionRoute);
-    websocket.onmessage = (event) => {
-      const incoming = JSON.parse(event.data);
-      if (incoming?.type) {
-        dispatch(incomingToast(incoming));
-      } else {
-        dispatch(incomingScan(incoming));
-      }
-    };
-
-    return () => {
-      websocket.close();
-    };
-  }, []);
 
   const onFormChange = (e) => {
     const { name, value } = e.target;
