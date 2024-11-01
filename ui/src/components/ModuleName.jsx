@@ -30,14 +30,14 @@ const StyledDiv = styled.div`
     display: flex;
     align-items: center;
     .text {
-      color: white;
+      color: #ffffff;
       font-weight: 600;
-      font-size: 24px;
+      font-size: 20px;
     }
     .icon {
       stroke-width: 1.5;
-      height: 24px;
-      width: 24px;
+      height: 20px;
+      width: 20px;
       color: white;
       margin-right: 5px;
     }

@@ -39,6 +39,14 @@ export const parseDate = (date) => {
   return time.format("HH:mm:ss DD/MM");
 };
 
+export const isValidIP = (ip) => {
+  const ipv4Pattern =
+    /^(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}$/;
+  const ipv6Pattern = /^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$/;
+
+  return ipv4Pattern.test(ip) || ipv6Pattern.test(ip);
+};
+
 export const scanOptions = [
   "-sn",
   "-sV",
@@ -88,7 +96,7 @@ export const scanTypes = {
   "-sU": "UDP Scan",
   "-T2": "Slow Scan",
   "-F": "Fast Scan",
-  "-st": "Standard Scan",
+  default: "Standard Scan",
 };
 
 export const ascii = `

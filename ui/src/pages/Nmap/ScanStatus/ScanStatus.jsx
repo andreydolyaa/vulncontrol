@@ -1,6 +1,6 @@
 import React, { memo } from "react";
-import { Status } from "../../components/Status";
-import { NmapScanStatus } from "../../constants";
+import { Status } from "../../../components/Status";
+import { NmapScanStatus } from "../../../constants";
 
 export const ScanStatus = memo(({ status }) => {
   const checkStatus = (status) => {

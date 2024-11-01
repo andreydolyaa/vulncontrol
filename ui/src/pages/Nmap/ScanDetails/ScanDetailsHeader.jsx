@@ -1,14 +1,13 @@
 import React from "react";
+import { useParams } from "react-router-dom";
 import { ModuleName } from "../../../components/ModuleName";
-import { ScanStatus } from "../ScanStatus";
+import { ScanStatus } from "../ScanStatus/ScanStatus";
 
 export const ScanDetailsHeader = ({ scan }) => {
-
+  const { scanId } = useParams();
   return (
-    scan && (
-      <ModuleName text={`SCAN ${scan.id}`} enableSearch={false}>
-        <ScanStatus status={scan.status} />
-      </ModuleName>
-    )
+    <ModuleName text={`SCAN ${scanId}`} enableSearch={false}>
+      <ScanStatus status={scan?.status} />
+    </ModuleName>
   );
 };

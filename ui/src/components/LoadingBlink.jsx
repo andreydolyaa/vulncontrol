@@ -1,10 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 
-export const LoadingBlink = () => {
+export const LoadingBlink = ({ text = "Loading" }) => {
   return (
-    <StyledLoadingBlinkDiv>
-      Loading<span className="dot">.</span>
+    <StyledLoadingBlinkDiv $text={text}>
+      {text}
+      <span className="dot">.</span>
       <span className="dot">.</span>
       <span className="dot">.</span>
     </StyledLoadingBlinkDiv>
@@ -12,11 +13,16 @@ export const LoadingBlink = () => {
 };
 
 const StyledLoadingBlinkDiv = styled.div`
+  font-size: ${({ $text }) => !$text && "18px"};
   .dot {
     opacity: 0;
+    margin-right: 3px;
     animation: blink 1.5s infinite;
   }
 
+  .dot:nth-child(1) {
+    margin-left: 3px;
+  }
   .dot:nth-child(2) {
     animation-delay: 0.3s;
   }

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteToast } from "../redux/toastSlice";
 import { TbAlertHexagon } from "react-icons/tb";
 
-const TOAST_DURATION = 6000;
+const TOAST_DURATION = 4000;
 const ANIMATION_DURATION = 300;
 const TYPES = {
   done: "completed",
@@ -14,26 +14,28 @@ const TYPES = {
 
 export const Toast = () => {
   const dispatch = useDispatch();
-  const toastMessage = useSelector((state) => state.toast.toast);
+  const { toast, customToast } = useSelector((state) => state.toast);
 
   useEffect(() => {
-    if (toastMessage) {
+    if (toast || customToast) {
       const toastTimer = setTimeout(() => {
         dispatch(deleteToast());
       }, TOAST_DURATION);
       return () => clearTimeout(toastTimer);
     }
-  }, [toastMessage, dispatch]);
+  }, [toast, customToast, dispatch]);
 
-  if (!toastMessage) return null;
+  if (!toast && !customToast) return null;
 
   return (
-    <StyledDivToast>
+    <StyledDivToast $customToast={customToast}>
       <div className="icon-wrapper">
         <TbAlertHexagon className="icon" />
       </div>
       <div className="text-wrapper">
-        Scan {TYPES[toastMessage.type]} for {toastMessage.scan.target}
+        {customToast
+          ? customToast
+          : `Scan ${TYPES[toast.type]} for ${toast.scan.target}`}
       </div>
     </StyledDivToast>
   );
@@ -49,17 +51,18 @@ const StyledDivToast = styled.div`
   align-items: center;
   border: 1px solid var(--border-color);
   border-radius: var(--radius);
-  width: 280px;
-  height: 80px;
+  width: 295px;
+  height: 90px;
   background-color: var(--background-color);
   box-shadow: 1px 1px 25px 6px #131313;
+  white-space: pre-line;
   .text-wrapper {
     height: 100%;
     width: 100%;
     display: flex;
     align-items: center;
     font-size: 12px;
-    text-transform: uppercase;
+    text-transform: ${({ $customToast }) => !$customToast && "uppercase"};
   }
   .icon-wrapper {
     height: 100%;
