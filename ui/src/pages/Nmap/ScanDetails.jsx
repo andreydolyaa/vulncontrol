@@ -1,28 +1,31 @@
-import React, { useRef } from "react";
 import styled from "styled-components";
-import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { BASE_URL, WS_URL } from "../../api/baseUrl";
+import React, { useRef, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useWebSocket } from "../../hooks/useWebSocket";
+import { WS_URL } from "../../api/baseUrl";
 import { Container } from "../../components/Container/Container";
 import { ModuleName } from "../../components/ModuleName";
 import { ScanStatus } from "./ScanStatus";
 import { ascii } from "../../utils";
-import { useDispatch, useSelector } from "react-redux";
-import { incomingScan, selectScanById } from "../../redux/nmapSlice";
+import { getScanById, selectScanById } from "../../redux/nmap";
 import { Empty } from "../../components/Empty";
-import { useWebSocket } from "../../hooks/useWebSocket";
 
 export const ScanDetails = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const terminalRef = useRef(null);
   const { scanId } = useParams();
-  const scan = useSelector((state) => selectScanById(state, scanId));
+  const { loading } = useSelector((state) => state.nmap);
   const { user } = useSelector((state) => state.user);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState("");
+  const scan = useSelector((state) => selectScanById(state, scanId));
 
   const updatesRoute = `${WS_URL}/ws/nmap/${scanId}?userId=${user.id}`;
   useWebSocket(updatesRoute);
+
+  useEffect(() => {
+    dispatch(getScanById(scanId));
+  }, []);
 
   useEffect(() => {
     if (terminalRef.current) {
@@ -31,15 +34,10 @@ export const ScanDetails = () => {
   }, [scan]);
 
   useEffect(() => {
-    fetch(`${BASE_URL}/api/nmap/${scanId}`)
-      .then((res) => res.json())
-      .then((data) => {
-        dispatch(incomingScan(data));
-        setIsLoading(false);
-      })
-      .catch((error) => setError(error))
-      .finally(() => setIsLoading(false));
-  }, []);
+    if (!loading && !scan) {
+      return navigate("/nmap"); // TODO: go to /not-found & remove 3 uE
+    }
+  }, [loading, scan]);
 
   return (
     <Container>
@@ -50,7 +48,7 @@ export const ScanDetails = () => {
       <StyledDiv ref={terminalRef}>
         <pre>
           <div className="ascii">{ascii}</div>
-          {isLoading ? (
+          {loading || !scan ? (
             <Empty text="Loading Scan..." loading={true} />
           ) : (
             <>

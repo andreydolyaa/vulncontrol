@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { deleteScan } from "../../../redux/nmapSlice";
+import { deleteScan } from "../../../redux/nmap";
 import { TbTrash } from "react-icons/tb";
 
 export const ScanDelete = ({ scan }) => {

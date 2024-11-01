@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { styled } from "styled-components";
 import { TbTerminal2, TbAlignBoxRightBottom } from "react-icons/tb";
 import { useDispatch, useSelector } from "react-redux";
-import { setUiMode } from "../../../redux/nmapSlice";
+import { setUiMode } from "../../../redux/nmap";
 import { UIModes } from "../../../constants/index";
 
 export const Mode = () => {
