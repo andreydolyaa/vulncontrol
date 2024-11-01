@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
 import api from "../api/index";
 
 export const startScan = createAsyncThunk(
@@ -130,9 +130,22 @@ export const nmapSlice = createSlice({
   },
 });
 
-export const getScanById = (state, scanId) => {
-  return state.nmap.scans.find((scan) => scan.id === scanId);
-};
+// explanation of createSelector (uses memoization)
+export const selectScanById = createSelector(
+  // 1. First argument: Array of "input selectors"
+  [
+    // Input selector 1: gets all scans from state
+    (state) => state.nmap.scans,
+
+    // Input selector 2: gets scanId from component
+    // (_) means we don't use state here, we just want the second argument
+    (_, scanId) => scanId,
+  ],
+
+  // 2. Second argument: "Result selector"
+  // Gets the results from input selectors as arguments
+  (scans, scanId) => scans.find((scan) => scan.id === scanId)
+);
 
 export const { incomingScan, getScan, setUiMode } = nmapSlice.actions;
 export default nmapSlice.reducer;
