@@ -7,12 +7,6 @@ import { scanOptions } from "../../../utils";
 export const Args = ({ selectedArgs, handleCheckboxChange }) => {
   const isDisabled = (label) => label === "--packet-trace";
 
-  // const handleCheckboxChange = (arg) => {
-  //   onFormChange({
-  //     target: { name: arg, type: "checkbox", checked: !formData.args[arg] },
-  //   });
-  // };
-
   return (
     <StyledDiv>
       {scanOptions.map((arg) => {

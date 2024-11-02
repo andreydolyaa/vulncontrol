@@ -19,6 +19,7 @@ const StyledDiv = styled.div`
   align-items: center;
   margin: 0 0 20px 0;
   gap:10px;
+  font-size: 14px;
   .icon {
     stroke-width: 1.5;
     font-size: 18px;
