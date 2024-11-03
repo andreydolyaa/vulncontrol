@@ -53,13 +53,3 @@ export class HttpServer {
     });
   }
 }
-
-process.on("uncaughtException", (error) => {
-  logger.error("Uncaught Exception:", error);
-  process.exit(1);
-});
-
-process.on("unhandledRejection", (reason) => {
-  logger.error("Unhandled Rejection:", reason);
-  process.exit(1);
-});

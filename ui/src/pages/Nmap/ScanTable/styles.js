@@ -11,7 +11,7 @@ export const TableWrapper = styled.div`
 export const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
-  table-layout: fixed;
+  /* table-layout: fixed; */
 `;
 
 export const TableRow = styled.tr`
