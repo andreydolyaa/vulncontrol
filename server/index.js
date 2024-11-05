@@ -27,9 +27,9 @@ server
     const theHarvester = new TheHarvester({
       userId: "670f918c18444c7f0002e09e",
       scanType: "TEST",
-      domain: "http://www.egged.co.il/",
+      domain: "http://www.123.com/",
     });
-    await theHarvester.start();
+    // await theHarvester.start();
     // await removeAll(NmapScan);
     // await removeAll(TheHarvesterScan);
   });
