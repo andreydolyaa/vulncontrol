@@ -13,7 +13,7 @@ import {
 } from "../../constants/processes.js";
 import path from "path";
 
-// TODO: IP BLOCKED BY MOST SEARCH ENGINES, LOOK FOR OTHER TOOL :
+// TODO: TH is broken, need to replace;
 
 export class TheHarvester extends Docker {
   static containerName = "";
@@ -75,7 +75,7 @@ export class TheHarvester extends Docker {
         THE_HARVESTER_ARG.DOMAIN,
         this.scan.target,
         THE_HARVESTER_ARG.DATA_SOURCE,
-        "google",
+        "all",
         // THE_HARVESTER_ARG.OUTPUT,
         // this.outputFile,
       ];
