@@ -1,35 +1,31 @@
 import { spawn, exec } from "child_process";
-import { EventEmitter } from "events";
-import { loggerWrapper } from "../../utils/index.js";
 import {
   DOCKER_ARG,
   DOCKER_BIN,
   DOCKER_CMD,
   PROC_SIGNAL,
 } from "../../constants/processes.js";
+import { Utils } from "../utils/Utils.js";
 
 // container name constructed of: <module>_<document_id> (nmap_123, sublister_334)
 
-export class Docker extends EventEmitter {
+export class Docker {
   static processes = new Map();
 
-  constructor(image) {
-    super();
-    this.image = image;
+  constructor() {}
+
+  static assignContainerName(prefix, name) {
+    return prefix + "_" + name;
   }
 
-  static constructContainerName(prefix, name) {
-    return prefix + name;
-  }
-
-  async run(containerName, scanSettings, containerSettings = []) {
+  static async run(image, containerName, scanSettings, containerSettings = []) {
     const dockerArgs = [
       DOCKER_CMD.RUN,
       DOCKER_ARG.RM,
       DOCKER_ARG.NAME,
       containerName,
       ...containerSettings,
-      this.image,
+      image,
     ];
 
     const scanFlags = [...scanSettings, DOCKER_ARG.VERBOSE];
@@ -74,6 +70,6 @@ export class Docker extends EventEmitter {
   }
 
   static log(msg) {
-    loggerWrapper("DOCKER | ", msg);
+    Utils.logWrapper(DOCKER_BIN, msg);
   }
 }

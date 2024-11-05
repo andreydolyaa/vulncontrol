@@ -30,6 +30,7 @@ server
     // });
     // await theHarvester.start();
     // await removeAll(NmapScan);
+    // await removeAll(TheHarvester);
   });
 
 process.on("uncaughtException", (error) => {
