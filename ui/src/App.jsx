@@ -14,9 +14,9 @@ import { ProtectedRoutes } from "./layout/ProtectedRoutes";
 import { PublicRoutes } from "./layout/PublicRoutes";
 import { Loading } from "./components/Loading";
 import { Tooltip } from "react-tooltip";
-import "react-tooltip/dist/react-tooltip.css";
 import { Toast } from "./components/Toast";
-import { Sublister } from "./pages/Sublister/Sublister";
+import { TheHarvester } from "./pages/TheHarvester/TheHarvester";
+import "react-tooltip/dist/react-tooltip.css";
 
 export const App = () => {
   const dispatch = useDispatch();
@@ -40,7 +40,7 @@ export const App = () => {
           <Route path="/nmap/:scanId" element={<ScanDetails />} />
           <Route path="/nikto" element={<Nikto />} />
           <Route path="/settings" element={<Settings />} />
-          <Route path="/sublister" element={<Sublister />} />
+          <Route path="/theharvester" element={<TheHarvester />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
 

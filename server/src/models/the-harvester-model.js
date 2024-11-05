@@ -1,16 +1,20 @@
 import mongoose from "mongoose";
 
-const SublisterScanSchema = new mongoose.Schema(
+const TheHarvesterScanSchema = new mongoose.Schema(
   {
-    stdout: [String],
-    byUser: {
+    stdout: {
+      type: [String],
+    },
+    userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
     target: {
       type: String,
-      required: true,
+    },
+    scanType: {
+      type: String,
     },
     status: {
       type: String,
@@ -22,8 +26,15 @@ const SublisterScanSchema = new mongoose.Schema(
     endTime: {
       type: Date,
     },
-    subdomains: [String],
-    processPid: Number,
+    data: {
+      autonomousSystemNumbers: [String],
+      urls: [String],
+      ips: [String],
+      hosts: [String],
+      twitterUsers: [String],
+      linkedInUsers: [String],
+      trelloUsers: [String],
+    },
     id: {
       type: String,
       default: function () {
@@ -32,12 +43,13 @@ const SublisterScanSchema = new mongoose.Schema(
       index: true,
     },
   },
+
   {
     versionKey: false,
   }
 );
 
-export const SublisterScan = mongoose.model(
-  "SublisterScan",
-  SublisterScanSchema
+export const TheHarvesterScan = mongoose.model(
+  "TheHarvesterScan",
+  TheHarvesterScanSchema
 );

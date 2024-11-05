@@ -1,5 +1,24 @@
+import logger from "../core/logger.js";
+
 export const sleep = async (ms) => {
   return await new Promise((resolve) => setInterval(resolve, ms));
+};
+
+export const loggerWrapper = (prefix, message) => {
+  if (message.startsWith("err:")) {
+    logger.error(prefix + message.substring(5));
+  } else if (message.startsWith("warn:")) {
+    logger.warn(prefix + message.substring(6));
+  } else if (message.startsWith("info:")) {
+    logger.info(prefix + message.substring(6));
+  } else {
+    logger.info(prefix + message);
+  }
+};
+
+export const extractDomain = (url) => {
+  const domain = url.replace(/.*?:\/\//, "").replace(/\/.*$/, "");
+  return domain.replace(/^www\./, "");
 };
 
 export const extractIP = (str) => {

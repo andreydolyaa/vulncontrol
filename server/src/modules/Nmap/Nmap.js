@@ -1,25 +1,34 @@
 import { server } from "../../../index.js";
 import { subscriptionPaths } from "../../constants/common.js";
-import logger from "../../core/logger.js";
 import { NmapScan } from "../../models/nmap-model.js";
-import { extractIP } from "../../utils/index.js";
+import { extractIP, loggerWrapper } from "../../utils/index.js";
 import { create, update } from "../db-actions/db-actions.js";
 import { Docker } from "../docker/docker.js";
+import {
+  DOCKER_IMAGES,
+  PROC_SIGNAL,
+  PROC_STATUS,
+  PROC_STREAM_EVENT,
+} from "../../constants/processes.js";
 
 export class Nmap extends Docker {
   constructor(request) {
-    super("instrumentisto/nmap");
+    super(DOCKER_IMAGES.NMAP);
     this.process = null;
     this.scan = null;
     this.request = request;
   }
 
-  static constructContainerName(id) {
-    return "nmap_" + id;
+  static containerName(id) {
+    return Docker.constructContainerName("nmap_", id);
   }
 
   static async abortScan(scanId) {
-    await Docker.abort(Nmap.constructContainerName(scanId));
+    await Docker.abort(Nmap.containerName(scanId));
+  }
+
+  static log(msg) {
+    loggerWrapper("NMAP | ", msg);
   }
 
   async _init() {
@@ -29,7 +38,7 @@ export class Nmap extends Docker {
       command: args,
       userId: this.request.userId,
       scanType: this.request.scanType,
-      status: "live",
+      status: PROC_STATUS.LIVE,
       startTime: this._setTime(),
       target: extractIP(args),
     });
@@ -44,24 +53,27 @@ export class Nmap extends Docker {
 
       this.process = await this.run(
         this.request.args,
-        Nmap.constructContainerName(this.scan.id),
-        this.scan.id
+        Nmap.containerName(this.scan.id)
       );
 
       this._handleStandardStream();
-      logger.info(`NMAP | scan started`);
+      Nmap.log("warn: scan started");
       return this.scan;
     } catch (error) {
-      logger.error(`NMAP | error starting scan [${error}]`);
+      Nmap.log(`err: error starting scan [${error}]`);
     }
   }
 
   _handleStandardStream() {
     const p = this.process;
-    p.stdout.on("data", (data) => this._stdout(data.toString()));
-    p.stderr.on("data", (data) => this._stderr(data.toString()));
-    p.on("exit", (code, signal) => this._exit(code, signal));
-    p.on("close", (code, signal) => this._close(code, signal));
+    p.stdout.on(PROC_STREAM_EVENT.DATA, (data) =>
+      this._stdout(data.toString())
+    );
+    p.stderr.on(PROC_STREAM_EVENT.DATA, (data) =>
+      this._stderr(data.toString())
+    );
+    p.on(PROC_STREAM_EVENT.EXIT, (code, signal) => this._exit(code, signal));
+    p.on(PROC_STREAM_EVENT.CLOSE, (code, signal) => this._close(code, signal));
   }
 
   async _stdout(data) {
@@ -79,11 +91,11 @@ export class Nmap extends Docker {
 
   async _exit(code, signal) {
     return code === 0
-      ? await this._setExitStatus("done")
+      ? await this._setExitStatus(PROC_STATUS.DONE)
       : code === 1
-      ? await this._setExitStatus("failed")
-      : code === null && signal === "SIGKILL"
-      ? await this._setExitStatus("aborted")
+      ? await this._setExitStatus(PROC_STATUS.FAILED)
+      : code === null && signal === PROC_SIGNAL.SIGKILL
+      ? await this._setExitStatus(PROC_STATUS.ABORTED)
       : null;
   }
 
@@ -91,12 +103,12 @@ export class Nmap extends Docker {
     await this._insertServerMessage(`scan ${status}!`);
     await this._updateScanInDatabase({ status, endTime: this._setTime() });
     this._sendToast(status);
-    logger.info(`NMAP | scan ${status}`);
+    Nmap.log(`info: scan ${status}`);
   }
 
   _close(code, signal) {
-    Docker.processes.delete(Nmap.constructContainerName(this.scan.id));
-    logger.info("NMAP | process closed");
+    Docker.processes.delete(Nmap.containerName(this.scan.id));
+    Nmap.log(`info: process closed`);
   }
 
   _setTime() {
@@ -107,9 +119,9 @@ export class Nmap extends Docker {
     try {
       this.scan = await update(NmapScan, data, this.scan._id);
       this._sendNotification(this.scan);
-      logger.info(`NMAP | updating db...`);
+      Nmap.log(`info: updating db...`);
     } catch (error) {
-      logger.error(`NMAP | failed to update db`);
+      Nmap.log(`error: failed to update db`);
     }
   }
 
@@ -127,7 +139,7 @@ export class Nmap extends Docker {
     try {
       await this._updateScanInDatabase(update);
     } catch (error) {
-      logger.error("failed to insert server message");
+      Nmap.log(`error: failed to insert server message`);
     }
   }
 

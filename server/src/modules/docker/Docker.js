@@ -1,6 +1,12 @@
 import { spawn, exec } from "child_process";
-import logger from "../../core/logger.js";
 import { EventEmitter } from "events";
+import { loggerWrapper } from "../../utils/index.js";
+import {
+  DOCKER_ARG,
+  DOCKER_BIN,
+  DOCKER_CMD,
+  PROC_SIGNAL,
+} from "../../constants/processes.js";
 
 // container name constructed of: <module>_<document_id> (nmap_123, sublister_334)
 
@@ -12,25 +18,30 @@ export class Docker extends EventEmitter {
     this.image = image;
   }
 
-  async run(args, containerName) {
+  static constructContainerName(prefix, name) {
+    return prefix + name;
+  }
+
+  async run(scanSettings, containerName, containerArgs = [], verbose = false) {
+    const dockerArgs = [
+      DOCKER_CMD.RUN,
+      DOCKER_ARG.RM,
+      DOCKER_ARG.NAME,
+      containerName,
+      ...containerArgs,
+      this.image,
+    ];
+    const scanFlags = [...scanSettings, DOCKER_ARG.VERBOSE];
+
     try {
-      const options = [
-        "run",
-        "--rm",
-        "--name",
-        containerName,
-        this.image,
-        ...args,
-        "-v",
-      ];
+      const allArgs = [...dockerArgs, ...scanFlags];
+      const process = spawn(DOCKER_BIN, allArgs);
 
-      const process = spawn("docker", options);
       Docker.processes.set(containerName, process);
-
-      logger.info(`DOCKER | starting process... [${options.join(" ")}]`);
+      Docker.log(`info: starting process... [${allArgs.join(" ")}]`);
       return process;
     } catch (error) {
-      logger.error(`DOCKER | failed to run image [${error}]`);
+      Docker.log(`error: failed to run image [${error}]`);
     }
   }
 
@@ -39,25 +50,29 @@ export class Docker extends EventEmitter {
 
     if (process) {
       try {
-        process.kill("SIGKILL");
-        await Docker._cmd("stop", containerName);
+        process.kill(PROC_SIGNAL.SIGKILL);
+        await Docker._cmd(DOCKER_CMD.STOP, containerName);
         Docker.processes.delete(containerName);
-        logger.warn(`DOCKER | process kill by user`);
+        Docker.log("warn: process kill requested by user");
       } catch (error) {
-        logger.error(`DOCKER | failed to kill process`);
+        Docker.log("err: failed to kill process");
       }
     } else {
-      logger.warn(`DOCKER | process not found`);
+      Docker.log("warn: process not found");
     }
   }
 
   static _cmd(action, containerName) {
-    const command = `docker ${action} ${containerName}`;
+    const command = `${DOCKER_BIN} ${action} ${containerName}`;
     return new Promise((resolve, reject) => {
       exec(command, (error, stdout, stderr) => {
         if (error) return reject(`error ${action} container: ${stderr}`);
         resolve(stdout);
       });
     });
+  }
+
+  static log(msg) {
+    loggerWrapper("DOCKER | ", msg);
   }
 }

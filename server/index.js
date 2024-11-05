@@ -3,6 +3,8 @@ import { HttpServer } from "./src/core/http-server.js";
 import { Database } from "./src/core/database.js";
 import router from "./src/router.js";
 import logger from "./src/core/logger.js";
+import { NmapScan } from "./src/models/nmap-model.js";
+import { removeAll } from "./src/modules/db-actions/db-actions.js";
 
 dotenv.config();
 
@@ -13,9 +15,14 @@ export const server = new HttpServer({
 
 const database = new Database(process.env.DB_URL);
 
-server.run().then(async () => {
-  await database.connect();
-});
+server
+  .run()
+  .then(async () => {
+    await database.connect();
+  })
+  .then(async () => {
+    // await removeAll(NmapScan);
+  });
 
 process.on("uncaughtException", (error) => {
   logger.error(`Uncaught Exception: ${error}`);
