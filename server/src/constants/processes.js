@@ -16,7 +16,7 @@ export const DOCKER_ARG = {
   NAME: "--name",
   VERBOSE: "-v",
   INTERACTIVE: "-it",
-  PLATFORM_AMD64: "--platform linux/amd64"
+  PLATFORM_AMD64: "--platform linux/amd64",
 };
 
 export const PROC_STATUS = {
@@ -39,5 +39,5 @@ export const PROC_SIGNAL = {
 export const NMAP_ARG = {};
 export const THE_HARVESTER_ARG = {
   DOMAIN: "-d",
-  DATA_SOURCE: "-b all"
-}
+  ALL_DATA_SOURCES: "-b all",
+};

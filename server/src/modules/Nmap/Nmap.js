@@ -52,8 +52,8 @@ export class Nmap extends Docker {
       await this._insertServerMessage(`nmap ${this.request.args.join(" ")} -v`);
 
       this.process = await this.run(
+        Nmap.containerName(this.scan.id),
         this.request.args,
-        Nmap.containerName(this.scan.id)
       );
 
       this._handleStandardStream();

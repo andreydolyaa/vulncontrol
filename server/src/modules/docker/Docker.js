@@ -22,15 +22,16 @@ export class Docker extends EventEmitter {
     return prefix + name;
   }
 
-  async run(scanSettings, containerName, containerArgs = [], verbose = false) {
+  async run(containerName, scanSettings, containerSettings = []) {
     const dockerArgs = [
       DOCKER_CMD.RUN,
       DOCKER_ARG.RM,
       DOCKER_ARG.NAME,
       containerName,
-      ...containerArgs,
+      ...containerSettings,
       this.image,
     ];
+
     const scanFlags = [...scanSettings, DOCKER_ARG.VERBOSE];
 
     try {
