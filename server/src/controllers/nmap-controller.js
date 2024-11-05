@@ -1,7 +1,6 @@
 import logger from "../core/logger.js";
 import { NmapScan } from "../models/nmap-model.js";
 import { Nmap } from "../modules/nmap/nmap.js";
-import { sleep } from "../utils/index.js";
 
 export const startNmap = async (req, res) => {
   const { args, userId, scanType = "default" } = req.body;
@@ -49,8 +48,6 @@ export const getAllScans = async (req, res) => {
       totalPages,
       currentPage: page,
     };
-
-    // await sleep(1000) // TODO: remove
     return res.status(200).send(responseData);
   } catch (error) {
     logger.error(`Failed to get scans: ${error}`);
@@ -62,7 +59,6 @@ export const getAllScans = async (req, res) => {
 export const getScanById = async (req, res) => {
   try {
     const scan = await NmapScan.findOne({ _id: req.params.id });
-    // await sleep(1000) // TODO: remove
     return res.status(200).send(scan);
   } catch (error) {
     logger.error(`Failed to get scan by id: ${error}`);
@@ -70,7 +66,7 @@ export const getScanById = async (req, res) => {
   }
 };
 
-export const abortScan = async (req, res) => {  
+export const abortScan = async (req, res) => {
   const scanId = req.params.id;
   try {
     await Nmap.abortScan(scanId);

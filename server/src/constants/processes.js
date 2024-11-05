@@ -4,7 +4,9 @@ export const DOCKER_IMAGES = {
 };
 
 export const DOCKER_BIN = "docker";
-export const THE_HARVESTER_BIN = "theharvester";
+export const NMAP_BIN = "nmap";
+export const NIKTO_BIN = "nikto";
+export const THE_HARVESTER_BIN = "the_harvester";
 
 export const DOCKER_CMD = {
   DOCKER: "docker",

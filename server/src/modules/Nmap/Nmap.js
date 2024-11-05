@@ -1,34 +1,34 @@
 import { server } from "../../../index.js";
 import { subscriptionPaths } from "../../constants/common.js";
 import { NmapScan } from "../../models/nmap-model.js";
-import { extractIP, loggerWrapper } from "../../utils/index.js";
 import { create, update } from "../db-actions/db-actions.js";
 import { Docker } from "../docker/docker.js";
+import { Utils } from "../utils/Utils.js";
 import {
   DOCKER_IMAGES,
-  PROC_SIGNAL,
+  NMAP_BIN,
   PROC_STATUS,
   PROC_STREAM_EVENT,
 } from "../../constants/processes.js";
+import { StreamListener } from "../stream-listener/stream-listener.js";
 
 export class Nmap extends Docker {
+  static containerName = "";
+
   constructor(request) {
-    super(DOCKER_IMAGES.NMAP);
+    super();
     this.process = null;
     this.scan = null;
     this.request = request;
+    this.streamListener = null;
   }
 
-  static containerName(id) {
-    return Docker.constructContainerName("nmap_", id);
-  }
-
-  static async abortScan(scanId) {
-    await Docker.abort(Nmap.containerName(scanId));
+  static async abortScan() {
+    await Docker.abort(Nmap.containerName);
   }
 
   static log(msg) {
-    loggerWrapper("NMAP | ", msg);
+    Utils.logWrapper(NMAP_BIN, msg);
   }
 
   async _init() {
@@ -39,41 +39,40 @@ export class Nmap extends Docker {
       userId: this.request.userId,
       scanType: this.request.scanType,
       status: PROC_STATUS.LIVE,
-      startTime: this._setTime(),
-      target: extractIP(args),
+      startTime: Utils.setCurrentTime(),
+      target: Utils.extractIPAddress(args),
     });
+
+    Nmap.containerName = Docker.assignContainerName(NMAP_BIN, this.scan.id);
   }
 
   async start() {
     try {
       await this._init();
-      await this._insertServerMessage("starting nmap docker image...");
-      await this._insertServerMessage("starting nmap scan...");
-      await this._insertServerMessage(`nmap ${this.request.args.join(" ")} -v`);
+      await this._insertServerMsgs([
+        "starting nmap docker image...",
+        "starting nmap scan...",
+        `nmap ${this.request.args.join(" ")} -v`,
+      ]);
 
-      this.process = await this.run(
-        Nmap.containerName(this.scan.id),
-        this.request.args,
+      this.process = await Docker.run(
+        DOCKER_IMAGES.NMAP,
+        Nmap.containerName,
+        this.request.args
       );
 
-      this._handleStandardStream();
+      new StreamListener(this.process, {
+        stdout: this._stdout.bind(this),
+        stderr: this._stderr.bind(this),
+        exit: this._exit.bind(this),
+        close: this._close.bind(this),
+      });
+
       Nmap.log("warn: scan started");
       return this.scan;
     } catch (error) {
       Nmap.log(`err: error starting scan [${error}]`);
     }
-  }
-
-  _handleStandardStream() {
-    const p = this.process;
-    p.stdout.on(PROC_STREAM_EVENT.DATA, (data) =>
-      this._stdout(data.toString())
-    );
-    p.stderr.on(PROC_STREAM_EVENT.DATA, (data) =>
-      this._stderr(data.toString())
-    );
-    p.on(PROC_STREAM_EVENT.EXIT, (code, signal) => this._exit(code, signal));
-    p.on(PROC_STREAM_EVENT.CLOSE, (code, signal) => this._close(code, signal));
   }
 
   async _stdout(data) {
@@ -90,29 +89,24 @@ export class Nmap extends Docker {
   }
 
   async _exit(code, signal) {
-    return code === 0
-      ? await this._setExitStatus(PROC_STATUS.DONE)
-      : code === 1
-      ? await this._setExitStatus(PROC_STATUS.FAILED)
-      : code === null && signal === PROC_SIGNAL.SIGKILL
-      ? await this._setExitStatus(PROC_STATUS.ABORTED)
-      : null;
+    return await this._setNmapExitStatus(
+      Utils.handleStreamExitStatus(code, signal)
+    );
   }
 
-  async _setExitStatus(status) {
-    await this._insertServerMessage(`scan ${status}!`);
-    await this._updateScanInDatabase({ status, endTime: this._setTime() });
+  async _setNmapExitStatus(status) {
+    await this._insertServerMsgs([`scan ${status}!`]);
+    await this._updateScanInDatabase({
+      status,
+      endTime: Utils.setCurrentTime(),
+    });
     this._sendToast(status);
     Nmap.log(`info: scan ${status}`);
   }
 
   _close(code, signal) {
-    Docker.processes.delete(Nmap.containerName(this.scan.id));
+    Docker.processes.delete(Nmap.containerName);
     Nmap.log(`info: process closed`);
-  }
-
-  _setTime() {
-    return new Date().toISOString();
   }
 
   async _updateScanInDatabase(data) {
@@ -134,8 +128,14 @@ export class Nmap extends Docker {
     return port ? parseInt(port) : undefined;
   }
 
-  async _insertServerMessage(message) {
-    const update = { $push: { stdout: `server: ${message}\n` } };
+  async _insertServerMsgs(messages) {
+    const update = {
+      $push: {
+        stdout: {
+          $each: messages.map((msg) => `server: ${msg}\n`),
+        },
+      },
+    };
     try {
       await this._updateScanInDatabase(update);
     } catch (error) {

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import logger from "./logger.js";
-import { sleep } from "../utils/index.js";
+import { Utils } from "../modules/utils/Utils.js";
 
 export class Database {
   RECONNECT_INTERVAL = 1000;
@@ -30,7 +30,7 @@ export class Database {
   }
 
   async reconnect() {
-    await sleep(this.RECONNECT_INTERVAL);
+    await Utils.sleep(this.RECONNECT_INTERVAL);
     await this.connect();
   }
 
