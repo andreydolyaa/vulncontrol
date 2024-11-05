@@ -6,6 +6,7 @@ import logger from "./src/core/logger.js";
 import { NmapScan } from "./src/models/nmap-model.js";
 import { removeAll } from "./src/modules/db-actions/db-actions.js";
 import { TheHarvester } from "./src/modules/the-harvester/the-harvester.js";
+import { TheHarvesterScan } from "./src/models/the-harvester-model.js";
 
 dotenv.config();
 
@@ -23,14 +24,14 @@ server
   })
   // TEST
   .then(async () => {
-    // const theHarvester = new TheHarvester({
-    //   userId: "670f918c18444c7f0002e09e",
-    //   scanType: "TEST",
-    //   domain: "http://www.egged.co.il/",
-    // });
-    // await theHarvester.start();
+    const theHarvester = new TheHarvester({
+      userId: "670f918c18444c7f0002e09e",
+      scanType: "TEST",
+      domain: "http://www.egged.co.il/",
+    });
+    await theHarvester.start();
     // await removeAll(NmapScan);
-    // await removeAll(TheHarvester);
+    // await removeAll(TheHarvesterScan);
   });
 
 process.on("uncaughtException", (error) => {

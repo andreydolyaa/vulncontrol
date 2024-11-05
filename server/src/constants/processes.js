@@ -1,6 +1,6 @@
 export const DOCKER_IMAGES = {
   NMAP: "instrumentisto/nmap",
-  THE_HARVESTER: "followthewhiterabbit/theharvester",
+  THE_HARVESTER: "edelahozuah/theharvester",
 };
 
 export const DOCKER_BIN = "docker";
@@ -12,13 +12,16 @@ export const DOCKER_CMD = {
   DOCKER: "docker",
   RUN: "run",
   STOP: "stop",
+  MOUNT: "-v",
 };
 export const DOCKER_ARG = {
   RM: "--rm",
   NAME: "--name",
-  VERBOSE: "-v",
-  INTERACTIVE: "-it",
-  PLATFORM_AMD64: "--platform linux/amd64",
+  MOUNT: "-v",
+  INTERACTIVE: "-i",
+  TTY: "-t",
+  PLATFORM: "--platform",
+  AMD64: "linux/amd64",
 };
 
 export const PROC_STATUS = {
@@ -38,8 +41,12 @@ export const PROC_SIGNAL = {
   SIGKILL: "SIGKILL",
 };
 
-export const NMAP_ARG = {};
+export const NMAP_ARG = {
+  VERBOSE: "-v",
+};
 export const THE_HARVESTER_ARG = {
   DOMAIN: "-d",
-  ALL_DATA_SOURCES: "-b all",
+  DATA_SOURCE: "-b",
+  OUTPUT: "-f",
+  ALL: "all",
 };

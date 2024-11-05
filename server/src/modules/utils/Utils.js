@@ -1,7 +1,11 @@
+import path from "path";
+import { fileURLToPath } from "url";
 import { PROC_SIGNAL, PROC_STATUS } from "../../constants/processes.js";
 import logger from "../../core/logger.js";
 
 export class Utils {
+  static __filename = fileURLToPath(import.meta.url);
+  static __dirname = path.dirname(Utils.__filename);
   constructor() {}
 
   static setCurrentTime() {

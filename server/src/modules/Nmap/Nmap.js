@@ -6,6 +6,7 @@ import { Docker } from "../docker/docker.js";
 import { Utils } from "../utils/Utils.js";
 import {
   DOCKER_IMAGES,
+  NMAP_ARG,
   NMAP_BIN,
   PROC_STATUS,
   PROC_STREAM_EVENT,
@@ -54,6 +55,9 @@ export class Nmap extends Docker {
         "starting nmap scan...",
         `nmap ${this.request.args.join(" ")} -v`,
       ]);
+
+      if (!this.request.args.includes(NMAP_ARG.VERBOSE))
+        this.request.args.push(NMAP_ARG.VERBOSE);
 
       this.process = await Docker.run(
         DOCKER_IMAGES.NMAP,
