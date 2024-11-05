@@ -1,11 +1,12 @@
 import { spawn, exec } from "child_process";
+import { Utils } from "../utils/Utils.js";
 import {
   DOCKER_ARG,
   DOCKER_BIN,
   DOCKER_CMD,
+  NMAP_ARG,
   PROC_SIGNAL,
 } from "../../constants/processes.js";
-import { Utils } from "../utils/Utils.js";
 
 // container name constructed of: <module>_<document_id> (nmap_123, sublister_334)
 
@@ -28,10 +29,8 @@ export class Docker {
       image,
     ];
 
-    const scanFlags = [...scanSettings, DOCKER_ARG.VERBOSE];
-
     try {
-      const allArgs = [...dockerArgs, ...scanFlags];
+      const allArgs = [...dockerArgs, ...scanSettings];
       const process = spawn(DOCKER_BIN, allArgs);
 
       Docker.processes.set(containerName, process);
