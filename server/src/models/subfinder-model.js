@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const TheHarvesterScanSchema = new mongoose.Schema(
+const SubfinderScanSchema = new mongoose.Schema(
   {
     stdout: {
       type: [String],
@@ -26,14 +26,8 @@ const TheHarvesterScanSchema = new mongoose.Schema(
     endTime: {
       type: Date,
     },
-    data: {
-      autonomousSystemNumbers: [String],
-      urls: [String],
-      ips: [String],
-      hosts: [String],
-      twitterUsers: [String],
-      linkedInUsers: [String],
-      trelloUsers: [String],
+    subdomains: {
+      type: [String],
     },
     id: {
       type: String,
@@ -49,7 +43,7 @@ const TheHarvesterScanSchema = new mongoose.Schema(
   }
 );
 
-export const TheHarvesterScan = mongoose.model(
-  "TheHarvesterScan",
-  TheHarvesterScanSchema
+export const SubfinderScan = mongoose.model(
+  "SubfinderScan",
+  SubfinderScanSchema
 );

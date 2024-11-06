@@ -1,12 +1,12 @@
 export const DOCKER_IMAGES = {
   NMAP: "instrumentisto/nmap",
-  THE_HARVESTER: "edelahozuah/theharvester",
+  SUBFINDER: "projectdiscovery/subfinder",
 };
 
 export const DOCKER_BIN = "docker";
 export const NMAP_BIN = "nmap";
 export const NIKTO_BIN = "nikto";
-export const THE_HARVESTER_BIN = "the_harvester";
+export const SUBFINDER_BIN = "subfinder";
 
 export const DOCKER_CMD = {
   DOCKER: "docker",
@@ -44,9 +44,10 @@ export const PROC_SIGNAL = {
 export const NMAP_ARG = {
   VERBOSE: "-v",
 };
-export const THE_HARVESTER_ARG = {
+
+export const SUBFINDER_ARG = {
   DOMAIN: "-d",
-  DATA_SOURCE: "-b",
-  OUTPUT: "-f",
-  ALL: "all",
+  VERBOSE: "-v",
+  OUTPUT_JSON: "-json",
+  OUTPUT_FILE: "-output",
 };
