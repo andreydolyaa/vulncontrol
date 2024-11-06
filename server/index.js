@@ -5,8 +5,8 @@ import router from "./src/router.js";
 import logger from "./src/core/logger.js";
 import { NmapScan } from "./src/models/nmap-model.js";
 import { removeAll } from "./src/modules/db-actions/db-actions.js";
-import { TheHarvester } from "./src/modules/the-harvester/the-harvester.js";
-import { TheHarvesterScan } from "./src/models/the-harvester-model.js";
+import { Subfinder } from "./src/modules/subfinder/subfinder.js";
+import { SubfinderScan } from "./src/models/subfinder-model.js";
 
 dotenv.config();
 
@@ -24,14 +24,14 @@ server
   })
   // TEST
   .then(async () => {
-    const theHarvester = new TheHarvester({
+    const subfinder = new Subfinder({
       userId: "670f918c18444c7f0002e09e",
       scanType: "TEST",
-      domain: "http://www.123.com/",
+      domain: "http://www.hackthissite.org/",
     });
-    // await theHarvester.start();
+    await subfinder.start();
     // await removeAll(NmapScan);
-    // await removeAll(TheHarvesterScan);
+    // await removeAll(SubfinderScan);
   });
 
 process.on("uncaughtException", (error) => {
