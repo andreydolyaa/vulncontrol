@@ -1,6 +1,9 @@
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 import { Docker } from "../docker/docker.js";
 import { Utils } from "../utils/Utils.js";
-import { create } from "../db-actions/db-actions.js";
+import { create, update } from "../db-actions/db-actions.js";
 import { SubfinderScan } from "../../models/subfinder-model.js";
 import { StreamListener } from "../stream-listener/stream-listener.js";
 import {
@@ -10,10 +13,9 @@ import {
   SUBFINDER_ARG,
   SUBFINDER_BIN,
 } from "../../constants/processes.js";
-import path from "path";
 
-// TODO: TH is broken, need to replace;
-// docker run --rm projectdiscovery/subfinder -d egged.co.il
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export class Subfinder extends Docker {
   static containerName = "";
@@ -23,10 +25,6 @@ export class Subfinder extends Docker {
     this.process = null;
     this.scan = null;
     this.request = request;
-  }
-
-  static containerName(id) {
-    return Docker.assignContainerName(SUBFINDER_BIN, this.scan.id);
   }
 
   static log(msg) {
@@ -56,27 +54,25 @@ export class Subfinder extends Docker {
       //   "starting Subfinder scan...",
       // ]);
 
-      const outputFilePath = path.join(
-        path.dirname(import.meta.url),
-        `${this.scan.id}.json`
-      );
-
-      console.log(outputFilePath, "!!!!!!!!!!! !!!!!!!!!!! !!!!!!!!!");
-      
+      const dockerMountPath = "/app/reports";
+      const localMountPath = `${__dirname}/reports`;
+      const volumeMap = `${localMountPath}:${dockerMountPath}`;
 
       const scanSettings = [
         SUBFINDER_ARG.DOMAIN,
         this.scan.target,
         SUBFINDER_ARG.VERBOSE,
-        SUBFINDER_ARG.OUTPUT_JSON,
         SUBFINDER_ARG.OUTPUT_FILE,
-        outputFilePath,
+        dockerMountPath + "/" + Utils.getFileName(this.scan.id),
       ];
+
+      const containerSettings = [DOCKER_ARG.MOUNT, volumeMap];
 
       this.process = await Docker.run(
         DOCKER_IMAGES.SUBFINDER,
         Subfinder.containerName,
-        scanSettings
+        scanSettings,
+        containerSettings
       );
 
       new StreamListener(this.process, {
@@ -101,12 +97,27 @@ export class Subfinder extends Docker {
   }
 
   async _exit(code, signal) {
-    try {
-      Subfinder.log(`info: JSON output saved to `);
-    } catch (error) {
-      Subfinder.log(`err: error handling _exit [${error}]`);
-    }
-  
+    fs.readFile(
+      Utils.getFilePath(__dirname, this.scan.id),
+      "utf8",
+      async (err, data) => {
+        if (err) {
+          Subfinder.log("err: failed to read file");
+        } else {
+          console.log(data.split("\n"), "@@@");
+          await update(
+            SubfinderScan,
+            { subdomains: data.split("\n") },
+            this.scan._id
+          );
+          fs.unlink(Utils.getFilePath(__dirname, this.scan.id), (err) => {
+            if (err) {
+              Subfinder.log(`err: failed to delete report file: ${err}`);
+            }
+          });
+        }
+      }
+    );
   }
 
   _close(code, signal) {
