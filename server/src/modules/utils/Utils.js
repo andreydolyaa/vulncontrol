@@ -12,6 +12,14 @@ export class Utils {
     return new Date().toISOString();
   }
 
+  static getFileName(id) {
+    // all scan file paths and names constructed of report_<scan id>.txt
+    return "report-" + id + ".txt";
+  }
+  static getFilePath(dirname, id) {
+    return dirname + "/reports" + "/" + Utils.getFileName(id);
+  }
+
   static handleStreamExitStatus(code, signal) {
     return code === 0
       ? PROC_STATUS.DONE

@@ -29,7 +29,7 @@ server
       scanType: "TEST",
       domain: "http://www.hackthissite.org/",
     });
-    await subfinder.start();
+    // await subfinder.start();
     // await removeAll(NmapScan);
     // await removeAll(SubfinderScan);
   });
