@@ -15,7 +15,7 @@ import { PublicRoutes } from "./layout/PublicRoutes";
 import { Loading } from "./components/Loading";
 import { Tooltip } from "react-tooltip";
 import { Toast } from "./components/Toast";
-import { TheHarvester } from "./pages/TheHarvester/TheHarvester";
+import { Subfinder } from "./pages/Subfinder/Subfinder";
 import "react-tooltip/dist/react-tooltip.css";
 
 export const App = () => {
@@ -40,7 +40,7 @@ export const App = () => {
           <Route path="/nmap/:scanId" element={<ScanDetails />} />
           <Route path="/nikto" element={<Nikto />} />
           <Route path="/settings" element={<Settings />} />
-          <Route path="/theharvester" element={<TheHarvester />} />
+          <Route path="/subfinder" element={<Subfinder />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
 
