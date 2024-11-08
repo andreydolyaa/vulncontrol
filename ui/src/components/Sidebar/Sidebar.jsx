@@ -23,7 +23,7 @@ export const Sidebar = () => {
         <Item icon={Project} title={"Overview"} link="overview" />
 
         <Section title={"Recon & Enumeration"} />
-        <Item icon={World} title={"TheHarvester"} link="theharvester" />
+        <Item icon={World} title={"Subfinder"} link="subfinder" />
         <Item icon={Radar} title={"Nmap"} link="nmap" />
         <Item icon={Bug} title={"Nikto"} link="nikto" />
 
