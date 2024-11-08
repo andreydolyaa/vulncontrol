@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   ui:
     build:
@@ -15,7 +13,6 @@ services:
       - vuln-control-network
   
   server:
-    # platform: linux/arm64
     build:
       context: ./server
       dockerfile: Dockerfile
@@ -30,6 +27,7 @@ services:
       - vuln-control-network
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - reports-data:/app/reports   # Shared volume for reports
     depends_on:
       - mongo
 
@@ -42,10 +40,11 @@ services:
       - vuln-control-network
     volumes:
       - mongo-data:/data/db
-  
+
 networks:
   vuln-control-network:
     driver: bridge
 
 volumes:
   mongo-data:
+  reports-data:  # Define shared volume for reports

@@ -1,5 +1,5 @@
 import { NmapScan } from "../models/nmap-model.js";
-import {Nmap} from "../modules/nmap/nmap.js";
+import { Nmap } from "../modules/nmap/nmap.js";
 
 export const startNmap = async (req, res) => {
   const { args, userId, scanType = "default" } = req.body;

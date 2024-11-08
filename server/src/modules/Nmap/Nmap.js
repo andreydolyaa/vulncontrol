@@ -1,7 +1,7 @@
 import { subscriptionPaths } from "../../constants/common.js";
 import { NmapScan } from "../../models/nmap-model.js";
 import { create } from "../actions/db-actions.js";
-import { Docker } from "../docker/Docker.js";
+import { Docker } from "../docker/docker.js";
 import { Utils } from "../utils/Utils.js";
 import { StreamListener } from "../stream-listener/stream-listener.js";
 import { HttpActions } from "../actions/http-actions.js";

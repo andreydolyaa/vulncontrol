@@ -6,6 +6,8 @@ import { Utils } from "../utils/Utils.js";
 import { create, update } from "../actions/db-actions.js";
 import { SubfinderScan } from "../../models/subfinder-model.js";
 import { StreamListener } from "../stream-listener/stream-listener.js";
+import { subscriptionPaths } from "../../constants/common.js";
+import { HttpActions } from "../actions/http-actions.js";
 import {
   DOCKER_ARG,
   DOCKER_IMAGES,
@@ -13,9 +15,6 @@ import {
   SUBFINDER_ARG,
   SUBFINDER_BIN,
 } from "../../constants/processes.js";
-import { server } from "../../../index.js";
-import { subscriptionPaths } from "../../constants/common.js";
-import { HttpActions } from "../actions/http-actions.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -41,7 +40,7 @@ export class Subfinder extends Docker {
       status: PROC_STATUS.LIVE,
       startTime: Utils.setCurrentTime(),
       target: Utils.extractDomainAddress(this.request.domain),
-      domain: this.request.domain
+      domain: this.request.domain,
     });
 
     Subfinder.containerName = Docker.assignContainerName(
