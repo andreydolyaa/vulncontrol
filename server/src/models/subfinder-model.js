@@ -13,6 +13,9 @@ const SubfinderScanSchema = new mongoose.Schema(
     target: {
       type: String,
     },
+    domain: {
+      type: String,
+    },
     scanType: {
       type: String,
     },

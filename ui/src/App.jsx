@@ -23,7 +23,7 @@ export const App = () => {
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    dispatch(getLoggedUser()).then(() => setIsInitialized(true));
+    dispatch(getLoggedUser()).unwrap().then(() => setIsInitialized(true));
   }, []);
 
   if (!isInitialized) {

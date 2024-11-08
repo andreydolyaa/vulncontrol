@@ -41,6 +41,7 @@ export class Subfinder extends Docker {
       status: PROC_STATUS.LIVE,
       startTime: Utils.setCurrentTime(),
       target: Utils.extractDomainAddress(this.request.domain),
+      domain: this.request.domain
     });
 
     Subfinder.containerName = Docker.assignContainerName(

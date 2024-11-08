@@ -4,13 +4,30 @@ import { TbWorldSearch as World } from "react-icons/tb";
 import { Target } from "./Target";
 import { ScanList } from "./ScanList";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
-import { startSubfinderScan } from "../../redux/subfinder/subfinderThunks";
+import { useEffect, useState } from "react";
+import {
+  getScans,
+  startSubfinderScan,
+} from "../../redux/subfinder/subfinderThunks";
 
 export const Subfinder = () => {
   const dispatch = useDispatch();
   const [domain, setDomain] = useState("");
   const { user } = useSelector((state) => state.user);
+  const scans = useSelector((state) => state.subfinder.scans);
+  const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const limit = 10;
+
+  useEffect(() => {
+    dispatch(getScans({ currentPage, limit, search }))
+      .unwrap()
+      .then((data) => {
+        setTotalPages(data.totalPages);
+      });
+  }, [currentPage, search]);
 
   const handleChange = (e) => {
     setDomain(e.target.value);
@@ -18,9 +35,6 @@ export const Subfinder = () => {
 
   const startScan = () => {
     const data = { userId: user.id, domain };
-    console.log(data);
-
-    // dispatch(startScan())
     dispatch(startSubfinderScan(data));
   };
 
@@ -28,7 +42,7 @@ export const Subfinder = () => {
     <Container>
       <ModuleName text="Subfinder" icon={World}></ModuleName>
       <Target startScan={startScan} handleChange={handleChange} />
-      <ScanList />
+      <ScanList scans={scans} />
     </Container>
   );
 };

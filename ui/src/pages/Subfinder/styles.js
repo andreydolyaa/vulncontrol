@@ -3,8 +3,9 @@ import styled from "styled-components";
 export const ScanWrapper = styled.div`
   display: flex;
   width: 100%;
-  height: 100%;
+  flex: 1;
   gap: var(--padding);
+  overflow-y: auto;
 `;
 
 export const BaseDiv = styled.div`
@@ -15,11 +16,9 @@ export const BaseDiv = styled.div`
   padding: var(--padding);
 `;
 
-export const Targets = styled(BaseDiv)`
-  height: 100%;
-`;
-export const Subdomains = styled(BaseDiv)`
-  height: 100%;
+export const TargetsDiv = styled(BaseDiv)``;
+export const SubdomainsDiv = styled(BaseDiv)`
+  overflow-y: auto;
 `;
 
 export const TargetBody = styled.div`
