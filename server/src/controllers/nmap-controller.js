@@ -1,4 +1,3 @@
-import logger from "../core/logger.js";
 import { NmapScan } from "../models/nmap-model.js";
 import { Nmap } from "../modules/nmap/nmap.js";
 
@@ -9,7 +8,6 @@ export const startNmap = async (req, res) => {
     const scan = await nmap.start();
     return res.status(200).send({ message: "Nmap scan started", scan });
   } catch (error) {
-    logger.error(`Failed to start nmap scan: ${error}`);
     return res
       .status(400)
       .send({ message: "Failed to start Nmap scan", error });
@@ -50,7 +48,6 @@ export const getAllScans = async (req, res) => {
     };
     return res.status(200).send(responseData);
   } catch (error) {
-    logger.error(`Failed to get scans: ${error}`);
     return res.status(400).send({ message: "No scans found", error });
   }
 };
@@ -61,7 +58,6 @@ export const getScanById = async (req, res) => {
     const scan = await NmapScan.findOne({ _id: req.params.id });
     return res.status(200).send(scan);
   } catch (error) {
-    logger.error(`Failed to get scan by id: ${error}`);
     return res.status(400).send({ message: "Could not find user", error });
   }
 };
@@ -81,7 +77,6 @@ export const deleteScan = async (req, res) => {
     const scan = await NmapScan.findOneAndDelete(req.params.id);
     return res.status(200).send({ message: "Scan deleted", id: req.params.id });
   } catch (error) {
-    logger.error(`Failed to delete scan: ${error}`);
     return res.status(400).send({ message: "Failed to delete scan", error });
   }
 };

@@ -4,7 +4,7 @@ import { Database } from "./src/core/database.js";
 import router from "./src/router.js";
 import logger from "./src/core/logger.js";
 import { NmapScan } from "./src/models/nmap-model.js";
-import { removeAll } from "./src/modules/db-actions/db-actions.js";
+import { removeAll } from "./src/modules/actions/db-actions.js";
 import { Subfinder } from "./src/modules/subfinder/subfinder.js";
 import { SubfinderScan } from "./src/models/subfinder-model.js";
 
@@ -24,11 +24,11 @@ server
   })
   // TEST
   .then(async () => {
-    const subfinder = new Subfinder({
-      userId: "670f918c18444c7f0002e09e",
-      scanType: "TEST",
-      domain: "http://www.hackthissite.org/",
-    });
+    // const subfinder = new Subfinder({
+    //   userId: "670f918c18444c7f0002e09e",
+    //   scanType: "TEST",
+    //   domain: "http://www.hackthissite.org/",
+    // });
     // await subfinder.start();
     // await removeAll(NmapScan);
     // await removeAll(SubfinderScan);

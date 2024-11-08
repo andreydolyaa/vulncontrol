@@ -1,17 +1,16 @@
-import { server } from "../../../index.js";
 import { subscriptionPaths } from "../../constants/common.js";
 import { NmapScan } from "../../models/nmap-model.js";
-import { create, update } from "../db-actions/db-actions.js";
+import { create } from "../actions/db-actions.js";
 import { Docker } from "../docker/docker.js";
 import { Utils } from "../utils/Utils.js";
+import { StreamListener } from "../stream-listener/stream-listener.js";
+import { HttpActions } from "../actions/http-actions.js";
 import {
   DOCKER_IMAGES,
   NMAP_ARG,
   NMAP_BIN,
   PROC_STATUS,
-  PROC_STREAM_EVENT,
 } from "../../constants/processes.js";
-import { StreamListener } from "../stream-listener/stream-listener.js";
 
 export class Nmap extends Docker {
   static containerName = "";
@@ -50,7 +49,7 @@ export class Nmap extends Docker {
   async start() {
     try {
       await this._init();
-      await this._insertServerMsgs([
+      await this._writeServerMessage([
         "starting nmap docker image...",
         "starting nmap scan...",
         `nmap ${this.request.args.join(" ")} -v`,
@@ -83,24 +82,24 @@ export class Nmap extends Docker {
     const port = await this._isOpenPort(data);
 
     if (port) {
-      await this._updateScanInDatabase(this._wrap({ openPorts: port }));
+      await this._updateDb(this._wrap({ openPorts: port }));
     }
-    await this._updateScanInDatabase(this._wrap({ stdout: data }));
+    await this._updateDb(this._wrap({ stdout: data }));
   }
 
   async _stderr(data) {
-    await this._updateScanInDatabase(this._wrap({ stdout: data }));
+    await this._updateDb(this._wrap({ stdout: data }));
   }
 
   async _exit(code, signal) {
-    return await this._setNmapExitStatus(
+    return await this._setExitStatus(
       Utils.handleStreamExitStatus(code, signal)
     );
   }
 
-  async _setNmapExitStatus(status) {
-    await this._insertServerMsgs([`scan ${status}!`]);
-    await this._updateScanInDatabase({
+  async _setExitStatus(status) {
+    await this._writeServerMessage(`scan ${status}!`);
+    await this._updateDb({
       status,
       endTime: Utils.setCurrentTime(),
     });
@@ -113,14 +112,30 @@ export class Nmap extends Docker {
     Nmap.log(`info: process closed`);
   }
 
-  async _updateScanInDatabase(data) {
-    try {
-      this.scan = await update(NmapScan, data, this.scan._id);
-      this._sendNotification(this.scan);
-      Nmap.log(`info: updating db...`);
-    } catch (error) {
-      Nmap.log(`error: failed to update db`);
-    }
+  async _updateDb(data) {
+    this.scan = await HttpActions.updateDb(NmapScan, data, this.scan._id);
+    this._notify(this.scan);
+  }
+
+  async _writeServerMessage(data) {
+    await HttpActions.writeServerMessage(NmapScan, data, this.scan._id);
+  }
+
+  _notify(data) {
+    HttpActions.notify(subscriptionPaths.NMAP_ALL, data);
+    HttpActions.notify(`/nmap/${this.scan.id}`, data);
+  }
+
+  _sendToast(status) {
+    const message = {
+      type: status,
+      scan: this.scan,
+    };
+    this._notify(message);
+  }
+
+  _wrap(data) {
+    return { $push: data };
   }
 
   async _isOpenPort(stdout) {
@@ -130,43 +145,5 @@ export class Nmap extends Docker {
           .find((part) => part.includes("/tcp") || part.includes("/udp"))
       : null;
     return port ? parseInt(port) : undefined;
-  }
-
-  async _insertServerMsgs(messages) {
-    const update = {
-      $push: {
-        stdout: {
-          $each: messages.map((msg) => `server: ${msg}\n`),
-        },
-      },
-    };
-    try {
-      await this._updateScanInDatabase(update);
-    } catch (error) {
-      Nmap.log(`error: failed to insert server message`);
-    }
-  }
-
-  _sendNotification(data) {
-    server.websocketServer.updateSubsAtSubscription(
-      subscriptionPaths.NMAP_ALL,
-      data
-    );
-    server.websocketServer.updateSubsAtSubscription(
-      `/nmap/${this.scan.id}`,
-      data
-    );
-  }
-
-  _sendToast(status) {
-    const messageWrapper = {
-      type: status,
-      scan: this.scan,
-    };
-    this._sendNotification(messageWrapper);
-  }
-
-  _wrap(data) {
-    return { $push: data };
   }
 }
