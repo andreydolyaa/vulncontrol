@@ -1,8 +1,8 @@
 import { Container } from "../../components/Container/Container";
 import { ModuleName } from "../../components/ModuleName";
 import { TbWorldSearch as World } from "react-icons/tb";
-import { Target } from "./Target";
-import { ScanList } from "./ScanList";
+import { StartForm } from "./StartForm";
+import { ScanList } from "./Scans/Scans";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import {
@@ -41,7 +41,7 @@ export const Subfinder = () => {
   return (
     <Container>
       <ModuleName text="Subfinder" icon={World}></ModuleName>
-      <Target startScan={startScan} handleChange={handleChange} />
+      <StartForm startScan={startScan} handleChange={handleChange} />
       <ScanList scans={scans} />
     </Container>
   );

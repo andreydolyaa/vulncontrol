@@ -7,7 +7,7 @@ import {
   TbWorldSearch as World,
 } from "react-icons/tb";
 
-export const Target = ({ handleChange, startScan }) => {
+export const StartForm = ({ handleChange, startScan }) => {
   return (
     <TargetWrapper>
       <InputLabel text="domain name" icon={Search} />
