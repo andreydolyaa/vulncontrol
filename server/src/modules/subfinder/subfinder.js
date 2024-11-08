@@ -3,7 +3,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { Docker } from "../docker/docker.js";
 import { Utils } from "../utils/Utils.js";
-import { create, update } from "../db-actions/db-actions.js";
+import { create, update } from "../actions/db-actions.js";
 import { SubfinderScan } from "../../models/subfinder-model.js";
 import { StreamListener } from "../stream-listener/stream-listener.js";
 import {
@@ -13,6 +13,9 @@ import {
   SUBFINDER_ARG,
   SUBFINDER_BIN,
 } from "../../constants/processes.js";
+import { server } from "../../../index.js";
+import { subscriptionPaths } from "../../constants/common.js";
+import { HttpActions } from "../actions/http-actions.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -49,10 +52,6 @@ export class Subfinder extends Docker {
   async start() {
     try {
       await this._init();
-      // await this._insertServerMsgs([
-      //   "starting Subfinder docker image...",
-      //   "starting Subfinder scan...",
-      // ]);
 
       const dockerMountPath = "/app/reports";
       const localMountPath = `${__dirname}/reports`;
@@ -61,7 +60,7 @@ export class Subfinder extends Docker {
       const scanSettings = [
         SUBFINDER_ARG.DOMAIN,
         this.scan.target,
-        SUBFINDER_ARG.VERBOSE,
+        SUBFINDER_ARG.SILENT,
         SUBFINDER_ARG.OUTPUT_FILE,
         dockerMountPath + "/" + Utils.getFileName(this.scan.id),
       ];
@@ -88,40 +87,61 @@ export class Subfinder extends Docker {
       Subfinder.log(`err: error starting scan [${error}]`);
     }
   }
-  async _stdout(data) {
-    console.log(data);
-  }
+  async _stdout(data) {}
 
-  async _stderr(data) {
-    console.log(data);
-  }
+  async _stderr(data) {}
 
   async _exit(code, signal) {
-    fs.readFile(
-      Utils.getFilePath(__dirname, this.scan.id),
-      "utf8",
-      async (err, data) => {
-        if (err) {
-          Subfinder.log("err: failed to read file");
-        } else {
-          console.log(data.split("\n"), "@@@");
-          await update(
-            SubfinderScan,
-            { subdomains: data.split("\n") },
-            this.scan._id
-          );
-          fs.unlink(Utils.getFilePath(__dirname, this.scan.id), (err) => {
-            if (err) {
-              Subfinder.log(`err: failed to delete report file: ${err}`);
-            }
-          });
-        }
-      }
-    );
+    const status = Utils.handleStreamExitStatus(code, signal);
+    await this._updateDb({
+      endTime: Utils.setCurrentTime(),
+      status,
+    });
+    this._sendToast(status);
+    Subfinder.log(`info: scan ${status}`);
   }
 
   _close(code, signal) {
-    console.log(code);
-    console.log(signal);
+    this._handleOutputFile();
+  }
+
+  _notify(data) {
+    HttpActions.notify(subscriptionPaths.SUBFINDER_ALL, data);
+  }
+  _sendToast(status) {
+    const messageWrapper = {
+      type: status,
+      scan: this.scan,
+    };
+    this._notify(messageWrapper);
+  }
+
+  async _updateDb(data) {
+    this.scan = await HttpActions.updateDb(SubfinderScan, data, this.scan._id);
+    this._notify(this.scan);
+  }
+
+  async _writeServerMessage(data) {
+    await HttpActions.writeServerMessage(SubfinderScan, data, this.scan._id);
+  }
+
+  async _handleOutputFile() {
+    const filePath = Utils.getFilePath(__dirname, this.scan._id);
+    fs.readFile(filePath, "utf8", (err, data) =>
+      this._readFileAndUpdate(err, data)
+    );
+    fs.unlink(filePath, (err) => {
+      if (err) {
+        Subfinder.log(`err: failed to delete file [${err}]`);
+      }
+    });
+  }
+
+  async _readFileAndUpdate(err, data) {
+    if (err) {
+      return Subfinder.log("err: failed to read file");
+    }
+    const subdomains = data.trim().split("\n");
+    return await update(SubfinderScan, { subdomains }, this.scan._id);
   }
 }

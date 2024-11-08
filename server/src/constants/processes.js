@@ -50,4 +50,5 @@ export const SUBFINDER_ARG = {
   VERBOSE: "-v",
   OUTPUT_JSON: "-json",
   OUTPUT_FILE: "-output",
+  SILENT: "-silent"
 };
