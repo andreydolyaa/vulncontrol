@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import logger from "./logger.js";
-import { Utils } from "../modules/utils/Utils.js";
+import { Utils } from '../modules/utils/utils.js';
 
 export class Database {
   RECONNECT_INTERVAL = 1000;

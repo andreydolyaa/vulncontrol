@@ -1,6 +1,6 @@
 import { server } from "../../../index.js";
-import { Utils } from "../utils/Utils.js";
 import { update } from "./db-actions.js";
+import { Utils } from "../utils/utils.js";
 
 export class HttpActions {
   constructor() {}

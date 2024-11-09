@@ -23,7 +23,7 @@ export class Utils {
   static handleStreamExitStatus(code, signal) {
     return code === 0
       ? PROC_STATUS.DONE
-      : code === 1
+      : code >= 1
       ? PROC_STATUS.FAILED
       : code === null && signal === PROC_SIGNAL.SIGKILL
       ? PROC_STATUS.ABORTED

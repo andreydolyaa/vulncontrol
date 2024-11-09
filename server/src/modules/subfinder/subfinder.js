@@ -1,23 +1,16 @@
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
 import { Docker } from "../docker/docker.js";
-import { Utils } from "../utils/Utils.js";
-import { create, update } from "../actions/db-actions.js";
+import { Utils } from "../utils/utils.js";
+import { create } from "../actions/db-actions.js";
 import { SubfinderScan } from "../../models/subfinder-model.js";
 import { StreamListener } from "../stream-listener/stream-listener.js";
 import { subscriptionPaths } from "../../constants/common.js";
 import { HttpActions } from "../actions/http-actions.js";
 import {
-  DOCKER_ARG,
   DOCKER_IMAGES,
   PROC_STATUS,
   SUBFINDER_ARG,
   SUBFINDER_BIN,
 } from "../../constants/processes.js";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 export class Subfinder extends Docker {
   static containerName = "";
@@ -53,25 +46,16 @@ export class Subfinder extends Docker {
     try {
       await this._init();
 
-      const dockerMountPath = "/app/reports";
-      const localMountPath = `${__dirname}/reports`;
-      const volumeMap = `${localMountPath}:${dockerMountPath}`;
-
       const scanSettings = [
         SUBFINDER_ARG.DOMAIN,
         this.scan.target,
         SUBFINDER_ARG.SILENT,
-        SUBFINDER_ARG.OUTPUT_FILE,
-        dockerMountPath + "/" + Utils.getFileName(this.scan.id),
       ];
-
-      const containerSettings = [DOCKER_ARG.MOUNT, volumeMap];
 
       this.process = await Docker.run(
         DOCKER_IMAGES.SUBFINDER,
         Subfinder.containerName,
-        scanSettings,
-        containerSettings
+        scanSettings
       );
 
       new StreamListener(this.process, {
@@ -87,9 +71,17 @@ export class Subfinder extends Docker {
       Subfinder.log(`err: error starting scan [${error}]`);
     }
   }
-  async _stdout(data) {}
+  async _stdout(data) {
+    const subdomains = !data ? "" : data.trim().split("\n");
+    Subfinder.log(
+      `warn: found ${subdomains?.length || 0} subdomains [${this.scan.target}]`
+    );
+    await this._updateDb({ $push: { subdomains: { $each: subdomains } } });
+  }
 
-  async _stderr(data) {}
+  async _stderr(data) {
+    Subfinder.log(`err: stderr: ${data}`);
+  }
 
   async _exit(code, signal) {
     const status = Utils.handleStreamExitStatus(code, signal);
@@ -101,9 +93,7 @@ export class Subfinder extends Docker {
     Subfinder.log(`info: scan ${status}`);
   }
 
-  _close(code, signal) {
-    this._handleOutputFile();
-  }
+  _close(code, signal) {}
 
   _notify(data) {
     HttpActions.notify(subscriptionPaths.SUBFINDER_ALL, data);
@@ -119,29 +109,5 @@ export class Subfinder extends Docker {
   async _updateDb(data) {
     this.scan = await HttpActions.updateDb(SubfinderScan, data, this.scan._id);
     this._notify(this.scan);
-  }
-
-  async _writeServerMessage(data) {
-    await HttpActions.writeServerMessage(SubfinderScan, data, this.scan._id);
-  }
-
-  async _handleOutputFile() {
-    const filePath = Utils.getFilePath(__dirname, this.scan._id);
-    fs.readFile(filePath, "utf8", (err, data) =>
-      this._readFileAndUpdate(err, data)
-    );
-    fs.unlink(filePath, (err) => {
-      if (err) {
-        Subfinder.log(`err: failed to delete file [${err}]`);
-      }
-    });
-  }
-
-  async _readFileAndUpdate(err, data) {
-    if (err) {
-      return Subfinder.log("err: failed to read file");
-    }
-    const subdomains = data.trim().split("\n");
-    return await update(SubfinderScan, { subdomains }, this.scan._id);
   }
 }

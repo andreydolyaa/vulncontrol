@@ -23,11 +23,12 @@ services:
       DB_URL: mongodb://mongo:27017/vuln-control
       SERVER_PORT: 3000
       JWT_SECRET: "!!zzzzzzzzzzzzzzz&&^"
+      NODE_ENV: "production"
     networks:
       - vuln-control-network
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - reports-data:/app/reports   # Shared volume for reports
+      - reports:/app/src/modules/subfinder/reports
     depends_on:
       - mongo
 
@@ -47,4 +48,4 @@ networks:
 
 volumes:
   mongo-data:
-  reports-data:  # Define shared volume for reports
+  reports:
