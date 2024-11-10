@@ -22,15 +22,16 @@ export const ListDiv = styled(BaseDiv)`
 export const ListHeaderDiv = styled.div`
   position: sticky;
   top: 0;
-  box-shadow: 1px 1px 80px 30px #151518;
+  height: 60px;
+  /* box-shadow: 1px 1px 80px 30px #151518; */
   padding: 20px var(--padding);
   border-bottom: 1px solid var(--border-color);
-  background-color: var(--background-color);
+  background-color: #2e2e41;
   width: 100%;
+  z-index: 1;
+  display: flex;
 `;
-export const ListBodyDiv = styled.div`
-  /* padding: var(--padding); */
-`;
+export const ListBodyDiv = styled.div``;
 
 export const TargetBody = styled.div`
   width: 100%;
@@ -47,4 +48,7 @@ export const TargetWrapper = styled(BaseDiv)`
 export const Input = styled.input`
   width: 100%;
   border: 1px solid var(--border-color);
+  &::placeholder {
+    color: var(--placeholder-color);
+  }
 `;

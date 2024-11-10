@@ -38,6 +38,6 @@ const StyledInput = styled.input`
   background-color: var(--main-background-color);
   &::placeholder {
     font-size: 14px;
-    color: gray;
+    color: var(--placeholder-color);
   }
 `;

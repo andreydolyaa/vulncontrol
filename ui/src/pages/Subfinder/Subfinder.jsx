@@ -44,6 +44,7 @@ export const Subfinder = () => {
 
   return (
     <Container>
+      TODO: need to set the selected scan after starting, also auto display subdomains on end
       <ModuleName text="Subfinder" icon={World}></ModuleName>
       <StartForm startScan={startScan} handleChange={handleChange} />
       <ScanList scans={scans} />

@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 
 export const TargetInput = ({ onFormChange, easyMode }) => {
-
   const placeholderText = () => {
     return easyMode
       ? "Enter IPv4 or IPv6 address (example: 192.168.1.1)"
@@ -20,4 +19,7 @@ export const TargetInput = ({ onFormChange, easyMode }) => {
 
 const StyledInput = styled.input`
   width: 100%;
+  &::placeholder {
+    color: var(--placeholder-color);
+  }
 `;

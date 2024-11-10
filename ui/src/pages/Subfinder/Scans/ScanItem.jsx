@@ -3,9 +3,15 @@ import styled from "styled-components";
 import { ScanStatus } from "./ScanStatus";
 import { TbTrash, TbExternalLink } from "react-icons/tb";
 
-export const ScanItem = ({ scan, onClick, selected, handleScanSelect }) => {
+export const ScanItem = ({
+  scan,
+  onClick,
+  selected,
+  handleScanSelect,
+  isSubdomain = false,
+}) => {
   return (
-    <Container onClick={onClick} selected={selected}>
+    <Container onClick={onClick} $selected={selected}>
       <ItemWrapper onClick={() => handleScanSelect(scan)}>
         <IconDiv>
           <ScanStatus status={scan.status} />
@@ -20,26 +26,40 @@ export const ScanItem = ({ scan, onClick, selected, handleScanSelect }) => {
           </ActionButton>
         </ActionsDiv>
       </ItemWrapper>
+      <div className="active"></div>
     </Container>
   );
 };
 
-const Container = styled.div`
-  background-color: ${({ selected }) =>
-    selected ? "var(--main-background-color-3)" : null};
+export const Container = styled.div`
+  position: relative;
+  background-color: ${({ $selected }) =>
+    $selected ? "var(--main-background-color)" : null};
+  .active {
+    display: ${({ $selected }) => ($selected ? "block" : "none")};
+    height: 90%;
+    width: 5px;
+    background-color: var(--action-color);
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translate(0, -50%);
+    border-top-left-radius: var(--radius);
+    border-bottom-left-radius: var(--radius);
+  }
   &:hover {
-    background-color: ${({ selected }) => (selected ? null : "#2d35452c")};
+    background-color: ${({ $selected }) => ($selected ? null : "#2d35452c")};
   }
 `;
-const ItemWrapper = styled.div`
+export const ItemWrapper = styled.div`
   display: flex;
-  padding: 20px 30px;
+  padding: 15px 30px;
   gap: 8px;
   cursor: pointer;
   border-bottom: 1px dotted var(--border-color);
   transition: all 0.3s;
 `;
-const IconDiv = styled.div`
+export const IconDiv = styled.div`
   width: 22px;
   height: 22px;
   display: flex;
@@ -47,17 +67,21 @@ const IconDiv = styled.div`
   font-size: 16px;
 `;
 
-const DomainDiv = styled.div`
+export const DomainDiv = styled.div`
   flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 15px;
 `;
 
-const ActionsDiv = styled.div`
+export const ActionsDiv = styled.div`
   gap: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
 `;
-const ActionButton = styled.button`
+export const ActionButton = styled.button`
   width: 22px;
   height: 22px;
   font-size: 16px;
