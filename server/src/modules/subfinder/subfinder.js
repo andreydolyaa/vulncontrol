@@ -80,7 +80,7 @@ export class Subfinder extends Docker {
   }
 
   async _stderr(data) {
-    Subfinder.log(`err: stderr: ${data}`);
+    Subfinder.log(`warn: stderr: ${data}`);
   }
 
   async _exit(code, signal) {

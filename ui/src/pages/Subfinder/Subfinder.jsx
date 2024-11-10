@@ -1,10 +1,12 @@
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { TbWorldSearch as World } from "react-icons/tb";
 import { Container } from "../../components/Container/Container";
 import { ModuleName } from "../../components/ModuleName";
-import { TbWorldSearch as World } from "react-icons/tb";
 import { StartForm } from "./StartForm";
 import { ScanList } from "./Scans/Scans";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useWebSocket } from "../../hooks/useWebSocket";
+import { WS_URL } from "../../api/baseUrl";
 import {
   getScans,
   startSubfinderScan,
@@ -20,6 +22,8 @@ export const Subfinder = () => {
   const [totalPages, setTotalPages] = useState(1);
 
   const limit = 10;
+  const updatesRoute = `${WS_URL}/ws/subfinder/updates?userId=${user.id}`;
+  useWebSocket(updatesRoute);
 
   useEffect(() => {
     dispatch(getScans({ currentPage, limit, search }))

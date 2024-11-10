@@ -20,7 +20,6 @@ export class Nmap extends Docker {
     this.process = null;
     this.scan = null;
     this.request = request;
-    this.streamListener = null;
   }
 
   static async abortScan() {

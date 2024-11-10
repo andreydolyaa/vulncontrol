@@ -1,5 +1,11 @@
 import styled from "styled-components";
 
+export const ScanItemPre = styled.pre`
+  /* font-size:15px; */
+  border:1px solid red;
+  padding: 10px;
+`
+
 export const BaseDiv = styled.div`
   width: 100%;
   border: 1px solid var(--border-color);
