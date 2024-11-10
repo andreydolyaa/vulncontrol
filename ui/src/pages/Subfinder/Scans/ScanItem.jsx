@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { ScanStatus } from "./ScanStatus";
 import { TbTrash, TbExternalLink } from "react-icons/tb";
 
-export const ScanItem = ({ scan, handleScanSelect }) => {
+export const ScanItem = ({ scan, onClick, selected, handleScanSelect }) => {
   return (
-    <Container>
+    <Container onClick={onClick} selected={selected}>
       <ItemWrapper onClick={() => handleScanSelect(scan)}>
         <IconDiv>
           <ScanStatus status={scan.status} />
@@ -25,8 +25,10 @@ export const ScanItem = ({ scan, handleScanSelect }) => {
 };
 
 const Container = styled.div`
+  background-color: ${({ selected }) =>
+    selected ? "var(--main-background-color-3)" : null};
   &:hover {
-    background-color: #2d35452c;
+    background-color: ${({ selected }) => (selected ? null : "#2d35452c")};
   }
 `;
 const ItemWrapper = styled.div`

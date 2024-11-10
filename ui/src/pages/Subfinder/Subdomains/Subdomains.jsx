@@ -12,8 +12,8 @@ export const Subdomains = ({ selectedScan }) => {
       </ListHeaderDiv>
       <ListBodyDiv>
         {selectedScan?.subdomains &&
-          selectedScan.subdomains.map((subdomain) => {
-            return <Subdomain key={subdomain} subdomain={subdomain} />;
+          selectedScan.subdomains.map((subdomain, index) => {
+            return <Subdomain key={index} subdomain={subdomain} />;
           })}
       </ListBodyDiv>
     </ListDiv>
