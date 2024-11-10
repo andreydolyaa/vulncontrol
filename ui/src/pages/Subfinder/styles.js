@@ -1,11 +1,5 @@
 import styled from "styled-components";
 
-export const ScanItemPre = styled.pre`
-  /* font-size:15px; */
-  border:1px solid red;
-  padding: 10px;
-`
-
 export const BaseDiv = styled.div`
   width: 100%;
   border: 1px solid var(--border-color);
@@ -35,7 +29,7 @@ export const ListHeaderDiv = styled.div`
   width: 100%;
 `;
 export const ListBodyDiv = styled.div`
-  padding: var(--padding);
+  /* padding: var(--padding); */
 `;
 
 export const TargetBody = styled.div`

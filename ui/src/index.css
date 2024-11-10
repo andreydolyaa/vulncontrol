@@ -154,7 +154,9 @@ input:-webkit-autofill:focus {
   border-bottom: 1px solid rgb(159, 159, 159);
   width: 50%;
 }
-
+svg {
+  stroke-width: 1.5;
+}
 a {
   transition: 0.2s;
 }
