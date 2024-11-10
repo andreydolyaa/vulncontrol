@@ -70,6 +70,8 @@ export class Nmap extends Docker {
         close: this._close.bind(this),
       });
 
+      this._notify(this.scan, "toast");
+
       Nmap.log("warn: scan started");
       return this.scan;
     } catch (error) {
@@ -102,7 +104,7 @@ export class Nmap extends Docker {
       status,
       endTime: Utils.setCurrentTime(),
     });
-    this._sendToast(status);
+    this._notify(this.scan, "toast");
     Nmap.log(`info: scan ${status}`);
   }
 
@@ -120,17 +122,9 @@ export class Nmap extends Docker {
     await HttpActions.writeServerMessage(NmapScan, data, this.scan._id);
   }
 
-  _notify(data) {
-    HttpActions.notify(subscriptionPaths.NMAP_ALL, data);
-    HttpActions.notify(`/nmap/${this.scan.id}`, data);
-  }
-
-  _sendToast(status) {
-    const message = {
-      type: status,
-      scan: this.scan,
-    };
-    this._notify(message);
+  _notify(data, module = NMAP_BIN) {
+    HttpActions.notify(subscriptionPaths.NMAP_ALL, data, module);
+    HttpActions.notify(`/nmap/${this.scan.id}`, data, module);
   }
 
   _wrap(data) {

@@ -25,9 +25,9 @@ export const getScans = createAsyncThunk(
         )}`
       );
       return {
-        scans: response.data.scans,
-        totalPages: response.data.totalPages,
-        currentPage: response.data.currentPage,
+        scans: response.data?.data?.scans || [],
+        totalPages: response.data?.data?.totalPages || 1,
+        currentPage: response.data?.data?.currentPage || 1,
       };
     } catch (error) {
       return rejectWithValue(

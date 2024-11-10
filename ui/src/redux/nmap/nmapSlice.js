@@ -24,7 +24,7 @@ const nmapSlice = createSlice({
   },
   reducers: {
     incomingScan: (state, action) => {
-      const updatedScan = action.payload;
+      const updatedScan = action.payload.data;
       state.scans = upsertScan(state.scans, updatedScan);
     },
     setUiMode: (state, action) => {
@@ -39,7 +39,7 @@ const nmapSlice = createSlice({
       .addCase(startScan.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.loading = false;
-        state.scans = upsertScan(state.scans, action.payload.scan);
+        state.scans = upsertScan(state.scans, action.payload.data);
       })
       .addCase(startScan.rejected, (state) => {
         state.status = "failed";
@@ -52,6 +52,7 @@ const nmapSlice = createSlice({
         state.status = "succeeded";
         state.loading = false;
         state.scans = action.payload.scans;
+        
       })
       .addCase(getScans.rejected, (state) => {
         state.status = "failed";
@@ -67,7 +68,7 @@ const nmapSlice = createSlice({
       .addCase(getScanById.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.loading = false;
-        state.scans = upsertScan(state.scans, action.payload);
+        state.scans = upsertScan(state.scans, action.payload.data);
       })
       .addCase(getScanById.rejected, (state) => {
         state.status = "failed";

@@ -1,12 +1,16 @@
+import { moduleWrapper } from "../constants/wrappers.js";
 import { NmapScan } from "../models/nmap-model.js";
 import { Nmap } from "../modules/nmap/nmap.js";
+import { NMAP_BIN } from "../constants/processes.js";
 
 export const startNmap = async (req, res) => {
   const { args, userId, scanType = "default" } = req.body;
   try {
     const nmap = new Nmap({ args, userId, scanType });
     const scan = await nmap.start();
-    return res.status(200).send({ message: "Nmap scan started", scan });
+    return res
+      .status(200)
+      .send({ message: "Nmap scan started", ...moduleWrapper(NMAP_BIN, scan) });
   } catch (error) {
     return res
       .status(400)
@@ -46,7 +50,8 @@ export const getAllScans = async (req, res) => {
       totalPages,
       currentPage: page,
     };
-    return res.status(200).send(responseData);
+
+    return res.status(200).send(moduleWrapper(NMAP_BIN, responseData));
   } catch (error) {
     return res.status(400).send({ message: "No scans found", error });
   }
@@ -56,7 +61,7 @@ export const getAllScans = async (req, res) => {
 export const getScanById = async (req, res) => {
   try {
     const scan = await NmapScan.findOne({ _id: req.params.id });
-    return res.status(200).send(scan);
+    return res.status(200).send(moduleWrapper(NMAP_BIN, scan));
   } catch (error) {
     return res.status(400).send({ message: "Could not find user", error });
   }

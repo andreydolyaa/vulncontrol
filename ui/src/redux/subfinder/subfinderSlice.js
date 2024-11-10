@@ -22,8 +22,8 @@ const subfinderSlice = createSlice({
     scans: [],
   },
   reducers: {
-    incomingScan: (state, action) => {
-      const updatedScan = action.payload;
+    updateSubfinder: (state, action) => {
+      const updatedScan = action.payload.data;
       state.scans = upsertScan(state.scans, updatedScan);
     },
   },
@@ -35,7 +35,7 @@ const subfinderSlice = createSlice({
       .addCase(startSubfinderScan.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.loading = false;
-        state.scans = upsertScan(state.scans, action.payload.scan);
+        state.scans = upsertScan(state.scans, action.payload.data);
       })
       .addCase(startSubfinderScan.rejected, (state) => {
         state.status = "failed";
@@ -72,5 +72,5 @@ const subfinderSlice = createSlice({
   },
 });
 
-export const { incomingScan } = subfinderSlice.actions;
+export const { updateSubfinder } = subfinderSlice.actions;
 export default subfinderSlice.reducer;

@@ -1,6 +1,7 @@
 import { server } from "../../../index.js";
 import { update } from "./db-actions.js";
 import { Utils } from "../utils/utils.js";
+import { moduleWrapper } from "../../constants/wrappers.js";
 
 export class HttpActions {
   constructor() {}
@@ -35,7 +36,10 @@ export class HttpActions {
     }
   }
 
-  static notify(path, data) {
-    server.websocketServer.updateSubsAtSubscription(path, data);
+  static notify(path, data, module) {
+    server.websocketServer.updateSubsAtSubscription(
+      path,
+      moduleWrapper(module, data)
+    );
   }
 }

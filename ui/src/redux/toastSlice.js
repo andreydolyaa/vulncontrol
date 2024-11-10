@@ -8,10 +8,10 @@ export const toastSlice = createSlice({
   },
   reducers: {
     incomingToast: (state, action) => {
-      state.toast = action.payload;
+      state.toast = action.payload.data;
     },
     incomingCustomToast: (state, action) => {
-      state.customToast = action.payload;
+      state.customToast = action.payload.data;
     },
     deleteToast: (state, action) => {
       state.toast = null;

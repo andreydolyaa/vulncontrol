@@ -10,6 +10,7 @@ const TYPES = {
   done: "completed",
   failed: "failed",
   aborted: "aborted",
+  live: "started",
 };
 
 export const Toast = () => {
@@ -35,7 +36,7 @@ export const Toast = () => {
       <div className="text-wrapper">
         {customToast
           ? customToast
-          : `Scan ${TYPES[toast.type]} for ${toast.scan.target}`}
+          : `Scan ${TYPES[toast.status]} for ${toast.target}`}
       </div>
     </StyledDivToast>
   );

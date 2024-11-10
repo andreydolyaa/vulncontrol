@@ -1,3 +1,5 @@
+import { NMAP_BIN, SUBFINDER_BIN } from "../constants/processes.js";
+import { moduleWrapper } from "../constants/wrappers.js";
 import { SubfinderScan } from "../models/subfinder-model.js";
 import { Subfinder } from "../modules/subfinder/subfinder.js";
 
@@ -6,7 +8,12 @@ export const startSubfinder = async (req, res) => {
   try {
     const subfinder = new Subfinder({ userId, scanType, domain });
     const scan = await subfinder.start();
-    return res.status(200).send({ message: "subfinder scan started", scan });
+    return res
+      .status(200)
+      .send({
+        message: "subfinder scan started",
+        ...moduleWrapper(SUBFINDER_BIN, scan),
+      });
   } catch (error) {
     return res
       .status(400)
@@ -45,8 +52,8 @@ export const getAllScans = async (req, res) => {
       totalPages,
       currentPage: page,
     };
-    
-    return res.status(200).send(responseData);
+
+    return res.status(200).send(moduleWrapper(SUBFINDER_BIN, responseData));
   } catch (error) {
     return res.status(400).send({ message: "No scans found", error });
   }

@@ -65,6 +65,8 @@ export class Subfinder extends Docker {
         close: this._close.bind(this),
       });
 
+      this._notify(this.scan, "toast");
+
       Subfinder.log("warn: scan started");
       return this.scan;
     } catch (error) {
@@ -89,21 +91,14 @@ export class Subfinder extends Docker {
       endTime: Utils.setCurrentTime(),
       status,
     });
-    this._sendToast(status);
+    this._notify(this.scan, "toast");
     Subfinder.log(`info: scan ${status}`);
   }
 
   _close(code, signal) {}
 
-  _notify(data) {
-    HttpActions.notify(subscriptionPaths.SUBFINDER_ALL, data);
-  }
-  _sendToast(status) {
-    const messageWrapper = {
-      type: status,
-      scan: this.scan,
-    };
-    this._notify(messageWrapper);
+  _notify(data, module = SUBFINDER_BIN) {
+    HttpActions.notify(subscriptionPaths.SUBFINDER_ALL, data, module);
   }
 
   async _updateDb(data) {
