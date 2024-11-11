@@ -1,14 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { startScan, getScans, deleteScan, getScanById } from "./nmapThunks";
 
-const upsertScan = (scans, newScan) => {
+export const upsertScan = (scans, newScan) => {
   const index = scans.findIndex((scan) => scan.id === newScan.id);
   if (index !== -1) scans[index] = newScan;
   else scans.unshift(newScan);
   return scans;
 };
 
-const deleteScanFromState = (scans, scanId) => {
+export const deleteScanFromState = (scans, scanId) => {
   const index = scans.findIndex((scan) => scan.id === scanId);
   scans.splice(index, 1);
   return scans;

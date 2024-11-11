@@ -1,21 +1,37 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ListBodyDiv, ListDiv, ListHeaderDiv } from "../styles";
 import { Title } from "../../../components/Title";
 import { TbWorldSearch } from "react-icons/tb";
 import { ScanItem } from "./ScanItem";
 import { Empty } from "../../../components/Empty";
+import { useSelector } from "react-redux";
 
-export const ScansList = ({ scans, handleScanSelect }) => {
-  const [selectedItem, setSelectedItem] = useState(null);
+export const ScansList = ({ scans }) => {
+  const { selectedScan } = useSelector((state) => state.subfinder);
+  const [selectedItemIndex, setSelectedItemIndex] = useState(null);
 
-  const selectScanItem = (index) => {
-    setSelectedItem(index);
+  useEffect(() => {
+    if (selectedScan && selectedScan.status === "live") {
+      return selectScanItemIndex(0);
+    }
+    if (selectedScan && selectedScan.status === "done") {
+      const index = scans.findIndex((x) => x.id === selectedScan.id);
+      setSelectedItemIndex(index);
+    }
+  }, [selectedScan]);
+
+  const selectScanItemIndex = (index) => {
+    setSelectedItemIndex(index);
   };
 
   return (
     <ListDiv>
       <ListHeaderDiv>
-        <Title text="Scans" icon={TbWorldSearch} />
+        <Title
+          text="Domains"
+          icon={TbWorldSearch}
+          data={`${scans.length} Targets`}
+        />
       </ListHeaderDiv>
       {!scans.length ? (
         <Empty customHeight text="No scans yet" />
@@ -26,9 +42,8 @@ export const ScansList = ({ scans, handleScanSelect }) => {
               <ScanItem
                 key={scan.id}
                 scan={scan}
-                handleScanSelect={handleScanSelect}
-                onClick={() => selectScanItem(index)}
-                selected={selectedItem === index}
+                onClick={() => selectScanItemIndex(index)}
+                selected={selectedItemIndex === index}
               />
             );
           })}

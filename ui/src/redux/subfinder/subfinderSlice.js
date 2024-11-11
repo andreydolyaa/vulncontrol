@@ -1,22 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { startSubfinderScan, getScans } from "./subfinderThunks";
-
-const upsertScan = (scans, newScan) => {
-  const index = scans.findIndex((scan) => scan.id === newScan.id);
-  if (index !== -1) scans[index] = newScan;
-  else scans.unshift(newScan);
-  return scans;
-};
-
-// const deleteScanFromState = (scans, scanId) => {
-//   const index = scans.findIndex((scan) => scan.id === scanId);
-//   scans.splice(index, 1);
-//   return scans;
-// };
+import { upsertScan, deleteScanFromState } from "../nmap/nmapSlice";
+import {
+  startSubfinderScan,
+  getScans,
+  deleteSubfinderScan,
+} from "./subfinderThunks";
 
 const subfinderSlice = createSlice({
   name: "subfinder",
   initialState: {
+    selectedScan: null,
     loading: true,
     status: "idle",
     scans: [],
@@ -25,6 +18,9 @@ const subfinderSlice = createSlice({
     updateSubfinder: (state, action) => {
       const updatedScan = action.payload.data;
       state.scans = upsertScan(state.scans, updatedScan);
+    },
+    setSelectedScan: (state, action) => {
+      state.selectedScan = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -52,11 +48,11 @@ const subfinderSlice = createSlice({
       .addCase(getScans.rejected, (state) => {
         state.status = "failed";
         state.loading = false;
+      })
+      .addCase(deleteSubfinderScan.fulfilled, (state, action) => {
+        const scanId = action.payload.id;
+        state.scans = deleteScanFromState(state.scans, scanId);
       });
-    // .addCase(deleteScan.fulfilled, (state, action) => {
-    //   const scanId = action.payload.id;
-    //   state.scans = deleteScanFromState(state.scans, scanId);
-    // })
     // .addCase(getScanById.pending, (state) => {
     //   state.loading = true;
     // })
@@ -72,5 +68,5 @@ const subfinderSlice = createSlice({
   },
 });
 
-export const { updateSubfinder } = subfinderSlice.actions;
+export const { updateSubfinder, setSelectedScan } = subfinderSlice.actions;
 export default subfinderSlice.reducer;

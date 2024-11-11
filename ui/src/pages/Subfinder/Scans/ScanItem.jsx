@@ -2,26 +2,37 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import { ScanStatus } from "./ScanStatus";
 import { TbTrash, TbExternalLink } from "react-icons/tb";
+import { useDispatch } from "react-redux";
+import { setSelectedScan } from "../../../redux/subfinder/subfinderSlice";
+import { openLink } from "../../../utils";
+import { deleteSubfinderScan } from "../../../redux/subfinder/subfinderThunks";
 
-export const ScanItem = ({
-  scan,
-  onClick,
-  selected,
-  handleScanSelect,
-  isSubdomain = false,
-}) => {
+export const ScanItem = ({ scan, onClick, selected }) => {
+  const dispatch = useDispatch();
+  const isLive = scan.status === "live";
+
   return (
     <Container onClick={onClick} $selected={selected}>
-      <ItemWrapper onClick={() => handleScanSelect(scan)}>
+      <ItemWrapper onClick={() => dispatch(setSelectedScan(scan))}>
         <IconDiv>
           <ScanStatus status={scan.status} />
         </IconDiv>
         <DomainDiv>{scan.domain}</DomainDiv>
         <ActionsDiv>
-          <ActionButton>
-            <TbTrash />
-          </ActionButton>
-          <ActionButton>
+          {!isLive && (
+            <ActionButton
+              onClick={() => dispatch(deleteSubfinderScan(scan.id))}
+              data-tooltip-id="tooltip1"
+              data-tooltip-content="Remove"
+            >
+              <TbTrash />
+            </ActionButton>
+          )}
+          <ActionButton
+            onClick={() => openLink(scan.target)}
+            data-tooltip-id="tooltip1"
+            data-tooltip-content="Open in a new tab"
+          >
             <TbExternalLink />
           </ActionButton>
         </ActionsDiv>

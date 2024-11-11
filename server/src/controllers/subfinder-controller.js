@@ -1,6 +1,12 @@
-import { NMAP_BIN, SUBFINDER_BIN } from "../constants/processes.js";
+import { subscriptionPaths } from "../constants/common.js";
+import {
+  NMAP_BIN,
+  PROC_STATUS,
+  SUBFINDER_BIN,
+} from "../constants/processes.js";
 import { moduleWrapper } from "../constants/wrappers.js";
 import { SubfinderScan } from "../models/subfinder-model.js";
+import { HttpActions } from "../modules/actions/http-actions.js";
 import { Subfinder } from "../modules/subfinder/subfinder.js";
 
 export const startSubfinder = async (req, res) => {
@@ -8,12 +14,10 @@ export const startSubfinder = async (req, res) => {
   try {
     const subfinder = new Subfinder({ userId, scanType, domain });
     const scan = await subfinder.start();
-    return res
-      .status(200)
-      .send({
-        message: "subfinder scan started",
-        ...moduleWrapper(SUBFINDER_BIN, scan),
-      });
+    return res.status(200).send({
+      message: "subfinder scan started",
+      ...moduleWrapper(SUBFINDER_BIN, scan),
+    });
   } catch (error) {
     return res
       .status(400)
@@ -30,11 +34,7 @@ export const getAllScans = async (req, res) => {
 
   if (req.query.search) {
     const searchRegex = { $regex: req.query.search, $options: "i" };
-    searchQuery.$or = [
-      { target: searchRegex },
-      { scanType: searchRegex },
-      { states: searchRegex },
-    ];
+    searchQuery.$or = [{ target: searchRegex }, { domain: searchRegex }];
   }
 
   try {
@@ -56,5 +56,16 @@ export const getAllScans = async (req, res) => {
     return res.status(200).send(moduleWrapper(SUBFINDER_BIN, responseData));
   } catch (error) {
     return res.status(400).send({ message: "No scans found", error });
+  }
+};
+
+export const deleteScan = async (req, res) => {
+  try {
+    const scan = await SubfinderScan.findOneAndDelete({ id: req.params.id });
+    scan.status = PROC_STATUS.DELETED;
+    HttpActions.notify(subscriptionPaths.SUBFINDER_ALL, scan, "toast");
+    return res.status(200).send({ message: "Scan deleted", id: req.params.id });
+  } catch (error) {
+    return res.status(400).send({ message: "Failed to delete scan", error });
   }
 };

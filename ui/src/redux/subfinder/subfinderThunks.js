@@ -36,3 +36,17 @@ export const getScans = createAsyncThunk(
     }
   }
 );
+
+export const deleteSubfinderScan = createAsyncThunk(
+  "subfinder/deleteSubfinderScan",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await api.delete(`/api/subfinder/${id}`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || { message: "An error occurred" }
+      );
+    }
+  }
+);

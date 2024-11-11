@@ -29,6 +29,7 @@ export const PROC_STATUS = {
   DONE: "done",
   FAILED: "failed",
   ABORTED: "aborted",
+  DELETED: "deleted"
 };
 
 export const PROC_STREAM_EVENT = {

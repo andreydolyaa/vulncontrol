@@ -2,7 +2,10 @@ import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { incomingScan } from "../redux/nmap";
 import { incomingToast } from "../redux/toastSlice";
-import { updateSubfinder } from "../redux/subfinder/subfinderSlice";
+import {
+  setSelectedScan,
+  updateSubfinder,
+} from "../redux/subfinder/subfinderSlice";
 
 export const useWebSocket = (url) => {
   const dispatch = useDispatch();
@@ -14,6 +17,9 @@ export const useWebSocket = (url) => {
       if (incoming?.type === "toast") {
         dispatch(incomingToast(incoming));
       } else if (incoming.type === "subfinder") {
+        if (incoming.data?.status === "done") {
+          dispatch(setSelectedScan(incoming.data));
+        }
         dispatch(updateSubfinder(incoming));
       } else {
         dispatch(incomingScan(incoming));

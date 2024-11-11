@@ -11,6 +11,7 @@ const TYPES = {
   failed: "failed",
   aborted: "aborted",
   live: "started",
+  deleted: "deleted"
 };
 
 export const Toast = () => {
@@ -36,7 +37,7 @@ export const Toast = () => {
       <div className="text-wrapper">
         {customToast
           ? customToast
-          : `Scan ${TYPES[toast.status]} for ${toast.target}`}
+          : `Scan ${TYPES[toast.status]} - ${toast.target}`}
       </div>
     </StyledDivToast>
   );
@@ -64,6 +65,9 @@ const StyledDivToast = styled.div`
     align-items: center;
     font-size: 12px;
     text-transform: ${({ $customToast }) => !$customToast && "uppercase"};
+    /* white-space: nowrap; */
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .icon-wrapper {
     height: 100%;

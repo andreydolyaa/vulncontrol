@@ -18,6 +18,15 @@ export const downloadBlob = (content, fileName) => {
   URL.revokeObjectURL(url);
 };
 
+export const openLink = (domain) => {
+  const url =
+    domain.startsWith("http://") || domain.startsWith("https://")
+      ? domain
+      : `http://${domain}`;
+
+  window.open(url, "_blank", "noopener,noreferrer");
+};
+
 export const randomNum = () => {
   return Math.floor(Math.random() * 10000000) + 1;
 };

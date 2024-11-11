@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 
-export const LoadingBlink = ({ text = "Loading" }) => {
+export const LoadingBlink = ({ text = "Loading", color = null }) => {
   return (
-    <StyledLoadingBlinkDiv $text={text}>
+    <StyledLoadingBlinkDiv $text={text} $color={color}>
       {text}
       <span className="dot">.</span>
       <span className="dot">.</span>
@@ -14,6 +14,7 @@ export const LoadingBlink = ({ text = "Loading" }) => {
 
 const StyledLoadingBlinkDiv = styled.div`
   font-size: ${({ $text }) => !$text && "18px"};
+  color: ${({ $color }) => $color && $color};
   .dot {
     opacity: 0;
     margin-right: 3px;

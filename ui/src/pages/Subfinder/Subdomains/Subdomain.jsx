@@ -7,19 +7,11 @@ import {
   ItemWrapper,
 } from "../Scans/ScanItem";
 import { TbExternalLink } from "react-icons/tb";
+import { openLink } from "../../../utils";
 
 export const Subdomain = ({ subdomain }) => {
-  const openLink = () => {
-    const url =
-      subdomain.startsWith("http://") || subdomain.startsWith("https://")
-        ? subdomain
-        : `http://${subdomain}`;
-
-    window.open(url, "_blank", "noopener,noreferrer");
-  };
-
   return (
-    <Container onClick={openLink}>
+    <Container onClick={() => openLink(subdomain)}>
       <ItemWrapper>
         <DomainDiv>{subdomain}</DomainDiv>
         <ActionsDiv>
