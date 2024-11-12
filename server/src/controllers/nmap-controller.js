@@ -1,7 +1,9 @@
 import { moduleWrapper } from "../constants/wrappers.js";
 import { NmapScan } from "../models/nmap-model.js";
 import { Nmap } from "../modules/nmap/nmap.js";
-import { NMAP_BIN } from "../constants/processes.js";
+import { NMAP_BIN, PROC_STATUS } from "../constants/processes.js";
+import { HttpActions } from "../modules/actions/http-actions.js";
+import { subscriptionPaths } from "../constants/common.js";
 
 export const startNmap = async (req, res) => {
   const { args, userId, scanType = "default" } = req.body;
@@ -80,6 +82,8 @@ export const abortScan = async (req, res) => {
 export const deleteScan = async (req, res) => {
   try {
     const scan = await NmapScan.findOneAndDelete(req.params.id);
+    scan.status = PROC_STATUS.DELETED;
+    HttpActions.notify(subscriptionPaths.NMAP_ALL, scan, "toast");
     return res.status(200).send({ message: "Scan deleted", id: req.params.id });
   } catch (error) {
     return res.status(400).send({ message: "Failed to delete scan", error });
