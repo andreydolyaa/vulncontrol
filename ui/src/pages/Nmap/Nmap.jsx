@@ -62,7 +62,9 @@ export const Nmap = () => {
     e.preventDefault();
 
     if (easyMode && !isValidIP(formData.command)) {
-      const message = `Invalid IP: ${formData.command}\nEnter valid IPv4 or IPv6 Address`;
+      const message = {
+        data: `Invalid IP: ${formData.command}\nEnter valid IPv4 or IPv6 Address`,
+      };
       dispatch(incomingCustomToast(message));
       return;
     }
