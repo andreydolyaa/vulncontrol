@@ -1,13 +1,13 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { ModuleName } from "../../../components/ModuleName";
-import { ScanStatus } from "../ScanStatus/ScanStatus";
+import { NmapStatus } from "../NmapStatus";
 
-export const ScanDetailsHeader = ({ scan }) => {
+export const TerminalHeader = ({ scan }) => {
   const { scanId } = useParams();
   return (
     <ModuleName text={`SCAN ${scanId}`} enableSearch={false}>
-      <ScanStatus status={scan?.status} />
+      <NmapStatus status={scan?.status} />
     </ModuleName>
   );
 };
