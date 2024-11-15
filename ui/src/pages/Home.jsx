@@ -5,16 +5,15 @@ import { Container } from "../components/Container/Container";
 import { Empty } from "../components/Empty";
 
 export const Home = () => {
-
   // const style = {
   //   ol {
   //     list-style-type: decimal;
   //   }
   // }
   return (
-  
-      <div>
-        TODO:
+    <Container>
+      <pre>
+        <div>TODO:</div>
         <ol style={{ listStyleType: "decimal" }}>
           <li> add confirmation modal on logout/delete of scans</li>
           <li> add light theme</li>
@@ -25,17 +24,21 @@ export const Home = () => {
           <li> Overview - add auto start scan</li>
           <li> add loading to modules in sidebar</li>
           <li> add indication for debounce when searching</li>
-          <li> remove leftovers of tailwind and styled components and convert to css</li>
+          <li>
+            {" "}
+            remove leftovers of tailwind and styled components and convert to
+            css
+          </li>
           <li> server - add authorization middleware for jwt</li>
-          <li> fix login/register page styles and redirect from reg to login</li>
+          <li>
+            {" "}
+            fix login/register page styles and redirect from reg to login
+          </li>
           <li> add context menu to handle scans actions</li>
 
-          
-          
-          <li>*) rewrite with ts</li>
-
+          <li> rewrite with ts</li>
         </ol>
-      </div>
-
+      </pre>
+    </Container>
   );
 };
