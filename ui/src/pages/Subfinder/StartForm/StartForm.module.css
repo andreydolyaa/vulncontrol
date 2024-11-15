@@ -1,0 +1,29 @@
+.base {
+  width: 100%;
+  border: 1px solid var(--border-color);
+  background-color: var(--background-color);
+  border-radius: var(--radius);
+}
+
+.wrapper {
+  padding: var(--padding);
+  display: flex;
+  flex-direction: column;
+  .icon-scan {
+    margin-right: 5px;
+  }
+}
+
+.body {
+  width: 100%;
+  display: flex;
+}
+
+.input {
+  width: 100%;
+  border: 1px solid var(--border-color);
+}
+
+.input::placeholder {
+  color: var(--placeholder-color);
+}

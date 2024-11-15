@@ -1,0 +1,7 @@
+.wrapper {
+  display: flex;
+  width: 100%;
+  flex: 1;
+  gap: var(--padding);
+  overflow-y: auto;
+}

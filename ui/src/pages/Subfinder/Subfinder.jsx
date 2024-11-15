@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { TbWorldSearch as World } from "react-icons/tb";
 import { Container } from "../../components/Container/Container";
 import { ModuleName } from "../../components/ModuleName";
-import { StartForm } from "./StartForm";
+import { StartForm } from "./StartForm/StartForm";
 import { Scans } from "./Scans/Scans";
 import { useWebSocket } from "../../hooks/useWebSocket";
 import { WS_URL } from "../../api/baseUrl";
