@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { ListBodyDiv, ListDiv, ListHeaderDiv } from "../styles";
 import { Title } from "../../../components/Title";
 import { TbWorldSearch } from "react-icons/tb";
 import { ScanItem } from "./ScanItem";
 import { Empty } from "../../../components/Empty";
 import { useSelector } from "react-redux";
+import startFormStyles from "../StartForm/StartForm.module.css";
+import styles from "../Subdomains/Subdomains.module.css";
 
 export const ScansList = ({ scans }) => {
   const { selectedScan } = useSelector((state) => state.subfinder);
@@ -25,18 +26,18 @@ export const ScansList = ({ scans }) => {
   };
 
   return (
-    <ListDiv>
-      <ListHeaderDiv>
+    <div className={`${startFormStyles.base} ${styles.list}`}>
+      <div className={styles.header}>
         <Title
           text="Domains"
           icon={TbWorldSearch}
           data={`${scans.length} Targets`}
         />
-      </ListHeaderDiv>
+      </div>
       {!scans.length ? (
         <Empty customHeight text="No scans yet" />
       ) : (
-        <ListBodyDiv>
+        <div>
           {scans.map((scan, index) => {
             return (
               <ScanItem
@@ -47,8 +48,8 @@ export const ScansList = ({ scans }) => {
               />
             );
           })}
-        </ListBodyDiv>
+        </div>
       )}
-    </ListDiv>
+    </div>
   );
 };

@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { ListBodyDiv, ListDiv, ListHeaderDiv } from "../styles";
 import { Title } from "../../../components/Title";
 import { TbDeviceIpadHorizontalCheck as Check } from "react-icons/tb";
 import { Subdomain } from "./Subdomain";
@@ -7,6 +6,8 @@ import { Empty } from "../../../components/Empty";
 import { LoadingBlink } from "../../../components/LoadingBlink";
 import { useSelector } from "react-redux";
 import { setSelectedScan } from "../../../redux/subfinder/subfinderSlice";
+import styles from "./Subdomains.module.css";
+import startFormStyles from "../StartForm/StartForm.module.css";
 
 export const Subdomains = () => {
   const { selectedScan } = useSelector((state) => state.subfinder);
@@ -37,12 +38,12 @@ export const Subdomains = () => {
 
   const list = () => {
     return (
-      <ListBodyDiv>
+      <div>
         {selectedScan?.subdomains &&
           selectedScan.subdomains.map((subdomain, index) => {
             return <Subdomain key={index} subdomain={subdomain} />;
           })}
-      </ListBodyDiv>
+      </div>
     );
   };
 
@@ -51,14 +52,14 @@ export const Subdomains = () => {
   };
 
   return (
-    <ListDiv>
-      <ListHeaderDiv>
+    <div className={`${startFormStyles.base} ${styles.list}`}>
+      <div className={styles.header}>
         <Title
           text="Subdomains"
           icon={Check}
           data={selectedScan && titleData()}
         />
-      </ListHeaderDiv>
+      </div>
 
       {!selectedScan
         ? noSelectedScan()
@@ -67,6 +68,6 @@ export const Subdomains = () => {
         : !foundSubdomains
         ? noSubdomainsFound()
         : list()}
-    </ListDiv>
+    </div>
   );
 };
