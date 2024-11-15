@@ -8,7 +8,6 @@ import {
   Tooltip,
   ResponsiveContainer,
   Legend,
-  Text,
 } from "recharts";
 
 export const LineChartCustom = () => {
@@ -21,6 +20,10 @@ export const LineChartCustom = () => {
         setData(overviewData);
       });
   }, []);
+
+  const legendTextColor = (value) => {
+    return <span style={{ color: "var(--placeholder-color)" }}>{value}</span>;
+  };
 
   return (
     <ResponsiveContainer width="100%" height="100%">
@@ -45,13 +48,15 @@ export const LineChartCustom = () => {
         </defs>
         <XAxis
           dataKey="name"
-          height={20}
+          height={30}
+          dy={10}
           axisLine={false}
           tickLine={false}
           style={{ fontSize: 12, fill: "var(--placeholder-color)" }}
         />
         <YAxis
-          width={20}
+          width={30}
+          dx={-10}
           axisLine={false}
           tickLine={false}
           // ticks={[0, 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]}
@@ -71,9 +76,10 @@ export const LineChartCustom = () => {
           verticalAlign="top"
           iconType="circle"
           iconSize={8}
-          wrapperStyle={{ fontSize: "12px" }}
+          wrapperStyle={{ fontSize: "13px" }}
+          formatter={legendTextColor}
         />
-        <text x={60} y={20} textAnchor="start" fontSize={14} fill="white">
+        <text x={60} y={20} textAnchor="start" fontSize={12} fill="white">
           Scans By Date
         </text>
         <Area
