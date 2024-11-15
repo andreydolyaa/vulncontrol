@@ -15,6 +15,7 @@ export default {
       colors: {
         grayBg: "#F6F6F6",
         purpleBg: "rgb(116, 43, 225)", // sidebar card active
+        gradientBg: "HERE CHATGPT",
         purpleText: "#8A8FFF",
         greenish: "#00ff99", // logo color
         sidebarAndCardBg: "#171721",

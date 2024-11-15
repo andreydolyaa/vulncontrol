@@ -225,6 +225,7 @@ a {
   color: transparent;
 }
 
+
 @keyframes appear {
   0% {
     opacity: 0.1;
