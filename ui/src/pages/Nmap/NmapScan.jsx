@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { Pagination } from "../../components/Pagination/Pagination";
-import { ScanTable } from "./ScanTable/ScanTable";
+import { Table } from "./Table/Table";
 import { Empty } from "../../components/Empty";
 import { LoadingBlink } from "../../components/LoadingBlink";
 
@@ -26,7 +26,7 @@ export const NmapScan = ({
   else
     return (
       <>
-        <ScanTable scans={scans} />
+        <Table scans={scans} />
         <Pagination
           current={currentPage}
           total={totalPages}

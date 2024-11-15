@@ -3,7 +3,7 @@ export const UIModes = {
   COMMAND: "command",
 };
 
-export const NmapScanStatus = {
+export const ScanStatusList = {
   LIVE: "live",
   DONE: "done",
   ABORTED: "aborted",

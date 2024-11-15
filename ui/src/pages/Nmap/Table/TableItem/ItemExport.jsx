@@ -1,8 +1,9 @@
 import React from "react";
 import { TbFileDownload } from "react-icons/tb";
 import { downloadBlob } from "../../../../utils";
+import styles from "../Table.module.css";
 
-export const ScanExport = ({ scan }) => {
+export const ItemExport = ({ scan }) => {
   const handleExport = (scan) => {
     const fileName = `scan_${scan.id}_${scan.startTime}.txt`;
     const content =
@@ -20,7 +21,7 @@ export const ScanExport = ({ scan }) => {
 
   return (
     <TbFileDownload
-      className="icon"
+      className={styles.icon}
       data-tooltip-id="tooltip1"
       data-tooltip-content="Export"
       onClick={() => handleExport(scan)}

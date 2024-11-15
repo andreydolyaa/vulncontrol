@@ -1,8 +1,8 @@
 import React from "react";
-import { ScanItem } from "./ScanTableItem/ScanTableItem";
+import { TableItem } from "./TableItem/TableItem";
 import { useNavigate } from "react-router-dom";
 
-export const ScansTableBody = ({ scans }) => {
+export const TableBody = ({ scans }) => {
   const navigate = useNavigate();
 
   const navigateToScan = (scanId) => {
@@ -13,7 +13,7 @@ export const ScansTableBody = ({ scans }) => {
     <tbody>
       {scans.map((scan) => {
         return (
-          <ScanItem
+          <TableItem
             key={scan.id}
             scan={scan}
             onClick={() => navigateToScan(scan.id)}

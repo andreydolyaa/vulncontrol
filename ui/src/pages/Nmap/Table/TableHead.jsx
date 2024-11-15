@@ -1,7 +1,7 @@
 import React from "react";
-import { HeaderCell, HeaderRow } from "./styles";
+import styles from "./Table.module.css";
 
-export const ScansTableHeader = () => {
+export const TableHead = () => {
   const tableItems = [
     "Target",
     "Scan Type",
@@ -14,11 +14,13 @@ export const ScansTableHeader = () => {
 
   return (
     <thead>
-      <HeaderRow>
+      <tr className={styles["table-header-row"]}>
         {tableItems.map((item) => (
-          <HeaderCell key={item}>{item}</HeaderCell>
+          <th className={styles["table-header-cell"]} key={item}>
+            {item}
+          </th>
         ))}
-      </HeaderRow>
+      </tr>
     </thead>
   );
 };

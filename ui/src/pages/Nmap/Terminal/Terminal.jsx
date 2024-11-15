@@ -5,10 +5,10 @@ import { useWebSocket } from "../../../hooks/useWebSocket";
 import { WS_URL } from "../../../api/baseUrl";
 import { Container } from "../../../components/Container/Container";
 import { getScanById, selectScanById } from "../../../redux/nmap";
-import { ScanDetailsHeader } from "./ScanDetailsHeader";
-import { ScanDetailsCommandLine } from "./ScanDetailsCommandLine";
+import { TerminalHeader } from "./TerminalHeader";
+import { TerminalWindow } from "./TerminalWindow";
 
-export const ScanDetails = () => {
+export const Terminal = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { scanId } = useParams();
@@ -31,8 +31,8 @@ export const ScanDetails = () => {
 
   return (
     <Container>
-      <ScanDetailsHeader scan={scan} />
-      <ScanDetailsCommandLine scan={scan} loading={loading} />
+      <TerminalHeader scan={scan} />
+      <TerminalWindow scan={scan} loading={loading} />
     </Container>
   );
 };

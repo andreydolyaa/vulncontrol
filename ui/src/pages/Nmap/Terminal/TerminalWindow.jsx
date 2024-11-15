@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from "react";
-import styled from "styled-components";
+import styles from "./Terminal.module.css";
 import { ascii } from "../../../utils";
 import { LoadingBlink } from "../../../components/LoadingBlink";
 
-export const ScanDetailsCommandLine = ({ scan, loading }) => {
+export const TerminalWindow = ({ scan, loading }) => {
   const terminalRef = useRef(null);
 
   useEffect(() => {
@@ -20,28 +20,11 @@ export const ScanDetailsCommandLine = ({ scan, loading }) => {
   };
 
   return (
-    <StyledDiv ref={terminalRef}>
+    <div className={styles.terminal} ref={terminalRef}>
       <pre>
         <div className="ascii">{ascii}</div>
         {displayData()}
       </pre>
-    </StyledDiv>
+    </div>
   );
 };
-
-const StyledDiv = styled.div`
-  padding: 20px;
-  width: 100%;
-  flex-grow: 1;
-  background-color: #000000;
-  border-radius: var(--radius);
-  box-shadow: 1px 1px 15px 1px #0c0c0c;
-  overflow-y: auto;
-  scroll-behavior: smooth;
-  font-size: 16px;
-  pre {
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    word-break: break-word;
-  }
-`;
