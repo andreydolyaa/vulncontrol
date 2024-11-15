@@ -1,7 +1,11 @@
-import React from 'react'
+import React from "react";
+import { Container } from "../../components/Container/Container";
+import { Empty } from "../../components/Empty";
 
 export const Settings = () => {
   return (
-    <div>Settings</div>
-  )
-}
+    <Container>
+      <Empty text="tbd" />
+    </Container>
+  );
+};

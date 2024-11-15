@@ -1,7 +1,11 @@
-import React from 'react'
+import React from "react";
+import { Container } from "../../components/Container/Container";
+import { Empty } from "../../components/Empty";
 
 export const Nikto = () => {
   return (
-    <div>Nikto</div>
-  )
-}
+    <Container>
+      <Empty text="tbd" />
+    </Container>
+  );
+};

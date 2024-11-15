@@ -36,10 +36,11 @@ html,
   --main-background-color-3: rgba(66, 30, 144, 0.272);
   --radius: 10px;
   --purple: rgb(78, 3, 200);
+  --purple-3: rgb(130, 6, 255);
   --purple-2: rgb(0, 255, 153);
   --action-color: rgb(116, 43, 225);
   --action-color-2: #b88342;
-  --action-color-3: #ff6c0a;
+  --action-color-3: #ff0a7c;
   --orange: rgb(16 185 129);
   --greenish: rgb(0, 255, 166);
   --padding: 30px;
