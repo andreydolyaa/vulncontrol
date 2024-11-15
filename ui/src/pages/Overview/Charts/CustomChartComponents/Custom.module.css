@@ -1,0 +1,8 @@
+.custom-tooltip {
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  border: 1px solid var(--greenish);
+  background-color: var(--main-background-color);
+  font-size:12px;
+  box-shadow: 3px 3px 0px 1px rgb(92, 3, 195);
+}

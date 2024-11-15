@@ -25,7 +25,7 @@ export class HttpActions {
       $push: {
         stdout:
           typeof data === "string"
-            ? data
+            ? `server: ${data}\n`
             : { $each: data.map((msg) => `server: ${msg}\n`) },
       },
     };

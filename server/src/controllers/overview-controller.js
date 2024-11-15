@@ -1,5 +1,20 @@
 import { NmapScan } from "../models/nmap-model.js";
 import { SubfinderScan } from "../models/subfinder-model.js";
+import logger from "../core/logger.js";
+
+export const getNmapData = async (req, res) => {
+  try {
+    const portStats = await NmapScan.aggregate([
+      { $unwind: "$openPorts" },
+      { $group: { _id: "$openPorts", count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+    ]);
+
+    return res.send(portStats);
+  } catch (err) {
+    return res.status(500).send({ error: "Failed to fetch data" });
+  }
+};
 
 export const getOverviewData = async (req, res) => {
   try {
@@ -41,9 +56,9 @@ export const getOverviewData = async (req, res) => {
       });
     });
 
-    return res.json(mergedData);
+    return res.send(mergedData);
   } catch (error) {
-    console.error("Error aggregating scan data:", error);
+    logger.error("Error aggregating scan data:", error);
     return res.status(500).send("Internal Server Error");
   }
 };
