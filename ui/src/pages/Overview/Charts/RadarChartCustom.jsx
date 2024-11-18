@@ -1,9 +1,7 @@
 import React from "react";
 import {
-  Legend,
   PolarAngleAxis,
   PolarGrid,
-  PolarRadiusAxis,
   Radar,
   RadarChart,
   ResponsiveContainer,
@@ -35,8 +33,6 @@ export const RadarChartCustom = ({ data }) => {
           dataKey="status"
           tick={{
             fontSize: 12,
-            fill: "var(--action-color",
-            fontWeight: "bold",
           }}
           tickFormatter={(status) =>
             status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()

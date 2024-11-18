@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../api/baseUrl";
 
 export const useFetch = (url, fallback) => {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -16,7 +16,7 @@ export const useFetch = (url, fallback) => {
           throw new Error(`Error: ${response.statusText}`);
         }
         const result = await response.json();
-        setData(result || fallback);
+        setData(result);
       } catch (error) {
         if (error.name === "AbortError") {
           setError(error.message);
