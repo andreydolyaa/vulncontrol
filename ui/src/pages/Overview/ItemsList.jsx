@@ -33,7 +33,7 @@ export const ItemsList = ({ scans, title, scanType, handleScanType }) => {
           handleChange={handleScanType}
         />
       </div>
-      {scans.map((scan) => {
+      {scans && scans.map((scan) => {
         return (
           <div
             className={styles.item}

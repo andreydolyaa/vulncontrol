@@ -3,26 +3,23 @@ import { BASE_URL } from "../../api/baseUrl";
 import { ItemsList } from "./ItemsList";
 import styles from "./Overview.module.css";
 import { MODULE_TYPE } from "../../constants";
+import { useFetch } from "../../hooks/useFetch";
 
 export const RecentScans = () => {
-  const [scans, setScans] = useState([]);
   const [scanType, setScanType] = useState(MODULE_TYPE.NMAP);
+  const { data, loading, error } = useFetch(
+    `/overview/recent-scans/${scanType}`,
+    []
+  );
 
-  const handleScanType = (e) => {    
+  const handleScanType = (e) => {
     setScanType(e.target.value);
   };
-
-  useEffect(() => {
-    // TODO: make hook
-    fetch(`${BASE_URL}/api/overview/recent-scans/${scanType}`)
-      .then((res) => res.json())
-      .then((data) => setScans(data));
-  }, [scanType]);
 
   return (
     <div className={styles["recent-scans"]}>
       <ItemsList
-        scans={scans}
+        scans={data}
         title="Recent Scans"
         scanType={scanType}
         handleScanType={handleScanType}
