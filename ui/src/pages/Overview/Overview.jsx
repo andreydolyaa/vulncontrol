@@ -1,9 +1,11 @@
-import { LineChartCustom } from "./Charts/LineChartCustom";
 import { Container } from "../../components/Container/Container";
 import styles from "./Overview.module.css";
 import { useEffect, useState } from "react";
 import { BASE_URL } from "../../api/baseUrl";
-import { BarChartCustom } from "./Charts/BarChartCustom";
+import { TotalData } from "./TotalData";
+import { RecentScans } from "./RecentScans";
+import { NmapScans } from "./NmapScans";
+import { SubfinderScans } from "./SubfinderScans";
 
 export const Overview = () => {
   const [overviewData, setOverviewData] = useState([]);
@@ -26,22 +28,13 @@ export const Overview = () => {
     <Container>
       <div className={styles.wrapper}>
         <div className={styles.left}>
-          <div className={styles["total-data"]}>
-            <LineChartCustom
-              data={overviewData}
-              title="Scans count by date"
-              colorOne="var(--action-color-3)"
-              colorTwo="var(--purple)"
-            />
-          </div>
-          <div className={styles["recent-scans"]}></div>
+          <TotalData data={overviewData} />
+          <RecentScans />
         </div>
 
         <div className={styles.right}>
-          <div className={styles["nmap-scans"]}>
-            <BarChartCustom data={nmapData} title="Common open ports found" color="var(--purple)" />
-          </div>
-          <div className={styles["subfinder-scans"]}></div>
+          <NmapScans data={nmapData} />
+          <SubfinderScans />
         </div>
       </div>
     </Container>
