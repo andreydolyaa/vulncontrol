@@ -5,7 +5,7 @@ import { BASE_URL } from "../../api/baseUrl";
 import { TotalData } from "./TotalData";
 import { RecentScans } from "./RecentScans";
 import { NmapScans } from "./NmapScans";
-import { SubfinderScans } from "./SubfinderScans";
+import { ScansStats } from "./ScansStats";
 
 export const Overview = () => {
   const [overviewData, setOverviewData] = useState([]);
@@ -34,7 +34,7 @@ export const Overview = () => {
 
         <div className={styles.right}>
           <NmapScans data={nmapData} />
-          <SubfinderScans />
+          <ScansStats />
         </div>
       </div>
     </Container>

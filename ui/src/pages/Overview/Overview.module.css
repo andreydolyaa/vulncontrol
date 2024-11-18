@@ -2,8 +2,6 @@
   background-color: var(--background-color);
   border-radius: var(--radius);
   border: 1px solid var(--border-color);
-  /* padding: var(--padding); */
-  padding: 15px;
 }
 
 .full-height-width {
@@ -34,41 +32,48 @@
 .total-data {
   @apply base;
   @apply full-height-width;
-  display: flex;
-  flex-direction: column;
+  padding: 15px;
 }
 
 .recent-scans {
   @apply base;
   @apply full-height-width;
-  padding: 0;
 }
 
 .nmap-scans {
   @apply base;
   @apply full-height-width;
+  padding: 15px;
 }
 
-.subfinder-scans {
+.scans-stats {
   @apply base;
   @apply full-height-width;
+  display: flex;
+  flex-direction: column;
+  .title {
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+  }
 }
 
 .items-list {
-  /* font-size: 16px; */
   height: 100%;
   h1 {
     color: white;
     padding: 15px;
+  }
+  .items-title {
+    padding: 15px 30px;
+    display: flex;
   }
   .item {
     display: flex;
     align-items: center;
     justify-content: space-between;
     cursor: pointer;
-    padding: 15px;
-    transition: 0.2s;
-    font-weight: 500;
+    padding: 15px 30px;
     .title {
       display: flex;
       align-items: center;
@@ -86,7 +91,7 @@
   }
 }
 .icon {
-  font-size: 20px;
+  font-size: 18px;
 }
 .icon-action {
   transition: 0.3s;
@@ -94,4 +99,63 @@
 }
 .icon-action:hover {
   transform: scale(1.2);
+}
+
+@media (max-width: 1440px) {
+  .wrapper {
+    flex-wrap: wrap;
+  }
+  .right {
+    width: 100%;
+    .nmap-scans {
+      min-height: 300px;
+    }
+    .scans-stats {
+      min-height: 300px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .right {
+    .scans-stats {
+      .title {
+        flex-direction: column;
+        gap: 15px;
+      }
+    }
+  }
+  .left {
+    .recent-scans {
+      .items-title {
+        flex-direction: column;
+        gap: 15px;
+      }
+      .item {
+        p {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 520px) {
+  .left {
+    .recent-scans {
+      .item {
+        span {
+          display: none;
+        }
+        p {
+          width: 120px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+  }
 }

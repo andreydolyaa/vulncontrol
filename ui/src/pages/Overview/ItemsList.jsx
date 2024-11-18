@@ -1,23 +1,49 @@
 import React from "react";
 import styles from "./Overview.module.css";
-import { TbCircleArrowRight, TbWorld } from "react-icons/tb";
+import { TbAB, TbCircleArrowRight, TbWorld } from "react-icons/tb";
 import { parseDate } from "../../utils/index";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setSelectedScan } from "../../redux/subfinder/subfinderSlice";
+import { Title } from "../../components/Title";
+import { Select } from "../../components/Select";
+import { MODULE_TYPE } from "../../constants";
 
-export const ItemsList = ({ scans, title }) => {
+export const ItemsList = ({ scans, title, scanType, handleScanType }) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const navigateToScan = (scan) => {
+    if (scanType === MODULE_TYPE.NMAP) {
+      navigate(`/nmap/${scan.id}`);
+    } else {
+      dispatch(setSelectedScan(scan));
+      navigate("/subfinder");
+    }
+  };
   return (
     <div className={styles["items-list"]}>
-      {/* <h1>{title}</h1> */}
-      <select name="" id="">
-        <option value="">Nmap</option>
-        <option value="">Subfinder</option>
-      </select>
+      <div className={styles["items-title"]}>
+        <Title text={title} icon={TbAB} />
+        <Select
+          options={{
+            nmap: MODULE_TYPE.NMAP,
+            subfinder: MODULE_TYPE.SUBFINDER,
+          }}
+          handleChange={handleScanType}
+        />
+      </div>
       {scans.map((scan) => {
         return (
-          <div className={styles.item} key={scan.id}>
+          <div
+            className={styles.item}
+            key={scan.id}
+            onClick={() => navigateToScan(scan)}
+          >
             <div className={styles.title}>
               <TbWorld className={styles.icon} />
               <p>
-                {parseDate(scan.endTime)} - {scan.target}
+                <span>{parseDate(scan.endTime)} - </span>{scan.target}
               </p>
             </div>
             <TbCircleArrowRight

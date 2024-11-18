@@ -23,11 +23,10 @@ export const BarChartCustom = ({ data, title, color }) => {
         <XAxis {...axisStyles("x")} dataKey="_id" />
         <YAxis {...axisStyles("y")} />
         <Tooltip cursor={false} content={<CustomTooltip />} />
-        {/* <Legend /> */}
         <Bar
           dataKey="count"
-          radius={[5, 5, 3, 3]}
-          barSize={40}
+          radius={[3, 3, 3, 3]}
+          barSize={35}
           fill="url(#gradientColor)"
         />
         <text {...textStyles()}>{title}</text>

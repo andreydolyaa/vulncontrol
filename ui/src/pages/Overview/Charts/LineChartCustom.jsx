@@ -7,6 +7,7 @@ import {
   ResponsiveContainer,
   Legend,
   Tooltip,
+  CartesianGrid,
 } from "recharts";
 import { axisStyles, textStyles } from "./sharedStyles";
 
@@ -17,7 +18,8 @@ export const LineChartCustom = ({ data, title, colorOne, colorTwo }) => {
 
   const areaStyles = (dataKey, color) => {
     return {
-      type: "natural",
+      type: "monotone",
+      dot:true,
       dataKey,
       stroke: color,
       fillOpacity: 1,
@@ -35,16 +37,16 @@ export const LineChartCustom = ({ data, title, colorOne, colorTwo }) => {
     );
   };
 
-  const x = [...data]
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <AreaChart data={[...data]}>
+      <AreaChart data={data}>
         <defs>
           {gradient("nmap", colorTwo)}
           {gradient("subfinder", colorOne)}
         </defs>
-        <XAxis {...axisStyles("x")} dataKey="name" />
+        <XAxis {...axisStyles("x")} dataKey="name" domain={["auto","auto"]} />
         <YAxis {...axisStyles("y")} />
+        <CartesianGrid strokeDasharray="5 5"  fillOpacity={0.4} stroke="var(--border-color)" />
         <Tooltip content={<CustomTooltip />} />
         <Legend
           align="right"

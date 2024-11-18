@@ -9,3 +9,8 @@ export const ScanStatusList = {
   ABORTED: "aborted",
   FAILED: "failed",
 };
+
+export const MODULE_TYPE = {
+  NMAP: "nmap",
+  SUBFINDER: "subfinder",
+};

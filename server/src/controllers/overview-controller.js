@@ -2,12 +2,41 @@ import { NmapScan } from "../models/nmap-model.js";
 import { SubfinderScan } from "../models/subfinder-model.js";
 import logger from "../core/logger.js";
 
-export const getRecentScans = async (req, res) => {
+export const getScansStatusData = async (req, res) => {
   const param = req.params.module;
-  const module = param === "NmapScan" ? NmapScan : SubfinderScan;
+  console.log(param);
+  
+  const module = param === "nmap" ? NmapScan : SubfinderScan;
+
+  const allStatuses = ["live", "done", "failed", "aborted", "deleted"];
 
   try {
-    const scans = await module.find().sort({ endTime: -1 }).limit(7);
+    const counts = await module
+      .aggregate([{ $group: { _id: "$status", count: { $sum: 1 } } }])
+      .exec();
+
+    const statusMap = counts.reduce((acc, { _id, count }) => {
+      acc[_id] = count;
+      return acc;
+    }, {});
+
+    const result = allStatuses.map((status) => ({
+      status,
+      count: statusMap[status] || 0,
+    }));
+
+    return res.status(200).send(result);
+  } catch (error) {
+    return res.status(500).send({ message: "Failed to fetch data", error });
+  }
+};
+
+export const getRecentScans = async (req, res) => {
+  const param = req.params.module;
+  const module = param === "nmap" ? NmapScan : SubfinderScan;
+
+  try {
+    const scans = await module.find().sort({ startTime: -1 }).limit(6);
     return res.status(200).send(scans);
   } catch (error) {
     return res.status(500).send({ message: "Failed to fetch data", error });

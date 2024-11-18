@@ -7,8 +7,10 @@ export const axisStyles = (axis = "x") => {
     ...sizes,
     axisLine: false,
     tickLine: false,
+    allowDecimals:false,
     style: {
       fontSize: 12,
+      fontWeight: "bold",
       fill: "var(--placeholder-color)",
     },
   };
@@ -19,7 +21,7 @@ export const textStyles = (
   position = "start"
 ) => {
   return {
-    x: 60,
+    x: 35,
     y: 20,
     textAnchor: position,
     fontSize: 13,
