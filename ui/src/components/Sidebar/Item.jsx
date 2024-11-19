@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { NavLink, useMatch, useNavigate } from "react-router-dom";
-import { logout } from "../../redux/userSlice";
+import { openModal } from "../../redux/modalSlice";
 
 export const Item = ({ icon, title, link = "none", isLogout }) => {
   const dispatch = useDispatch();
@@ -11,11 +11,16 @@ export const Item = ({ icon, title, link = "none", isLogout }) => {
 
   const handleLogout = () => {
     if (isLogout) {
-      dispatch(logout())
-        .unwrap()
-        .then(() => {
-          navigate("/login");
-        });
+      dispatch(
+        openModal({
+          title: "Logout",
+          text: "You are about to logout, are you sure?",
+          confirm: {
+            type: "logout",
+            payload: "",
+          },
+        })
+      );
     }
   };
 

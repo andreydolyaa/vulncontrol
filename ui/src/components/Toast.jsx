@@ -58,6 +58,7 @@ const StyledDivToast = styled.div`
   background-color: var(--background-color);
   box-shadow: 1px 1px 25px 6px #131313;
   white-space: pre-line;
+  z-index: 999;
   .text-wrapper {
     height: 100%;
     width: 100%;

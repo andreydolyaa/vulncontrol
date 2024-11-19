@@ -13,8 +13,6 @@ import { Register } from "./pages/Register";
 import { ProtectedRoutes } from "./layout/ProtectedRoutes";
 import { PublicRoutes } from "./layout/PublicRoutes";
 import { Loading } from "./components/Loading";
-import { Tooltip } from "react-tooltip";
-import { Toast } from "./components/Toast";
 import { Subfinder } from "./pages/Subfinder/Subfinder";
 import "react-tooltip/dist/react-tooltip.css";
 
@@ -50,9 +48,6 @@ export const App = () => {
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Route>
       </Routes>
-      <Toast />
-      <Tooltip id="tooltip" className="tooltip lg:hidden" />
-      <Tooltip id="tooltip1" className="tooltip" />
     </BrowserRouter>
   );
 };

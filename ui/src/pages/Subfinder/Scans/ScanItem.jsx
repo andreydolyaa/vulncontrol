@@ -1,15 +1,28 @@
-import React, { useEffect } from "react";
-import styled from "styled-components";
 import { ScanStatus } from "./ScanStatus";
 import { TbTrash, TbExternalLink } from "react-icons/tb";
 import { useDispatch } from "react-redux";
 import { setSelectedScan } from "../../../redux/subfinder/subfinderSlice";
 import { openLink } from "../../../utils";
-import { deleteSubfinderScan } from "../../../redux/subfinder/subfinderThunks";
+import { openModal } from "../../../redux/modalSlice";
+import styled from "styled-components";
 
 export const ScanItem = ({ scan, onClick, selected }) => {
   const dispatch = useDispatch();
   const isLive = scan.status === "live";
+
+  const deleteScan = (e) => {
+    e.stopPropagation();
+    dispatch(
+      openModal({
+        title: "Delete item?",
+        text: "You are about to delete this scan permanently, are you sure?",
+        confirm: {
+          type: "deleteSubfinderScan",
+          payload: scan.id,
+        },
+      })
+    );
+  };
 
   return (
     <Container onClick={onClick} $selected={selected}>
@@ -21,7 +34,7 @@ export const ScanItem = ({ scan, onClick, selected }) => {
         <ActionsDiv>
           {!isLive && (
             <ActionButton
-              onClick={() => dispatch(deleteSubfinderScan(scan.id))}
+              onClick={deleteScan}
               data-tooltip-id="tooltip1"
               data-tooltip-content="Remove"
             >

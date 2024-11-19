@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export const toastSlice = createSlice({
-  name: "nmap",
+  name: "toast",
   initialState: {
     toast: null,
     customToast: null,
