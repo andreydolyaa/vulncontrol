@@ -31,6 +31,11 @@
         color: white;
       }
       .subtext {
+        display: inline-block;
+        overflow: hidden;
+        white-space: nowrap;
+        padding-right: 5px;
+        width: auto;
         font-size: 11px;
         text-transform: uppercase;
       }
@@ -61,6 +66,9 @@
 .card:hover {
   border: 1px solid var(--action-color-2);
   transform: scale(1.01);
+  .subtext {
+    animation: typing 2s steps(30) forwards;
+  }
 }
 
 @media (max-width: 768px) {
@@ -89,5 +97,14 @@
         width: 24px;
       }
     }
+  }
+}
+
+@keyframes typing {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
   }
 }
