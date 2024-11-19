@@ -27,3 +27,11 @@
 .input::placeholder {
   color: var(--placeholder-color);
 }
+
+@media (max-width: 769px) {
+  .wrapper {
+    .body {
+      flex-direction: column;
+    }
+  }
+}

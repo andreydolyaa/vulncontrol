@@ -46,7 +46,7 @@ export const LineChartCustom = ({ data, title, colorOne, colorTwo }) => {
         </defs>
         <XAxis {...axisStyles("x")} dataKey="name" domain={["auto","auto"]} />
         <YAxis {...axisStyles("y")} />
-        <CartesianGrid strokeDasharray="5 5"  fillOpacity={0.4} stroke="var(--border-color)" />
+        <CartesianGrid strokeDasharray="2 2"  fillOpacity={0.4} stroke="var(--border-color)" />
         <Tooltip content={<CustomTooltip />} />
         <Legend
           align="right"

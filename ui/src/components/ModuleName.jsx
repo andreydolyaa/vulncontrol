@@ -16,10 +16,7 @@ export const ModuleName = ({
   return (
     <StyledDiv>
       <div className="text-and-icon">
-        <TbArrowLeft
-          className="icon-return"
-          onClick={() => navigate(-1)}
-        />
+        <TbArrowLeft className="icon-return" onClick={() => navigate(-1)} />
         {icon && <IconComponent className="icon" />}
         <div className="text">{text}</div>
       </div>
@@ -48,6 +45,9 @@ const StyledDiv = styled.div`
       color: #ffffff;
       font-weight: 600;
       font-size: 20px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .icon {
       height: 20px;
@@ -68,18 +68,32 @@ const StyledDiv = styled.div`
     }
   }
   @media (max-width: 570px) {
+    display: flex;
+    min-height: 130px;
+    padding: 15px;
+    align-items: center;
+    flex-direction: column;
     .search {
       width: 100%;
       min-width: 100px;
     }
     .text-and-icon {
-      margin-right: 10px;
+      justify-content: space-between;
+      width: 100%;
+      .icon-return {
+        margin: 0;
+        margin-right:10px;
+        min-width: 20px;
+      }
       .text {
-        font-size: 18px;
+        font-size: 14px;
+        text-align: center;
       }
       .icon {
+        order: 1;
         height: 18px;
         width: 18px;
+        display: none;
       }
     }
   }

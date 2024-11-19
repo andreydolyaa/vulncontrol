@@ -1,7 +1,15 @@
 .wrapper {
   display: flex;
   width: 100%;
-  flex: 1;
+  height: 100%;
   gap: var(--padding);
-  overflow-y: auto;
+  overflow-y: auto;   
+}
+
+@media (max-width: 1000px) {
+  .wrapper {
+    height: 1000px;
+    flex-direction: column;
+    overflow-y: unset;
+  }
 }

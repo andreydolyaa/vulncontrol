@@ -1,11 +1,11 @@
 .cards-container {
-  width: 650px;
+  width: 670px;
   display: flex;
   flex-wrap: wrap;
   gap: 30px;
 }
 .card {
-  width: 300px;
+  width: 320px;
   min-height: 140px;
   border: 1px solid var(--border-color);
   border-radius: var(--radius);

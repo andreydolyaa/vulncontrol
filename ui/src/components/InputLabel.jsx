@@ -13,16 +13,14 @@ export const InputLabel = ({ text, icon }) => {
 
 const StyledDiv = styled.div`
   text-transform: uppercase;
-  /* color: var(--brighter-color); */
   font-weight: 500;
   display: flex;
   align-items: center;
   margin: 0 0 20px 0;
   gap:10px;
-  font-size: 14px;
+  font-size: 12px;
   .icon {
-    stroke-width: 1.5;
-    font-size: 18px;
+    font-size: 16px;
     color:var(--icon-color);
   }
 `;
