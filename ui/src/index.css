@@ -88,20 +88,19 @@ input:-webkit-autofill:focus {
 /* scrollbar container */
 ::-webkit-scrollbar {
   width: 8px; /* Width of the scrollbar */
+  height:8px;
 }
 
 /* scrollbar track (the background of the scrollbar) */
 ::-webkit-scrollbar-track {
-  background-color: var(--main-background-color);
-  border-top-right-radius: var(--radius);
-  border-bottom-right-radius: var(--radius);
+  /* background-color: var(--main-background-color); */
+  border-radius: var(--radius);
 }
 
 /* scrollbar thumb (the draggable part) */
 ::-webkit-scrollbar-thumb {
   background-color: rgb(71, 63, 81);
-  border-top-right-radius: var(--radius);
-  border-bottom-right-radius: var(--radius);
+  border-radius: var(--radius);
 }
 
 /* scrollbar thumb when hovered */
@@ -111,7 +110,7 @@ input:-webkit-autofill:focus {
 
 /* scrollbar corner for resizable elements */
 ::-webkit-scrollbar-corner {
-  background-color: #f1f1f1;
+  /* background-color: var(--main-background-color); */
 }
 
 .sign-button {
