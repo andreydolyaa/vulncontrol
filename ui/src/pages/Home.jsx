@@ -1,44 +1,38 @@
 import React from "react";
-import { useSelector } from "react-redux";
-import styled from "styled-components";
 import { Container } from "../components/Container/Container";
-import { Empty } from "../components/Empty";
+import { Card } from "../components/Card/Card";
+import { TbBug, TbChartBar, TbRadar, TbWorldSearch } from "react-icons/tb";
+import styles from "../components/Card/Card.module.css";
 
 export const Home = () => {
-  // const style = {
-  //   ol {
-  //     list-style-type: decimal;
-  //   }
-  // }
   return (
-    <Container>
-      <pre>
-        <div>TODO:</div>
-        <ol style={{ listStyleType: "decimal" }}>
-          <li> add confirmation modal on logout/delete of scans</li>
-          <li> add light theme</li>
-          <li> finish topbar</li>
-          <li> add manual toggle to sidebar</li>
-          <li> add Nikto</li>
-          <li> Overview - add recent scans</li>
-          <li> Overview - add auto start scan</li>
-          <li> add loading to modules in sidebar</li>
-          <li> add indication for debounce when searching</li>
-          <li>
-            {" "}
-            remove leftovers of tailwind and styled components and convert to
-            css
-          </li>
-          <li> server - add authorization middleware for jwt</li>
-          <li>
-            {" "}
-            fix login/register page styles and redirect from reg to login
-          </li>
-          <li> add context menu to handle scans actions</li>
-
-          <li> rewrite with ts</li>
-        </ol>
-      </pre>
+    <Container center>
+      <div className={styles["cards-container"]}>
+        <Card
+          text="Nmap"
+          subtext="Network Exploration"
+          icon={TbRadar}
+          link="nmap"
+        />
+        <Card
+          text="Subfinder"
+          subtext="Subdomain Discovery"
+          icon={TbWorldSearch}
+          link="subfinder"
+        />
+        <Card
+          text="Nikto"
+          subtext="Web Server Scanner"
+          icon={TbBug}
+          link="nikto"
+        />
+        <Card
+          text="Overview"
+          subtext="View Scans Data"
+          icon={TbChartBar}
+          link="overview"
+        />
+      </div>
     </Container>
   );
 };

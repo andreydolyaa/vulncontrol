@@ -4,8 +4,8 @@ import { Section } from "./Section";
 import { Item } from "./Item";
 import {
   TbHome as Home,
-  TbBrandAsana as Project,
-  TbRadar2 as Radar,
+  TbChartBar as Project,
+  TbRadar as Radar,
   TbBug as Bug,
   TbSettings as Settings,
   TbLogout as Logout,
