@@ -4,9 +4,7 @@ import { useSelector } from "react-redux";
 
 export const Topbar = () => {
   const { user } = useSelector(state => state.user);
-  return <div className="topbar flex w-full h-9 shadow-lg p-5">
-    {/* <h1>hi, {user && user?.firstName} !</h1>
-    <Logout /> */}
-    <h1>Logged in as {user.firstName} {user.lastName}</h1>
+  return <div className="topbar">
+    <h1>Logged in as {user.firstName}</h1>
   </div>;
 };

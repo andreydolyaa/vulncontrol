@@ -205,8 +205,14 @@ select:focus {
   position: fixed;
   left: 270px;
   height: 60px;
-  width: 100%;
+  width: calc(100% - 270px);
+  display: flex;
+  align-items: center;
   background-color: #1e1e2b;
+  h1 {
+    margin-left: auto;
+    padding: 0 20px;
+  }
 }
 
 .root-layout .main {
