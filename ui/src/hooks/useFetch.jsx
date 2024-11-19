@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../api/baseUrl";
 
-export const useFetch = (url, fallback) => {
+export const useFetch = (url) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -18,9 +18,7 @@ export const useFetch = (url, fallback) => {
         const result = await response.json();
         setData(result);
       } catch (error) {
-        if (error.name === "AbortError") {
-          setError(error.message);
-        }
+        setError(error.message);
       } finally {
         setLoading(false);
       }

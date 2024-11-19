@@ -1,7 +1,7 @@
 import { NmapScan } from "../models/nmap-model.js";
 import { SubfinderScan } from "../models/subfinder-model.js";
 import logger from "../core/logger.js";
-import { Utils } from '../modules/utils/utils.js';
+// import { Utils } from '../modules/utils/utils.js';
 
 export const getScansStatusData = async (req, res) => {
   const param = req.params.module;
@@ -23,7 +23,7 @@ export const getScansStatusData = async (req, res) => {
       status,
       count: statusMap[status] || 0,
     }));
-    await Utils.sleep(2000)
+    // await Utils.sleep(2000)
     return res.status(200).send(result);
   } catch (error) {
     return res.status(500).send({ message: "Failed to fetch data", error });
@@ -36,7 +36,7 @@ export const getRecentScans = async (req, res) => {
 
   try {
     const scans = await module.find().sort({ startTime: -1 }).limit(6);
-    await Utils.sleep(2000)
+    // await Utils.sleep(2000)
     return res.status(200).send(scans);
   } catch (error) {
     return res.status(500).send({ message: "Failed to fetch data", error });
@@ -50,7 +50,6 @@ export const getNmapData = async (req, res) => {
       { $group: { _id: "$openPorts", count: { $sum: 1 } } },
       { $sort: { count: -1 } },
     ]);
-
     return res.status(200).send(portStats);
   } catch (error) {
     return res.status(500).send({ message: "Failed to fetch data", error });
@@ -97,7 +96,8 @@ export const getOverviewData = async (req, res) => {
       });
     });
 
-    return res.send(mergedData);
+    // await Utils.sleep(2300)
+    return res.status(200).send(mergedData);
   } catch (error) {
     logger.error("Error aggregating scan data:", error);
     return res.status(500).send("Internal Server Error");
