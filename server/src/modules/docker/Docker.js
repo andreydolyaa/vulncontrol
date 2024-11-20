@@ -4,7 +4,7 @@ import {
   DOCKER_ARG,
   DOCKER_BIN,
   DOCKER_CMD,
-  NMAP_ARG,
+  NMAP_BIN,
   PROC_SIGNAL,
 } from "../../constants/processes.js";
 
@@ -48,7 +48,8 @@ export class Docker {
     }
   }
 
-  static async abort(containerName) {
+  static async abort(scanId) {
+    const containerName = Docker.assignContainerName(NMAP_BIN, scanId);
     const process = Docker.processes.get(containerName);
 
     if (process) {

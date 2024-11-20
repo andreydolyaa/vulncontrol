@@ -7,9 +7,7 @@ export const verifyJWT = (req, res, next) => {
   }
 
   try {
-    const raw = token.startsWith("Bearer ") ? token.slice(7) : token;
-    console.log(token," #@$#@$ @# $@#$#@ #@ $@# $#@ $#@ $#@ $@# $#@ $#@ # @$");
-    
+    const raw = token.startsWith("Bearer ") ? token.slice(7) : token;    
     const decoded = jwt.verify(raw, process.env.JWT_SECRET);
     req.user = decoded;
     next();

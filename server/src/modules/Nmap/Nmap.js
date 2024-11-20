@@ -22,8 +22,8 @@ export class Nmap extends Docker {
     this.request = request;
   }
 
-  static async abortScan() {
-    await Docker.abort(Nmap.containerName);
+  static async abortScan(scanId) {
+    await Docker.abort(scanId);
   }
 
   static log(msg) {
@@ -108,10 +108,7 @@ export class Nmap extends Docker {
     Nmap.log(`info: scan ${status}`);
   }
 
-  _close(code, signal) {
-    Docker.processes.delete(Nmap.containerName);
-    Nmap.log(`info: process closed [${Nmap.containerName}]`);
-  }
+  _close(code, signal) {}
 
   async _updateDb(data) {
     this.scan = await HttpActions.updateDb(NmapScan, data, this.scan._id);
