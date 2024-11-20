@@ -22,8 +22,6 @@ export const Nmap = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const limit = 6;
-
-  console.log(WS_URL);
   
   const updatesRoute = `${WS_URL}/ws/nmap/updates?userId=${user.id}`;
   useWebSocket(updatesRoute);
@@ -78,7 +76,13 @@ export const Nmap = () => {
     const scanType = scanTypes[args[0]] ?? scanTypes["default"];
     const data = { args, userId: user.id, scanType };
 
-    dispatch(startScan(data));
+    dispatch(startScan(data))
+    .unwrap()
+    .then(() => {
+      setFormData({}); // Clear the form data
+      setSelectedArgs([]); // Also clear the selected arguments if needed
+    });
+    
   };
 
   return (
@@ -90,6 +94,7 @@ export const Nmap = () => {
         handleCheckboxChange={handleCheckboxChange}
         easyMode={easyMode}
         onFormChange={onFormChange}
+        formData={formData}
       />
       <NmapScan
         search={search}
