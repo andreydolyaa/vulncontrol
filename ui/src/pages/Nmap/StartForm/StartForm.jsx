@@ -17,6 +17,7 @@ export const StartForm = ({
   onFormChange,
   selectedArgs,
   handleCheckboxChange,
+  formData
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -26,7 +27,7 @@ export const StartForm = ({
 
   return (
     <StartScanForm onSubmit={start}>
-      <Target easyMode={easyMode} onFormChange={onFormChange} />
+      <Target easyMode={easyMode} onFormChange={onFormChange} formData={formData}/>
 
       {easyMode && (
         <ArgsContainer $isOpen={isOpen}>
