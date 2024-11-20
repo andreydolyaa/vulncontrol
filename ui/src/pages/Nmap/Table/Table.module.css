@@ -71,3 +71,9 @@
     min-height: 500px;
   }
 }
+
+@media (max-width: 500px) {
+  .table {
+    font-size: 12px;
+  }
+}

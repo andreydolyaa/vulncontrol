@@ -16,7 +16,7 @@ export const login = async (req, res, next) => {
     } else {
       const match = await bcrypt.compare(password, user?.password);
       if (match) {
-        await User.updateOne({ isLoggedIn: true });
+        await User.updateOne({ email }, { isLoggedIn: true });
         delete user.password;
         const userCopy = JSON.parse(JSON.stringify(user));
         delete userCopy.password;
@@ -100,9 +100,9 @@ export const getLoggedUser = async (req, res) => {
       return res.status(404).send({ message: "User not found" });
     }
 
-    if (!user.isLoggedIn) {
-      return res.status(401).send({ message: "User is not logged in" });
-    }
+    // if (!user.isLoggedIn) {
+    //   return res.status(401).send({ message: "User is not logged in" });
+    // }
 
     delete user.password;
     return res

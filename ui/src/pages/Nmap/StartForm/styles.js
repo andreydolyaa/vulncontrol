@@ -135,8 +135,9 @@ export const ModeSelectWrapper = styled.div`
   }
   @media (max-width: 570px) {
     flex-direction: column;
-    height: 70px;
+    height: 60px;
     width: 100%;
+    font-size:11px;
   }
 `;
 
@@ -193,6 +194,7 @@ export const Button = styled.button`
   @media (max-width: 768px) {
     margin: 20px 0 0 0;
     width: 100%;
-    height: 50px;
+    height: 40px;
+    font-size: 14px;
   }
 `;

@@ -60,7 +60,7 @@ export const LineChartCustom = ({ data, title, colorOne, colorTwo }) => {
           wrapperStyle={{ fontSize: "13px", textTransform: "capitalize" }}
           formatter={legendTextColor}
         />
-        <text {...textStyles()}>{title}</text>
+        <text className="chart-title" {...textStyles()}>{title}</text>
         <Area {...areaStyles("nmap", colorTwo)} />
         <Area {...areaStyles("subfinder", colorOne)} />
       </AreaChart>
