@@ -5,7 +5,7 @@ import { NmapStatus } from "../NmapStatus";
 
 export const TerminalHeader = ({ scan }) => {
   return (
-    <ModuleName text={scan.target} enableSearch={false}>
+    <ModuleName text={scan?.target} enableSearch={false}>
       <NmapStatus status={scan?.status} />
     </ModuleName>
   );

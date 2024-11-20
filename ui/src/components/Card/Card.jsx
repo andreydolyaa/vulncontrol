@@ -3,7 +3,7 @@ import styles from "./Card.module.css";
 import { TbCircleArrowRight } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 
-export const Card = ({ text, subtext, icon, link }) => {
+export const Card = ({ text, subtext, icon, link, customClass }) => {
   const navigate = useNavigate();
   const IconComponent = icon;
 
@@ -12,7 +12,7 @@ export const Card = ({ text, subtext, icon, link }) => {
   };
 
   return (
-    <div className={styles.card} onClick={goTo}>
+    <div className={`${styles.card} ${customClass}`} onClick={goTo}>
       <div className={styles.title}>
         <div className={styles.wrapper}>
           <IconComponent className={styles.icon} />

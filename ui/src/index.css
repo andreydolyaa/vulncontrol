@@ -178,6 +178,7 @@ select:focus {
 .login-main {
   background-color: var(--background-color);
   border: 1px solid var(--border-color);
+  box-shadow: 1px 1px 15px 1px #15151c;
 }
 
 .root-layout {
@@ -291,6 +292,70 @@ select:focus {
     transform: translateY(0);
   }
 }
+@keyframes appear4 {
+  0% {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes card1 {
+  0% {
+    opacity: 0;
+    transform: translate(-50px, -50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+}
+@keyframes card2 {
+  0% {
+    opacity: 0;
+    transform: translate(50px, -50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+}
+@keyframes card3 {
+  0% {
+    opacity: 0;
+    transform: translate(-50px, 50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+}
+@keyframes card4 {
+  0% {
+    opacity: 0;
+    transform: translate(50px, 50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+}
+
+.card-1 {
+  animation: card1 0.4s ease-in-out 1;
+}
+.card-2 {
+  animation: card2 0.4s ease-in-out 1;
+}
+.card-3 {
+  animation: card3 0.4s ease-in-out 1;
+}
+.card-4 {
+  animation: card4 0.4s ease-in-out 1;
+}
 
 @media (max-width: 1023px) {
   .root-layout {
@@ -310,7 +375,6 @@ select:focus {
     gap: 15px;
   }
   .login-layout {
-    border: 1px solid red;
     padding: 0 30px;
   }
 }

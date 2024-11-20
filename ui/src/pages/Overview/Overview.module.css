@@ -2,6 +2,8 @@
   background-color: var(--background-color);
   border-radius: var(--radius);
   border: 1px solid var(--border-color);
+  animation: appear4 .3s ease-in-out 1;
+  
 }
 
 .full-height-width {
@@ -159,5 +161,15 @@
         }
       }
     }
+  }
+}
+@keyframes appear4 {
+  0% {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

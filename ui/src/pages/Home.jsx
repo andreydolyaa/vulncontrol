@@ -13,24 +13,28 @@ export const Home = () => {
           subtext="Network Exploration"
           icon={TbRadar}
           link="nmap"
+          customClass="card-1"
         />
         <Card
           text="Subfinder"
           subtext="Subdomain Discovery"
           icon={TbWorldSearch}
           link="subfinder"
+          customClass="card-2"
         />
         <Card
           text="Nikto"
           subtext="Web Server Scanner"
           icon={TbBug}
           link="nikto"
+          customClass="card-3"
         />
         <Card
           text="Overview"
           subtext="View Scans Data"
           icon={TbChartBar}
           link="overview"
+          customClass="card-4"
         />
       </div>
     </Container>
