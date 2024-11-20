@@ -1,4 +1,5 @@
 import express from "express";
+import { verifyJWT } from "../middleware/verify-jwt.js";
 import {
   getNmapData,
   getOverviewData,
@@ -8,9 +9,13 @@ import {
 
 const router = express.Router();
 
-router.get("/overview", getOverviewData);
-router.get("/overview/nmap", getNmapData);
-router.get("/overview/recent-scans/:module", getRecentScans);
-router.get("/overview/scans-status-data/:module", getScansStatusData);
+router.get("/overview", verifyJWT, getOverviewData);
+router.get("/overview/nmap", verifyJWT, getNmapData);
+router.get("/overview/recent-scans/:module", verifyJWT, getRecentScans);
+router.get(
+  "/overview/scans-status-data/:module",
+  verifyJWT,
+  getScansStatusData
+);
 
 export default router;
