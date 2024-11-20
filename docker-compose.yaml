@@ -9,6 +9,7 @@ services:
     environment:
       VITE_BASE_URL: http://server:3000
       VITE_WEBSOCKET_URL: ws://server:3000
+      VITE_AUTH_TOKEN_NAME: vulncontrol
     networks:
       - vuln-control-network
   
