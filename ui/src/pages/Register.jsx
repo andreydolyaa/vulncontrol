@@ -37,41 +37,41 @@ export const Register = () => {
 
   return (
     <SignForm
-      buttonText={"Register"}
+      buttonText="Register"
       onFormSubmit={submitRegisterForm}
       isLoading={isLoading}
       message={message}
       status={status}
     >
       <SignFormItem
-        label={"First Name"}
-        placeholder={"Enter your first name"}
-        name={"firstName"}
+        label="First Name"
+        placeholder="Enter your first name"
+        name="firstName"
         value={formData.firstName}
         onFormChange={onFormChange}
       />
 
       <SignFormItem
-        label={"Last Name"}
-        placeholder={"Enter your last name"}
-        name={"lastName"}
+        label="Last Name"
+        placeholder="Enter your last name"
+        name="lastName"
         value={formData.lastName}
         onFormChange={onFormChange}
       />
 
       <SignFormItem
-        label={"Email"}
-        placeholder={"Enter your work email"}
-        name={"email"}
+        label="Email"
+        placeholder="Enter your email"
+        name="email"
         value={formData.email}
         onFormChange={onFormChange}
       />
 
       <SignFormItem
-        inputType={"password"}
-        label={"Password"}
-        placeholder={"Enter your password"}
-        name={"password"}
+        inputType="password"
+        label="Password"
+        placeholder="Enter your password"
+        name="password"
         value={formData.password}
         onFormChange={onFormChange}
       />

@@ -7,7 +7,6 @@ import {
   TbCircleCheck,
   TbExclamationCircle,
 } from "react-icons/tb";
-import { Loading } from "./Loading";
 import { LoadingBlink } from "./LoadingBlink";
 
 export const Status = ({ text, background }) => {
@@ -26,7 +25,7 @@ export const Status = ({ text, background }) => {
   const checkText = (text) => (text === "aborted" ? "halted" : text);
 
   return (
-    <StyledDiv $background={background} $isLoading={!text}>
+    <StyledDiv className="status-cmp" $background={background} $isLoading={!text}>
       {!text ? (
         <div className="placeholder">
           <LoadingBlink text={""} />

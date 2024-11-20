@@ -118,6 +118,7 @@
 
 @media (max-width: 768px) {
   .right {
+    gap:15px;
     .scans-stats {
       .title {
         flex-direction: column;
@@ -126,6 +127,7 @@
     }
   }
   .left {
+    gap:15px;
     .recent-scans {
       .items-title {
         flex-direction: column;

@@ -31,26 +31,26 @@ export const Login = () => {
 
   return (
     <SignForm
-      buttonText={"Log In"}
+      buttonText="Log In"
       onFormSubmit={submitLoginForm}
       loading={loading}
       message={message}
       status={status}
     >
       <SignFormItem
-        inputType={"email"}
-        label={"Work Email"}
-        placeholder={"Enter your work email"}
-        name={"email"}
+        inputType="email"
+        label="Email"
+        placeholder="Enter your email"
+        name="email"
         value={formData.email}
         onFormChange={onFormChange}
       />
 
       <SignFormItem
-        inputType={"password"}
-        label={"Password"}
-        placeholder={"Enter your password"}
-        name={"password"}
+        inputType="password"
+        label="Password"
+        placeholder="Enter your password"
+        name="password"
         value={formData.password}
         onFormChange={onFormChange}
       />

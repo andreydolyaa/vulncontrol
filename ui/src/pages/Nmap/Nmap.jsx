@@ -23,6 +23,8 @@ export const Nmap = () => {
   const [totalPages, setTotalPages] = useState(1);
   const limit = 6;
 
+  console.log(WS_URL);
+  
   const updatesRoute = `${WS_URL}/ws/nmap/updates?userId=${user.id}`;
   useWebSocket(updatesRoute);
 

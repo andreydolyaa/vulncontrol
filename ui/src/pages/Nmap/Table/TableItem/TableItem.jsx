@@ -15,7 +15,7 @@ export const TableItem = ({ scan, onClick }) => {
       <td>
         <NmapStatus status={scan.status} />
       </td>
-      <td onClick={(e) => e.stopPropagation()}>
+      <td className="table-actions" onClick={(e) => e.stopPropagation()}>
         <ItemActions scan={scan} />
       </td>
     </tr>

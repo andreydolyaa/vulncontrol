@@ -41,4 +41,9 @@ const StyledDiv = styled.div`
     text-overflow: ellipsis;
     max-width: 250px;
   }
+  @media (max-width:768px) {
+    .data {
+      max-width:90px;
+    }
+  }
 `;
