@@ -34,6 +34,7 @@ const StyledDivPagination = styled.div`
   border-radius: var(--radius);
   background-color: var(--background-color);
   width: 320px;
+  animation: appear4 .3s ease-in-out 1;
   & > * {
     display: flex;
     align-items: center;

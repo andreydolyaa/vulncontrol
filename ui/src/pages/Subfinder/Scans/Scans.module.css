@@ -4,6 +4,7 @@
   height: 100%;
   gap: var(--padding);
   overflow-y: auto;   
+  animation: appear4 .3s ease-in-out 1;
 }
 
 @media (max-width: 1000px) {
@@ -11,5 +12,15 @@
     height: 1000px;
     flex-direction: column;
     overflow-y: unset;
+  }
+}
+@keyframes appear4 {
+  0% {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
