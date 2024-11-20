@@ -1,4 +1,5 @@
 import express from "express";
+import { verifyAdminAccess } from "../middleware/admin-access.js";
 import {
   getLoggedUser,
   login,
@@ -10,7 +11,7 @@ const router = express.Router();
 
 router.post("/auth/login", login);
 router.post("/auth/logout", logout);
-router.post("/auth/register", register);
+router.post("/auth/register", verifyAdminAccess, register);
 router.get("/auth/user", getLoggedUser);
 
 export default router;

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { BASE_URL } from "../api/baseUrl";
+import { useEffect, useState } from "react";
+import api from "../api/index";
 
 export const useFetch = (url) => {
   const [data, setData] = useState([]);
@@ -10,15 +10,10 @@ export const useFetch = (url) => {
     const controller = new AbortController();
     const fetchData = async () => {
       try {
-        const fullUrl = BASE_URL + "/api" + url;
-        const response = await fetch(fullUrl, { signal: controller.signal });
-        if (!response.ok) {
-          throw new Error(`Error: ${response.statusText}`);
-        }
-        const result = await response.json();
-        setData(result);
+        const response = await api.get(`/api${url}`, { signal: controller.signal });
+        setData(response.data);
       } catch (error) {
-        setError(error.message);
+        setError(error.message || "An error occurred");
       } finally {
         setLoading(false);
       }
