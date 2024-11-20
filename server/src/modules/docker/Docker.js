@@ -25,6 +25,8 @@ export class Docker {
       DOCKER_ARG.RM,
       DOCKER_ARG.NAME,
       containerName,
+      "--memory=512m",
+      "--cpus=0.5",
       ...containerSettings,
       image,
     ];
