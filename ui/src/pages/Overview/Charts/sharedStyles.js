@@ -1,7 +1,7 @@
 export const axisStyles = (axis = "x") => {
   let sizes = "";
   if (axis === "x") sizes = { height: 30, dy: 10 };
-  else sizes = { width: 30, dx: -10 };
+  else sizes = { width: 30, dx: -5 };
 
   return {
     ...sizes,

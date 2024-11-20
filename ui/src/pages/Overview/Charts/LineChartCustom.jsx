@@ -19,7 +19,7 @@ export const LineChartCustom = ({ data, title, colorOne, colorTwo }) => {
   const areaStyles = (dataKey, color) => {
     return {
       type: "monotone",
-      dot:true,
+      dot: true,
       dataKey,
       stroke: color,
       fillOpacity: 1,
@@ -44,9 +44,13 @@ export const LineChartCustom = ({ data, title, colorOne, colorTwo }) => {
           {gradient("nmap", colorTwo)}
           {gradient("subfinder", colorOne)}
         </defs>
-        <XAxis {...axisStyles("x")} dataKey="name" domain={["auto","auto"]} />
-        <YAxis {...axisStyles("y")} />
-        <CartesianGrid strokeDasharray="2 2"  fillOpacity={0.4} stroke="var(--border-color)" />
+        <XAxis {...axisStyles("x")} dataKey="name" domain={["auto", "auto"]} />
+        <YAxis {...axisStyles("y")} domain={[0, "auto"]} />
+        <CartesianGrid
+          strokeDasharray="2 2"
+          fillOpacity={0.4}
+          stroke="var(--border-color)"
+        />
         <Tooltip content={<CustomTooltip />} />
         <Legend
           align="right"
