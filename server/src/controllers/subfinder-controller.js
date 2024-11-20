@@ -5,13 +5,24 @@ import {
   SUBFINDER_BIN,
 } from "../constants/processes.js";
 import { moduleWrapper } from "../constants/wrappers.js";
+import logger from "../core/logger.js";
 import { SubfinderScan } from "../models/subfinder-model.js";
 import { HttpActions } from "../modules/actions/http-actions.js";
+import { Docker } from "../modules/docker/docker.js";
 import { Subfinder } from "../modules/subfinder/subfinder.js";
 
 export const startSubfinder = async (req, res) => {
   const { userId, scanType = "subdomains", domain } = req.body;
   try {
+    if (Docker.processes.size >= process.env.MAX_IMAGES) {
+      const msg = `Cannot run more then ${process.env.MAX_IMAGES} scans`;
+      HttpActions.notify(
+        subscriptionPaths.SUBFINDER_ALL,
+        { error: msg },
+        "toast"
+      );
+      throw new Error(msg);
+    }
     const subfinder = new Subfinder({ userId, scanType, domain });
     const scan = await subfinder.start();
     return res.status(200).send({
@@ -19,6 +30,7 @@ export const startSubfinder = async (req, res) => {
       ...moduleWrapper(SUBFINDER_BIN, scan),
     });
   } catch (error) {
+    logger.error(`Error starting nmap scan: [${error}]`);
     return res
       .status(400)
       .send({ message: "failed to start subfinder scan", error });

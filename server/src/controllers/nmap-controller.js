@@ -4,16 +4,24 @@ import { Nmap } from "../modules/nmap/nmap.js";
 import { NMAP_BIN, PROC_STATUS } from "../constants/processes.js";
 import { HttpActions } from "../modules/actions/http-actions.js";
 import { subscriptionPaths } from "../constants/common.js";
+import { Docker } from "../modules/docker/docker.js";
+import logger from "../core/logger.js";
 
 export const startNmap = async (req, res) => {
   const { args, userId, scanType = "default" } = req.body;
   try {
+    if (Docker.processes.size >= process.env.MAX_IMAGES) {
+      const msg = `Cannot run more then ${process.env.MAX_IMAGES} scans`;
+      HttpActions.notify(subscriptionPaths.NMAP_ALL, {error: msg}, "toast");
+      throw new Error(msg);
+    }
     const nmap = new Nmap({ args, userId, scanType });
     const scan = await nmap.start();
     return res
       .status(200)
       .send({ message: "Nmap scan started", ...moduleWrapper(NMAP_BIN, scan) });
   } catch (error) {
+    logger.error(`Error starting nmap scan: [${error}]`);
     return res
       .status(400)
       .send({ message: "Failed to start Nmap scan", error });

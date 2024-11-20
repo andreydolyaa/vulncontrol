@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteToast } from "../redux/toastSlice";
 import { TbAlertHexagon } from "react-icons/tb";
 
-const TOAST_DURATION = 4000;
+const TOAST_DURATION = 3000;
 const ANIMATION_DURATION = 300;
 const TYPES = {
   done: "completed",
@@ -37,6 +37,7 @@ export const Toast = () => {
       <div className="text-wrapper">
         {customToast
           ? customToast
+          : toast.error ? toast.error
           : `Scan ${TYPES[toast.status]} - ${toast.target}`}
       </div>
     </StyledDivToast>

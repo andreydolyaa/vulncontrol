@@ -24,6 +24,7 @@ services:
       SERVER_PORT: 3000
       JWT_SECRET: "!!zzzzzzzzzzzzzzz&&^"
       NODE_ENV: "production"
+      MAX_IMAGES: 5
     networks:
       - vuln-control-network
     volumes:

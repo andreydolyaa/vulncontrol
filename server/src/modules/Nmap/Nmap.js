@@ -110,7 +110,7 @@ export class Nmap extends Docker {
 
   _close(code, signal) {
     Docker.processes.delete(Nmap.containerName);
-    Nmap.log(`info: process closed`);
+    Nmap.log(`info: process closed [${Nmap.containerName}]`);
   }
 
   async _updateDb(data) {

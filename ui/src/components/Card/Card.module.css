@@ -65,7 +65,7 @@
 
 .card:hover {
   border: 1px solid var(--action-color-2);
-  transform: scale(1.01);
+  transform: scale(1.04);
   .subtext {
     animation: typing 2s steps(30) forwards;
   }

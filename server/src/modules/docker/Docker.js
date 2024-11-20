@@ -33,11 +33,16 @@ export class Docker {
       const allArgs = [...dockerArgs, ...scanSettings];
       const process = spawn(DOCKER_BIN, allArgs);
 
+      process.on("close", (code, signal) => {
+        Docker.processes.delete(containerName);
+        Docker.log(`info: process closed [${containerName}]`);
+      });
+
       Docker.processes.set(containerName, process);
       Docker.log(`info: starting process... [${allArgs.join(" ")}]`);
       return process;
     } catch (error) {
-      Docker.log(`error: failed to run image [${error}]`);
+      Docker.log(`err: failed to run image [${error}]`);
     }
   }
 
