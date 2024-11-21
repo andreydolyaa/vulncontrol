@@ -28,7 +28,7 @@ jobs:
 
       - name: Deploy to Droplet
         run: |
-          ssh -o StrictHostKeyChecking=no deployuser@${{ secrets.SERVER_IP }} << 'ENDSSH'
+          ssh -o StrictHostKeyChecking=no deployuser@${{ secrets.DROPLET_IP }} << 'ENDSSH'
             # Load NVM and environment variables
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
@@ -36,14 +36,12 @@ jobs:
             
             echo "Current path: $(pwd)"
             
-            # Navigate to project directory
-            cd /home/deployuser/vulncontrol
+            # Navigate to the UI directory and install dependencies
+            cd /home/deployuser/vulncontrol/ui
+            npm install
             
-            # Pull latest changes
-            git pull origin main
-            
-            # Install dependencies
-            export PATH="$HOME/.nvm/versions/node/$(nvm current)/bin:$PATH"
+            # Navigate to the Server directory and install dependencies
+            cd /home/deployuser/vulncontrol/server
             npm install
             
             # Copy environment files
@@ -51,6 +49,7 @@ jobs:
             cp /home/deployuser/envs/server/.env /home/deployuser/vulncontrol/server/.env
             
             # Build the project
+            cd /home/deployuser/vulncontrol/ui
             npm run build
             
             # Copy dist files with sudo (using NOPASSWD sudo configuration)
@@ -60,3 +59,4 @@ jobs:
             sudo -n pm2 restart vulncontrol-server
             sudo -n systemctl restart nginx
           ENDSSH
+
