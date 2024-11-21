@@ -10,6 +10,8 @@ export const verifyJWT = (req, res, next) => {
     const raw = token.startsWith("Bearer ") ? token.slice(7) : token;    
     const decoded = jwt.verify(raw, process.env.JWT_SECRET);
     req.user = decoded;
+    req.userId = decoded?.user.id;    
+
     next();
   } catch (error) {
     return res.status(401).send({ message: "Invalid or expired token" });

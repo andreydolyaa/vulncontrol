@@ -50,14 +50,20 @@ export const getAllScans = async (req, res) => {
   }
 
   try {
-    const scans = await SubfinderScan.find(searchQuery)
+    const scans = await SubfinderScan.find({
+      ...searchQuery,
+      userId: req.userId,
+    })
       .skip(skip)
       .limit(limit)
       .sort({ startTime: -1 });
 
     if (!scans) throw new Error();
 
-    const totalScans = await SubfinderScan.countDocuments(searchQuery);
+    const totalScans = await SubfinderScan.countDocuments({
+      ...searchQuery,
+      userId: req.userId,
+    });
     const totalPages = Math.ceil(totalScans / limit);
     const responseData = {
       scans,

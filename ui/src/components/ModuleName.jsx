@@ -38,7 +38,7 @@ const StyledDiv = styled.div`
   border: 1px solid var(--border-color);
   background-color: var(--background-color);
   border-radius: var(--radius);
-  animation: appear4 .3s ease-in-out 1;
+  animation: appear4 .2s ease-in-out 1;
   .text-and-icon {
     display: flex;
     align-items: center;

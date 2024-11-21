@@ -306,7 +306,7 @@ select:focus {
 @keyframes card1 {
   0% {
     opacity: 0;
-    transform: translate(-50px, -50px);
+    transform: translate(0px, -50px);
   }
   100% {
     opacity: 1;
@@ -345,16 +345,16 @@ select:focus {
 }
 
 .card-1 {
-  animation: card1 0.4s ease-in-out 1;
+  animation: card1 0.2s ease-in-out 1;
 }
 .card-2 {
-  animation: card2 0.4s ease-in-out 1;
+  animation: card1 0.2s ease-in-out 1;
 }
 .card-3 {
-  animation: card3 0.4s ease-in-out 1;
+  animation: card1 0.2s ease-in-out 1;
 }
 .card-4 {
-  animation: card4 0.4s ease-in-out 1;
+  animation: card1 0.2s ease-in-out 1;
 }
 
 @media (max-width: 1023px) {

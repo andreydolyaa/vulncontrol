@@ -9,7 +9,7 @@
   padding: var(--padding);
   display: flex;
   flex-direction: column;
-  animation: appear4 .3s ease-in-out 1;
+  animation: appear4 .2s ease-in-out 1;
   .icon-scan {
     margin-right: 5px;
   }

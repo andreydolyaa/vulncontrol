@@ -52,7 +52,7 @@ export const StartScanForm = styled.form`
   background-color: var(--background-color);
   border: 1px solid var(--border-color);
   border-radius: var(--radius);
-  animation: appear4 .3s ease-in-out 1;
+  animation: appear4 .2s ease-in-out 1;
 `;
 
 export const StartScanFormTop = styled.div`

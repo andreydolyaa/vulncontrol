@@ -9,10 +9,11 @@ import logger from "../core/logger.js";
 
 export const startNmap = async (req, res) => {
   const { args, userId, scanType = "default" } = req.body;
+
   try {
     if (Docker.processes.size >= process.env.MAX_IMAGES) {
       const msg = `Cannot run more then ${process.env.MAX_IMAGES} scans`;
-      HttpActions.notify(subscriptionPaths.NMAP_ALL, {error: msg}, "toast");
+      HttpActions.notify(subscriptionPaths.NMAP_ALL, { error: msg }, "toast");
       throw new Error(msg);
     }
     const nmap = new Nmap({ args, userId, scanType });
@@ -46,14 +47,17 @@ export const getAllScans = async (req, res) => {
   }
 
   try {
-    const scans = await NmapScan.find(searchQuery)
+    const scans = await NmapScan.find({ ...searchQuery, userId: req.userId })
       .skip(skip)
       .limit(limit)
       .sort({ startTime: -1 });
 
     if (!scans) throw new Error();
 
-    const totalScans = await NmapScan.countDocuments(searchQuery);
+    const totalScans = await NmapScan.countDocuments({
+      ...searchQuery,
+      userId: req.userId,
+    });
     const totalPages = Math.ceil(totalScans / limit);
     const responseData = {
       scans,

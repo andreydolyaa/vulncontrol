@@ -2,7 +2,7 @@
   background-color: var(--background-color);
   border-radius: var(--radius);
   border: 1px solid var(--border-color);
-  animation: appear4 .3s ease-in-out 1;
+  animation: appear4 .2s ease-in-out 1;
   
 }
 

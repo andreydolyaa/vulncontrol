@@ -4,7 +4,7 @@
   height: 100%;
   gap: var(--padding);
   overflow-y: auto;   
-  animation: appear4 .3s ease-in-out 1;
+  animation: appear4 .2s ease-in-out 1;
 }
 
 @media (max-width: 1000px) {
