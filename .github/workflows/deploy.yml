@@ -13,33 +13,50 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+      - name: Add known hosts
+        run: ssh-keyscan -H 206.189.63.84 >> ~/.ssh/known_hosts
+
       - name: Deploy to Droplet
         run: |
-          ssh -o StrictHostKeyChecking=no deployuser@206.189.63.84 << 'EOF'
-
+          ssh -o StrictHostKeyChecking=no deployuser@206.189.63.84 << 'ENDSSH'
+            # Load NVM and environment variables
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             source ~/.bashrc
-            echo "Current path: $(pwd)"
-            echo "Checking npm version: $(npm -v)"
-            echo "Checking pm2 version: $(pm2 -v)"
             
+            echo "Current path: $(pwd)"
+            
+            # Navigate to project directory
             cd /home/deployuser/vulncontrol
             
+            # Pull latest changes
             git pull origin main
             
+            # Install dependencies
+            export PATH="$HOME/.nvm/versions/node/$(nvm current)/bin:$PATH"
             npm install
             
+            # Copy environment files
             cp /home/deployuser/envs/ui/.env /home/deployuser/vulncontrol/ui/.env
             cp /home/deployuser/envs/server/.env /home/deployuser/vulncontrol/server/.env
             
+            # Build the project
             npm run build
             
-            cp -r dist/* /var/www/vulncontrol
-
-            pm2 restart vulncontrol-server
-            systemctl restart nginx
-          EOF
+            # Copy dist files with sudo (using NOPASSWD sudo configuration)
+            sudo cp -r dist/* /var/www/vulncontrol/
+            
+            # Restart services with sudo (using NOPASSWD sudo configuration)
+            sudo -n pm2 restart vulncontrol-server
+            sudo -n systemctl restart nginx
+          ENDSSH
