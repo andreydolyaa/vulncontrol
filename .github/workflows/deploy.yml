@@ -20,7 +20,7 @@ jobs:
 
       - name: Deploy to Droplet
         run: |
-          ssh -o StrictHostKeyChecking=deployuser@206.189.63.84 << 'EOF'
+          ssh -o StrictHostKeyChecking=no deployuser@206.189.63.84 << 'EOF'
             
             cd /home/deployuser/vulncontrol
             
