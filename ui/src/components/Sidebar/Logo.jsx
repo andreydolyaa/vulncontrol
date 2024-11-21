@@ -8,7 +8,7 @@ export const Logo = () => {
       <h1 className="flex items-center text-2xl mt-1 lg:mt-0 lg:text-3xl font-medium">
         <div>V</div>
         <div className="hidden lg:block">uln</div>
-        <div>CE</div>
+        <div>C</div>
         <div className="hidden lg:block">ontrol</div>
       </h1>
     </div>
