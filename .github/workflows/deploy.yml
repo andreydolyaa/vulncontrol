@@ -35,27 +35,24 @@ jobs:
             source ~/.bashrc
             
             echo "Current path: $(pwd)"
+
+            cd /home/deployuser/vulncontrol
+            git pull origin main
             
-            # Navigate to the UI directory and install dependencies
             cd /home/deployuser/vulncontrol/ui
             npm install
             
-            # Navigate to the Server directory and install dependencies
             cd /home/deployuser/vulncontrol/server
             npm install
             
-            # Copy environment files
             cp /home/deployuser/envs/ui/.env /home/deployuser/vulncontrol/ui/.env
             cp /home/deployuser/envs/server/.env /home/deployuser/vulncontrol/server/.env
             
-            # Build the project
             cd /home/deployuser/vulncontrol/ui
             npm run build
             
-            # Copy dist files with sudo (using echo to pass password to sudo)
             echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S cp -r dist/* /var/www/vulncontrol/
             
-            # Restart services with sudo (using echo to pass password to sudo)
             # echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S pm2 restart index
             # echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S /home/deployuser/.nvm/versions/node/v22.11.0/bin/pm2 restart index
             pm2 restart vc
