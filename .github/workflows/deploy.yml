@@ -21,6 +21,11 @@ jobs:
       - name: Deploy to Droplet
         run: |
           ssh -o StrictHostKeyChecking=no deployuser@206.189.63.84 << 'EOF'
+
+            source ~/.bashrc
+            echo "Current path: $(pwd)"
+            echo "Checking npm version: $(npm -v)"
+            echo "Checking pm2 version: $(pm2 -v)"
             
             cd /home/deployuser/vulncontrol
             
@@ -36,17 +41,5 @@ jobs:
             cp -r dist/* /var/www/vulncontrol
 
             pm2 restart vulncontrol-server
-            sudo systemctl restart nginx
+            systemctl restart nginx
           EOF
-
-
-# ssh -o StrictHostKeyChecking=no deployuser@your-droplet-ip << 'EOF'
-#   cd /home/deployuser/vulncontrol
-#   git pull origin main
-#   npm install
-#   npm run build
-#   cp -r dist/* /var/www/vulncontrol
-#   cp /home/deployuser/vulncontrol/.env /path/to/your/server/directory/.env
-#   pm2 restart your-app
-#   sudo systemctl restart nginx
-# EOF
