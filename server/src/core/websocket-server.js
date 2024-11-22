@@ -14,7 +14,7 @@ export class WebsocketServer {
     this.server.on("connection", (websocket, req) => {
       const subscriber = this._extractUserId(req);
       const subscriptionPath = this._extractSubscribePath(req);
-      this.subscriptionManager.create(subscriptionPath, websocket);
+      this.subscriptionManager.create(subscriptionPath, websocket, subscriber);
       this._handleNewConnection(websocket, subscriptionPath, subscriber);
     });
   }
@@ -28,7 +28,7 @@ export class WebsocketServer {
     websocket.on("message", this._handleIncomingMessage);
     websocket.on("error", this._handleError);
     websocket.on("close", () =>
-      this._handleDisconnection(subscriptionPath, websocket)
+      this._handleDisconnection(subscriptionPath, websocket, subscriber)
     );
   }
 
@@ -40,8 +40,8 @@ export class WebsocketServer {
     logger.error(`WS | error occurred: ${error}`);
   }
 
-  _handleDisconnection(subscriptionPath, websocket) {
-    this.subscriptionManager.close(subscriptionPath, websocket);
+  _handleDisconnection(subscriptionPath, websocket, subscriber) {
+    this.subscriptionManager.close(subscriptionPath, websocket, subscriber);
   }
 
   _extractUserId(req) {
@@ -54,24 +54,34 @@ export class WebsocketServer {
     return `/${url.pathname.split("/").slice(-2).join("/")}` || "default";
   }
 
-  updateSubsAtSubscription(subscriptionPath, message) {
+  updateSubsAtSubscription(subscriptionPath, message, userId) {
     const data = JSON.stringify(message);
-    const subscription =
+    const subscriptions =
       this.subscriptionManager.subscriptions[subscriptionPath];
 
+    if (!subscriptions) {
+      return;
+    }
+
+    const subscription = subscriptions[userId];
     if (!subscription) {
       return;
     }
 
-    subscription.forEach((subscriber) => {
+    subscription.forEach((session) => {
       try {
-        subscriber.send(data);
-        logger.info(`WS | update sent to ${subscriptionPath} [data: ${data}]`);
+        session.send(data);
+        logger.info(
+          `WS | update sent to ${subscriptionPath} [user: ${userId}]`
+        );
       } catch (error) {
-        logger.error(`WS | error updating subscriber [${error}]`);
+        logger.error(
+          `WS | error updating subscriber ${userId} at ${subscriptionPath} [${error}]`
+        );
       }
     });
   }
+
   // TODO: fix
   send(message, subscriber) {
     if (this.subscribers[subscriber]) {

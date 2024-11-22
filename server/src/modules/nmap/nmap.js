@@ -70,7 +70,7 @@ export class Nmap extends Docker {
         close: this._close.bind(this),
       });
 
-      this._notify(this.scan, "toast");
+      this._notify(this.scan, "toast", this.request.userId);      
 
       Nmap.log("warn: scan started");
       return this.scan;
@@ -104,7 +104,7 @@ export class Nmap extends Docker {
       status,
       endTime: Utils.setCurrentTime(),
     });
-    this._notify(this.scan, "toast");
+    this._notify(this.scan, "toast", this.request.userId);
     Nmap.log(`info: scan ${status}`);
   }
 
@@ -112,16 +112,16 @@ export class Nmap extends Docker {
 
   async _updateDb(data) {
     this.scan = await HttpActions.updateDb(NmapScan, data, this.scan._id);
-    this._notify(this.scan);
+    this._notify(this.scan, NMAP_BIN, this.request.userId);
   }
 
   async _writeServerMessage(data) {
     await HttpActions.writeServerMessage(NmapScan, data, this.scan._id);
   }
 
-  _notify(data, module = NMAP_BIN) {
-    HttpActions.notify(subscriptionPaths.NMAP_ALL, data, module);
-    HttpActions.notify(`/nmap/${this.scan.id}`, data, module);
+  _notify(data, module = NMAP_BIN, userId) {
+    HttpActions.notify(subscriptionPaths.NMAP_ALL, data, module, userId);
+    HttpActions.notify(`/nmap/${this.scan.id}`, data, module, userId);
   }
 
   _wrap(data) {

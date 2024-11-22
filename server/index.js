@@ -52,12 +52,11 @@ server
 
 process.on("uncaughtException", (error) => {
   logger.error(`Uncaught Exception: ${error}`);
-  process.exit(1);
 });
 
-process.on("unhandledRejection", (reason) => {
-  logger.error(`Unhandled Rejection: ${reason}`);
-  process.exit(1);
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection:', reason);
+  console.error('Stack trace:', reason.stack);
 });
 
 process.on("SIGINT", async () => {

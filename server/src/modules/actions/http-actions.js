@@ -36,10 +36,11 @@ export class HttpActions {
     }
   }
 
-  static notify(path, data, module) {
+  static notify(path, data, module, userId) {
     server.websocketServer.updateSubsAtSubscription(
       path,
-      moduleWrapper(module, data)
+      moduleWrapper(module, data),
+      userId
     );
   }
 }

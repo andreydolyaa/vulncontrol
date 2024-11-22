@@ -79,9 +79,10 @@ export const ModeSelectButton = styled.div`
   flex-grow: 1;
   cursor: pointer;
   transition: all 0.3s;
-  color: ${({ $active }) => ($active ? "#000" : "var(--brighter-color)")};
+  /* color: ${({ $active }) => ($active ? "white" : "var(--brighter-color)")}; */
+  color: var(--brighter-color);
   background-color: ${({ $active }) =>
-    $active ? "var(--action-color-2)" : "var(--main-background-color)"};
+    $active ? "var(--purple-3)" : "var(--main-background-color)"};
   font-weight: 500;
   .icon {
     height: 16px;

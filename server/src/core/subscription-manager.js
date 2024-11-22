@@ -1,38 +1,55 @@
-import logger from "./logger.js";
+import { Utils } from "../modules/utils/utils.js";
 
 export class SubscriptionManager {
   constructor() {
     this.subscriptions = {};
   }
 
-  create(id, ws) {
-    if (!this.subscriptions[id]) {
-      this.subscriptions[id] = [];
+  // subscription path -> user id -> array of sessions
+  // {
+  //    /nmap/updates: { 
+  //          112e042681b5f49969a64009: [ [WebSocket], [WebSocket] ] 
+  //    },
+
+  //    /subfinder/updates: { 
+  //          555e042681b5f49969a64333: [ [WebSocket] ],
+  //          g43e042681b5f49969a64gww: [ [WebSocket], [WebSocket], [WebSocket] ]
+  //    }
+  // }
+
+  create(path, ws, subscriber) {
+    if (!this.subscriptions[path]) {
+      this.subscriptions[path] = {};
     }
-    this.subscriptions[id].push(ws);
-    logger.info(`SubscriptionManager | client subscribed to [id: ${id}]`);
-    this._logInfo(id);
+    if (!this.subscriptions[path][subscriber]) {
+      this.subscriptions[path][subscriber] = [];
+    }
+    this.subscriptions[path][subscriber].push(ws);
+
+    SubscriptionManager.log(`info: ${subscriber} subscribed to [${path}]`);
+    console.log(this.subscriptions);
   }
 
-  close(id, ws) {
-    if (this.subscriptions[id]) {
-      this.subscriptions[id] = this.subscriptions[id].filter(
-        (session) => session !== ws
-      );
+  close(path, ws, subscriber) {
+    if (this.subscriptions[path] && this.subscriptions[path][subscriber]) {
+      this.subscriptions[path][subscriber] = this.subscriptions[path][
+        subscriber
+      ].filter((session) => session !== ws);
 
-      if (this.subscriptions[id].length === 0) {
-        delete this.subscriptions[id];
-        logger.info(`SubscriptionManager | subscription deleted [id: ${id}]`);
+      if (this.subscriptions[path][subscriber].length === 0) {
+        delete this.subscriptions[path][subscriber];
+        SubscriptionManager.log(`info: subscriber deleted [${subscriber}]`);
+      }
+
+      if (Object.keys(this.subscriptions[path]).length === 0) {
+        delete this.subscriptions[path];
+        SubscriptionManager.log(`info: subscription deleted [path: ${path}]`);
       }
     }
-    logger.info(`SubscriptionManager | client unsubscribed from [id: ${id}]`);
-    this._logInfo(id);
+    console.log(this.subscriptions);
   }
 
-  _logInfo(id) {
-    const activeSubs = this.subscriptions[id]?.length || 0;
-    logger.warn(
-      `SubscriptionManager | ${[id]}: has ${activeSubs} active subscriptions`
-    );
+  static log(msg) {
+    Utils.logWrapper("WS_SUB_MANAGER", msg);
   }
 }

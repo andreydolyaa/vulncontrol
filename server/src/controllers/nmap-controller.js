@@ -13,7 +13,7 @@ export const startNmap = async (req, res) => {
   try {
     if (Docker.processes.size >= process.env.MAX_IMAGES) {
       const msg = `Cannot run more then ${process.env.MAX_IMAGES} scans`;
-      HttpActions.notify(subscriptionPaths.NMAP_ALL, { error: msg }, "toast");
+      HttpActions.notify(subscriptionPaths.NMAP_ALL, { error: msg }, "toast", userId);
       throw new Error(msg);
     }
     const nmap = new Nmap({ args, userId, scanType });
