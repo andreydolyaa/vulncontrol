@@ -38,7 +38,7 @@ const StyledDiv = styled.div`
   border: 1px solid var(--border-color);
   background-color: var(--background-color);
   border-radius: var(--radius);
-  animation: appear4 .2s ease-in-out 1;
+  animation: appear4 0.2s ease-in-out 1;
   .text-and-icon {
     display: flex;
     align-items: center;
@@ -49,6 +49,7 @@ const StyledDiv = styled.div`
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      max-width: 300px;
     }
     .icon {
       height: 20px;
@@ -83,7 +84,7 @@ const StyledDiv = styled.div`
       width: 100%;
       .icon-return {
         margin: 0;
-        margin-right:10px;
+        margin-right: 10px;
         min-width: 20px;
       }
       .text {

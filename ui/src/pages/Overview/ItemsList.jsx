@@ -33,25 +33,27 @@ export const ItemsList = ({ scans, title, scanType, handleScanType }) => {
           handleChange={handleScanType}
         />
       </div>
-      {scans && scans.map((scan) => {
-        return (
-          <div
-            className={styles.item}
-            key={scan.id}
-            onClick={() => navigateToScan(scan)}
-          >
-            <div className={styles.title}>
-              <TbWorld className={styles.icon} />
-              <p>
-                <span>{parseDate(scan.endTime)} - </span>{scan.target}
-              </p>
+      {scans &&
+        scans.map((scan) => {
+          return (
+            <div
+              className={styles.item}
+              key={scan.id}
+              onClick={() => navigateToScan(scan)}
+            >
+              <div className={styles.title}>
+                <TbWorld className={styles.icon} />
+                <p>
+                  <span>{parseDate(scan.endTime)} - </span>
+                  {scan.target}
+                </p>
+              </div>
+              <TbCircleArrowRight
+                className={`${styles.icon} ${styles["icon-action"]}`}
+              />
             </div>
-            <TbCircleArrowRight
-              className={`${styles.icon} ${styles["icon-action"]}`}
-            />
-          </div>
-        );
-      })}
+          );
+        })}
     </div>
   );
 };

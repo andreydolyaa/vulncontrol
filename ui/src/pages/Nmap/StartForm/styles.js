@@ -191,6 +191,9 @@ export const Button = styled.button`
     margin-right: 3px;
     stroke-width: 1.5;
   }
+  .icon-scan {
+    margin-right: 3px;
+  }
   &:hover {
     animation: ${start} 0.4s ease-in-out 1;
   }

@@ -10,7 +10,7 @@ export const TableItem = ({ scan, onClick }) => {
       <td>
         <NmapStatus status={scan.status} />
       </td>
-      <td>{scan.target}</td>
+      <td className={styles.target}>{scan.target}</td>
       <td>{scan.openPorts.length}</td>
       <td>{parseDate(scan.startTime)}</td>
       <td>{parseDate(scan.endTime)}</td>

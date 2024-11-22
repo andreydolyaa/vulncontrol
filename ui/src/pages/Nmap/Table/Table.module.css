@@ -25,6 +25,15 @@
     text-overflow: ellipsis;
     cursor: pointer;
   }
+  .target {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 500px;
+    @media (max-width: 570px) {
+      max-width: 300px;
+    }
+  }
 }
 
 .table-header-row {
