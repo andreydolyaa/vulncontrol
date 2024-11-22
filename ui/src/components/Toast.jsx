@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteToast } from "../redux/toastSlice";
@@ -11,15 +11,17 @@ const TYPES = {
   failed: "failed",
   aborted: "aborted",
   live: "started",
-  deleted: "deleted"
+  deleted: "deleted",
 };
 
 export const Toast = () => {
   const dispatch = useDispatch();
+  const [key, setKey] = useState(0);
   const { toast, customToast } = useSelector((state) => state.toast);
 
   useEffect(() => {
     if (toast || customToast) {
+      setKey(prevKey => prevKey + 1);
       const toastTimer = setTimeout(() => {
         dispatch(deleteToast());
       }, TOAST_DURATION);
@@ -30,14 +32,15 @@ export const Toast = () => {
   if (!toast && !customToast) return null;
 
   return (
-    <StyledDivToast $customToast={customToast}>
+    <StyledDivToast key={key} $customToast={customToast}>
       <div className="icon-wrapper">
         <TbAlertHexagon className="icon" />
       </div>
       <div className="text-wrapper">
         {customToast
           ? customToast
-          : toast.error ? toast.error
+          : toast.error
+          ? toast.error
           : `Scan ${TYPES[toast.status]} - ${toast.target}`}
       </div>
     </StyledDivToast>

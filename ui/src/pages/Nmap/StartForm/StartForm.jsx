@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Args } from "./Args";
 import { InputLabel } from "../../../components/InputLabel";
-import { TbAssembly, TbCircleChevronDown } from "react-icons/tb";
+import { TbAssembly, TbChevronDown } from "react-icons/tb";
 import {
   ArgsContainer,
   ArgsToggler,
@@ -39,7 +39,7 @@ export const StartForm = ({
           >
             <InputLabel text="Scan Arguments" icon={TbAssembly} />
             <ArgsTogglerIcon $isOpen={isOpen}>
-              <TbCircleChevronDown className="icon-toggle" />
+              <TbChevronDown className="icon-toggle" />
             </ArgsTogglerIcon>
           </ArgsToggler>
           <ArgsWrapper $isOpen={isOpen}>

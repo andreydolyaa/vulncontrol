@@ -4,9 +4,8 @@
   background-color: #1e1e2b;
   overflow-y: auto;
   width: 100%;
-  animation: appear4 .2s ease-in-out 1;
+  animation: appear4 0.2s ease-in-out 1;
 }
-
 
 .table {
   width: 100%;
@@ -74,9 +73,20 @@
   }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 570px) {
   .table {
-    font-size: 12px;
+    font-size: 14px;
+  }
+  .table-row {
+    td {
+      padding: 15px;
+    }
+  }
+  .table-header-cell {
+    padding: 0 15px;
+  }
+  .table-wrapper {
+    min-height: 410px;
   }
 }
 

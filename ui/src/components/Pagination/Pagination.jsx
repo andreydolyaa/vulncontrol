@@ -43,8 +43,9 @@ const StyledDivPagination = styled.div`
     font-weight: 500;
   }
   @media (max-width: 570px) {
-    flex-direction: column;
     width: 100%;
+    font-size:12px;
+    margin-bottom: 20px;
   }
 `;
 
@@ -53,10 +54,8 @@ const StyledDivCounter = styled.div`
   border-left: 1px solid var(--border-color);
   border-right: 1px solid var(--border-color);
   @media (max-width: 570px) {
-    border: unset;
-    border-top: 1px solid var(--border-color);
-    border-bottom: 1px solid var(--border-color);
     width: 100%;
+
   }
 `;
 

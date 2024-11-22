@@ -13,6 +13,9 @@
   .icon-scan {
     margin-right: 5px;
   }
+  @media (max-width: 570px) {
+    padding: 15px;
+  }
 }
 
 .body {

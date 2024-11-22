@@ -19,7 +19,8 @@ export const startSubfinder = async (req, res) => {
       HttpActions.notify(
         subscriptionPaths.SUBFINDER_ALL,
         { error: msg },
-        "toast"
+        "toast",
+        userId
       );
       throw new Error(msg);
     }
@@ -81,7 +82,7 @@ export const deleteScan = async (req, res) => {
   try {
     const scan = await SubfinderScan.findOneAndDelete({ id: req.params.id });
     scan.status = PROC_STATUS.DELETED;
-    HttpActions.notify(subscriptionPaths.SUBFINDER_ALL, scan, "toast");
+    HttpActions.notify(subscriptionPaths.SUBFINDER_ALL, scan, "toast", req.userId);
     return res.status(200).send({ message: "Scan deleted", id: req.params.id });
   } catch (error) {
     return res.status(400).send({ message: "Failed to delete scan", error });

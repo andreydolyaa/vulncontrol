@@ -28,11 +28,11 @@ export const ArgsToggler = styled.div`
 export const ArgsTogglerIcon = styled.div`
   transition: transform 0.3s ease-in-out;
   transform: ${({ $isOpen }) => ($isOpen ? "rotate(-180deg)" : "rotate(0)")};
-  margin-left: 8px;
+  margin-left: 10px;
   .icon-toggle {
     stroke-width: 1.5;
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
     color: var(--action-color-2);
   }
 `;
@@ -53,6 +53,9 @@ export const StartScanForm = styled.form`
   border: 1px solid var(--border-color);
   border-radius: var(--radius);
   animation: appear4 .2s ease-in-out 1;
+  @media (max-width: 570px) {
+    padding: 15px;
+  }
 `;
 
 export const StartScanFormTop = styled.div`
@@ -66,9 +69,12 @@ export const StartScanFormTop = styled.div`
     align-items: center;
     justify-content: center;
     .input-label {
-      width: 100%;
       order: 1;
+      width: 100%;
     }
+  }
+  @media (max-width: 570px) {
+    flex-direction: row;
   }
 `;
 
@@ -103,18 +109,6 @@ export const ModeSelectButton = styled.div`
       $active ? "none" : "var(--background-color-hover)"};
     cursor: ${({ $active }) => ($active ? "default" : "pointer")};
   }
-  @media (max-width: 570px) {
-    &:first-child {
-      border-radius: unset;
-      border-top-left-radius: var(--radius);
-      border-top-right-radius: var(--radius);
-    }
-    &:last-child {
-      border-radius: unset;
-      border-bottom-right-radius: var(--radius);
-      border-bottom-left-radius: var(--radius);
-    }
-  }
 `;
 
 export const ModeSelectWrapper = styled.div`
@@ -136,10 +130,17 @@ export const ModeSelectWrapper = styled.div`
     margin: 0 0 30px 0;
   }
   @media (max-width: 570px) {
-    flex-direction: column;
-    height: 60px;
-    width: 100%;
-    font-size:11px;
+    width: 110px;
+    margin: 0 0 20px 0;
+    order: 2;
+    .icon {
+      width:16px;
+      height: 16px;
+      margin: 0;
+    }
+    .mode-text {
+      display: none;
+    }
   }
 `;
 

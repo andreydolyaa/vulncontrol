@@ -95,7 +95,7 @@ export const deleteScan = async (req, res) => {
   try {
     const scan = await NmapScan.findOneAndDelete(req.params.id);
     scan.status = PROC_STATUS.DELETED;
-    HttpActions.notify(subscriptionPaths.NMAP_ALL, scan, "toast");
+    HttpActions.notify(subscriptionPaths.NMAP_ALL, scan, "toast", req.userId);
     return res.status(200).send({ message: "Scan deleted", id: req.params.id });
   } catch (error) {
     return res.status(400).send({ message: "Failed to delete scan", error });

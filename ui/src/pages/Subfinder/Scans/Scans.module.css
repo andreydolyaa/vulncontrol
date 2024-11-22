@@ -5,6 +5,9 @@
   gap: var(--padding);
   overflow-y: auto;   
   animation: appear4 .2s ease-in-out 1;
+  @media (max-width: 570px) {
+    gap: 15px;
+  }
 }
 
 @media (max-width: 1000px) {

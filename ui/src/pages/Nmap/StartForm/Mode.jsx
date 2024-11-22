@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TbTerminal2, TbAlignBoxRightBottom } from "react-icons/tb";
+import { TbTerminal2, TbCopyCheck } from "react-icons/tb";
 import { useDispatch, useSelector } from "react-redux";
 import { setUiMode } from "../../../redux/nmap";
 import { UIModes } from "../../../constants/index";
@@ -23,14 +23,14 @@ export const Mode = () => {
         onClick={() => toggle(mode)}
       >
         <Icon className="icon"/>
-        <span>{mode} Mode</span>
+        <span className="mode-text">{mode} Mode</span>
       </ModeSelectButton>
     );
   };
 
   return (
     <ModeSelectWrapper>
-      {selectModeButton(UIModes.EASY, TbAlignBoxRightBottom)}
+      {selectModeButton(UIModes.EASY, TbCopyCheck)}
       {selectModeButton(UIModes.COMMAND, TbTerminal2)}
     </ModeSelectWrapper>
   );

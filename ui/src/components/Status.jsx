@@ -22,7 +22,7 @@ export const Status = ({ text, background }) => {
     }
   };
 
-  const checkText = (text) => (text === "aborted" ? "halted" : text);
+  const checkText = (text) => (text === "done" ? "completed" : text);
 
   return (
     <StyledDiv className="status-cmp" $background={background} $isLoading={!text}>
@@ -46,13 +46,13 @@ const blinkAnimation = keyframes`
 `;
 
 const StyledDiv = styled.div`
-  width: 95px;
+  width: 120px;
   height: 26px;
   border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: 11px;
   background-color: ${({ $background }) => $background};
   color: ${({ $background }) => changeRgbaAlpha($background, 1)};
   font-weight: 500;

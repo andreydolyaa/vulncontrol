@@ -20,7 +20,7 @@ const nmapSlice = createSlice({
     loading: true,
     status: "idle",
     scans: [],
-    uiMode: "command",
+    uiMode: "cmd",
   },
   reducers: {
     incomingScan: (state, action) => {

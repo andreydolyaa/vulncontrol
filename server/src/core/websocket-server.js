@@ -1,9 +1,11 @@
-import { WebSocketServer } from "ws";
-import logger from "./logger.js";
+import { WebSocket, WebSocketServer } from "ws";
 import { SubscriptionManager } from "./subscription-manager.js";
+import { WS_CONNECTION } from "../constants/common.js";
+import logger from "./logger.js";
 
 export class WebsocketServer {
   constructor(httpServer) {
+    this.interval = null;
     this.server = new WebSocketServer({ server: httpServer });
     this.subscriptionManager = new SubscriptionManager();
 
@@ -20,6 +22,7 @@ export class WebsocketServer {
   }
 
   _handleNewConnection(websocket, subscriptionPath, subscriber) {
+    this._startPing(websocket);
     logger.info(`WS | new client connected [${subscriber}]`);
     this._attachListeners(websocket, subscriptionPath, subscriber);
   }
@@ -42,6 +45,7 @@ export class WebsocketServer {
 
   _handleDisconnection(subscriptionPath, websocket, subscriber) {
     this.subscriptionManager.close(subscriptionPath, websocket, subscriber);
+    clearInterval(this.interval);
   }
 
   _extractUserId(req) {
@@ -52,6 +56,14 @@ export class WebsocketServer {
   _extractSubscribePath(req) {
     const url = new URL(req.url, `http://${req.headers.host}`);
     return `/${url.pathname.split("/").slice(-2).join("/")}` || "default";
+  }
+
+  _startPing(ws) {
+    this.interval = setInterval(() => {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({ type: WS_CONNECTION.PING }));
+      }
+    }, WS_CONNECTION.PING_INTERVAL);
   }
 
   updateSubsAtSubscription(subscriptionPath, message, userId) {

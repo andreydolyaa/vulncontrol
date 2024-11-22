@@ -14,7 +14,9 @@ export const useWebSocket = (url) => {
     const websocket = new WebSocket(url);
     websocket.onmessage = (event) => {
       const incoming = JSON.parse(event.data);
-      if (incoming?.type === "toast") {
+      if (incoming?.type === "ping") {
+        websocket.send(JSON.stringify({ type: "pong" }));
+      } else if (incoming?.type === "toast") {
         dispatch(incomingToast(incoming));
       } else if (incoming.type === "subfinder") {
         if (incoming.data?.status === "done") {

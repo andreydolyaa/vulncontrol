@@ -39,6 +39,7 @@ const StyledDiv = styled.div`
   background-color: var(--background-color);
   border-radius: var(--radius);
   animation: appear4 .2s ease-in-out 1;
+  border:1px solid red;
   .text-and-icon {
     display: flex;
     align-items: center;
@@ -70,7 +71,7 @@ const StyledDiv = styled.div`
   }
   @media (max-width: 570px) {
     display: flex;
-    min-height: 130px;
+    min-height: 110px;
     padding: 15px;
     align-items: center;
     flex-direction: column;

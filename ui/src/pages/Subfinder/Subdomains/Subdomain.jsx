@@ -16,7 +16,8 @@ export const Subdomain = ({ subdomain }) => {
         <DomainDiv>{subdomain}</DomainDiv>
         <ActionsDiv>
           <ActionButton>
-            <TbExternalLink />
+            <TbExternalLink data-tooltip-id="tooltip1"
+              data-tooltip-content="Open in a new tab"/>
           </ActionButton>
         </ActionsDiv>
       </ItemWrapper>

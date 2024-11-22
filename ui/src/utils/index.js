@@ -109,7 +109,7 @@ export const scanTypes = {
 };
 
 export const ascii = `
-* VulnControl v1.0 By Andrey
-. . . . . . . . . . . . . . . .                                            
+* VulnControl v1
+. . . . . . . . .                                          
 
 `;

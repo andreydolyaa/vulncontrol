@@ -59,6 +59,7 @@ html,
   border-radius: 8px !important;
   z-index: 9999;
 }
+
 .center {
   display: flex;
   align-items: center;
@@ -110,7 +111,8 @@ input:-webkit-autofill:focus {
 
 /* scrollbar corner for resizable elements */
 ::-webkit-scrollbar-corner {
-  /* background-color: var(--main-background-color); */
+  background-color: var(--background-color);
+  border-bottom-right-radius: var(--radius);
 }
 
 .sign-button {
@@ -257,7 +259,7 @@ select:focus {
 .ascii {
   /* font-family: ; */
   font-size: 15px;
-  background: linear-gradient(133deg, #ff0b50, #6f00ff, #6000e7);
+  background: linear-gradient(-133deg, #ff0b50, #6a00ff);
   -webkit-background-clip: text;
   color: transparent;
 }
@@ -376,6 +378,9 @@ select:focus {
   }
   .login-layout {
     padding: 0 30px;
+  }
+  .tooltip {
+    display: none;
   }
 }
 @media (max-width: 500px) {

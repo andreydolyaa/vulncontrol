@@ -82,6 +82,9 @@ export const ItemWrapper = styled.div`
   cursor: pointer;
   border-bottom: 1px dotted var(--border-color);
   transition: all 0.3s;
+  @media (max-width: 570px) {
+    padding: 15px;
+  }
 `;
 export const IconDiv = styled.div`
   width: 22px;
