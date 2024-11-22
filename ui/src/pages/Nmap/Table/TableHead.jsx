@@ -3,12 +3,12 @@ import styles from "./Table.module.css";
 
 export const TableHead = () => {
   const tableItems = [
+    "Status",
     "Target",
-    "Scan Type",
     "Open Ports",
     "Start Time",
     "End Time",
-    "Status",
+    "Scan Type",
     "Actions",
   ];
 

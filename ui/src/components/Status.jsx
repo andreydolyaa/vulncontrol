@@ -12,13 +12,13 @@ import { LoadingBlink } from "./LoadingBlink";
 export const Status = ({ text, background }) => {
   const IconComponent = () => {
     if (text === "live") {
-      return <TbRefresh className="icon animate-spin mr-2" />;
+      return <TbRefresh className="icon animate-spin mr-1" />;
     } else if (text === "done") {
-      return <TbCircleCheck className="icon mr-2" />;
+      return <TbCircleCheck className="icon mr-1" />;
     } else if (text === "aborted") {
-      return <TbExclamationCircle className="icon mr-2" />;
+      return <TbExclamationCircle className="icon mr-1" />;
     } else {
-      return <TbCircleX className="icon mr-2" />;
+      return <TbCircleX className="icon mr-1" />;
     }
   };
 
@@ -46,7 +46,7 @@ const blinkAnimation = keyframes`
 `;
 
 const StyledDiv = styled.div`
-  width: 120px;
+  width: 100px;
   height: 26px;
   border-radius: 20px;
   display: flex;
