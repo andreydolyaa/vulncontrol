@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getScans, startScan } from "../../redux/nmap";
 import { StartForm } from "./StartForm/StartForm";
 import { WS_URL } from "../../api/baseUrl";
-import { isValidIP, scanTypes } from "../../utils";
+import { isValidIPOrDomain, scanTypes } from "../../utils";
 import { ModuleName } from "../../components/ModuleName";
 import { TbRadar2 as Radar } from "react-icons/tb";
 import { UIModes } from "../../constants";
@@ -22,7 +22,7 @@ export const Nmap = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const limit = 6;
-  
+
   const updatesRoute = `${WS_URL}/ws/nmap/updates?userId=${user.id}`;
   useWebSocket(updatesRoute);
 
@@ -61,9 +61,9 @@ export const Nmap = () => {
   const start = async (e) => {
     e.preventDefault();
 
-    if (easyMode && !isValidIP(formData.command)) {
+    if (easyMode && !isValidIPOrDomain(formData.command)) {
       const message = {
-        data: `Invalid IP: ${formData.command}\nEnter valid IPv4 or IPv6 Address`,
+        data: `Invalid Address: ${formData.command}\nEnter valid IPv4, IPv6 or Domain Address`,
       };
       dispatch(incomingCustomToast(message));
       return;
@@ -76,13 +76,15 @@ export const Nmap = () => {
     const scanType = scanTypes[args[0]] ?? scanTypes["default"];
     const data = { args, userId: user.id, scanType };
 
-    dispatch(startScan(data))
-    .unwrap()
-    .then(() => {
-      setFormData({}); // Clear the form data
-      setSelectedArgs([]); // Also clear the selected arguments if needed
-    });
+
+    // TODO: clear http/s from target
     
+    dispatch(startScan(data))
+      .unwrap()
+      .then(() => {
+        setFormData({});
+        setSelectedArgs([]);
+      });
   };
 
   return (

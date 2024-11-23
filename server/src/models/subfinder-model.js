@@ -32,6 +32,8 @@ const SubfinderScanSchema = new mongoose.Schema(
     subdomains: {
       type: [String],
     },
+    ipData: [Object],
+    geoData: Object,
     id: {
       type: String,
       default: function () {

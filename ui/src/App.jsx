@@ -42,7 +42,7 @@ export const App = () => {
           <Route path="/nmap/:scanId" element={<Terminal />} />
           <Route path="/nikto" element={<Nikto />} />
           <Route path="/map" element={<Map />} />
-          <Route path="/settings" element={<Settings />} />
+          {/* <Route path="/settings" element={<Settings />} /> */}
           <Route path="/subfinder" element={<Subfinder />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>

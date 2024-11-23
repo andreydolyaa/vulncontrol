@@ -23,10 +23,10 @@ export const Home = () => {
           customClass="card-2"
         />
         <Card
-          text="Nikto"
-          subtext="Web Server Scanner"
+          text="IP2Geolocation"
+          subtext="View Targets Geo Data"
           icon={TbBug}
-          link="nikto"
+          link="map"
           customClass="card-3"
         />
         <Card

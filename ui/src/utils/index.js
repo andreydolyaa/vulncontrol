@@ -48,12 +48,19 @@ export const parseDate = (date) => {
   return time.format("HH:mm:ss DD/MM");
 };
 
-export const isValidIP = (ip) => {
+export const isValidIPOrDomain = (input) => {
+  const cleanedInput = input.replace(/^(https?:\/\/|ftp:\/\/|file:\/\/)/i, "");
+  console.log(cleanedInput);
+  
   const ipv4Pattern =
     /^(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}$/;
   const ipv6Pattern = /^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$/;
-
-  return ipv4Pattern.test(ip) || ipv6Pattern.test(ip);
+  const domainPattern = /^(?!-)(?:[A-Za-z0-9-]{1,63}\.)+[A-Za-z]{2,6}$/;
+  return (
+    ipv4Pattern.test(cleanedInput) ||
+    ipv6Pattern.test(cleanedInput) ||
+    domainPattern.test(cleanedInput)
+  );
 };
 
 export const scanOptions = [
