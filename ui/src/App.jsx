@@ -14,7 +14,11 @@ import { ProtectedRoutes } from "./layout/ProtectedRoutes";
 import { PublicRoutes } from "./layout/PublicRoutes";
 import { Loading } from "./components/Loading";
 import { Subfinder } from "./pages/Subfinder/Subfinder";
+import { Map } from "./pages/Map/Map";
 import "react-tooltip/dist/react-tooltip.css";
+import 'leaflet/dist/leaflet.css';
+
+
 
 export const App = () => {
   const dispatch = useDispatch();
@@ -37,6 +41,7 @@ export const App = () => {
           <Route path="/nmap" element={<Nmap />} />
           <Route path="/nmap/:scanId" element={<Terminal />} />
           <Route path="/nikto" element={<Nikto />} />
+          <Route path="/map" element={<Map />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/subfinder" element={<Subfinder />} />
           <Route path="*" element={<Navigate to="/" replace />} />

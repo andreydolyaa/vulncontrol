@@ -9,7 +9,8 @@ import {
   TbBug as Bug,
   TbSettings as Settings,
   TbLogout as Logout,
-  TbWorldSearch as World
+  TbWorldSearch as World,
+  TbWorld as Map
 } from "react-icons/tb";
 
 export const Sidebar = () => {
@@ -19,19 +20,20 @@ export const Sidebar = () => {
         <Logo />
 
         <Section title={"Dashboard"} />
-        <Item icon={Home} title={"Home"} link="/" />
-        <Item icon={Project} title={"Overview"} link="overview" />
+        <Item icon={Home} title="Home" link="/" />
+        <Item icon={Project} title="Overview" link="overview" />
 
-        <Section title={"Recon & Enumeration"} />
-        <Item icon={Radar} title={"Nmap"} link="nmap" />
-        <Item icon={World} title={"Subfinder"} link="subfinder" />
-        <Item icon={Bug} title={"Nikto"} link="nikto" />
+        <Section title="Recon & Enumeration" />
+        <Item icon={Radar} title="Nmap" link="nmap" />
+        <Item icon={World} title="Subfinder" link="subfinder" />
+        <Item icon={Bug} title="Nikto" link="nikto" />
+        <Item icon={Map} title="Map" link="map" />
 
         {/* <Section title={"Vulnerability Scanners"} /> */}
 
-        <Section title={"System"} />
-        <Item icon={Settings} title={"Settings"} link="settings" />
-        <Item icon={Logout} title={"Log Out"} isLogout />
+        <Section title="System" />
+        <Item icon={Settings} title="Settings" link="settings" />
+        <Item icon={Logout} title="Log Out" isLogout />
       </div>
     </div>
   );
