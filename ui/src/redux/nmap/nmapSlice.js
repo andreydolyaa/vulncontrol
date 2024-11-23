@@ -18,6 +18,7 @@ const nmapSlice = createSlice({
   name: "nmap",
   initialState: {
     loading: true,
+    isLoaded: false,
     status: "idle",
     scans: [],
     uiMode: "cmd",
@@ -46,17 +47,20 @@ const nmapSlice = createSlice({
         state.loading = false;
       })
       .addCase(getScans.pending, (state) => {
-        if (!state.scans.length) state.loading = true;
+        // if (!state.scans.length) state.loading = true;
+        if (!state.isLoaded) state.loading = true;
       })
       .addCase(getScans.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.loading = false;
+        state.isLoaded = true;
         state.scans = action.payload.scans;
         
       })
       .addCase(getScans.rejected, (state) => {
         state.status = "failed";
         state.loading = false;
+        state.isLoaded = true;
       })
       .addCase(deleteScan.fulfilled, (state, action) => {
         const scanId = action.payload.id;

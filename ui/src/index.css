@@ -383,7 +383,10 @@ select:focus {
     display: none;
   }
 }
-@media (max-width: 500px) {
+@media (max-width: 570px) {
+  ::placeholder {
+    font-size: 13px !important;
+  }
   .chart-title {
     display: none;
   }

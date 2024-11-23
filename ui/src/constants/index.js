@@ -1,6 +1,7 @@
 export const UIModes = {
   EASY: "easy",
   COMMAND: "cmd",
+  AUTO: "auto"
 };
 
 export const ScanStatusList = {

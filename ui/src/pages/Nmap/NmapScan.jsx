@@ -11,7 +11,7 @@ export const NmapScan = ({
   totalPages,
   setCurrentPage,
 }) => {
-  const { scans, loading } = useSelector((state) => state.nmap);
+  const { scans, loading, isLoaded } = useSelector((state) => state.nmap);
 
   const fetching = () => {
     return <Empty text={<LoadingBlink />} />;
@@ -21,17 +21,17 @@ export const NmapScan = ({
     return <Empty text={search ? "no search results" : "no scans yet"} />;
   };
 
-  if (loading) return fetching();
-  else if (scans.length < 1) return empty();
-  else
-    return (
-      <>
-        <Table scans={scans} />
-        <Pagination
-          current={currentPage}
-          total={totalPages}
-          onPageChange={setCurrentPage}
-        />
-      </>
-    );
+  if (!isLoaded && loading) return fetching();
+  if (isLoaded && !scans.length) return empty();
+
+  return (
+    <>
+      <Table scans={scans} />
+      <Pagination
+        current={currentPage}
+        total={totalPages}
+        onPageChange={setCurrentPage}
+      />
+    </>
+  );
 };

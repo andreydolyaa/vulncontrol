@@ -52,7 +52,7 @@ export const StartScanForm = styled.form`
   background-color: var(--background-color);
   border: 1px solid var(--border-color);
   border-radius: var(--radius);
-  animation: appear4 .2s ease-in-out 1;
+  animation: appear4 0.2s ease-in-out 1;
   @media (max-width: 570px) {
     padding: 15px;
   }
@@ -85,7 +85,8 @@ export const ModeSelectButton = styled.div`
   flex-grow: 1;
   cursor: pointer;
   transition: all 0.3s;
-  /* color: ${({ $active }) => ($active ? "white" : "var(--brighter-color)")}; */
+  /* color: ${({ $active }) =>
+    $active ? "white" : "var(--brighter-color)"}; */
   color: var(--brighter-color);
   background-color: ${({ $active }) =>
     $active ? "var(--purple-3)" : "var(--main-background-color)"};
@@ -123,18 +124,19 @@ export const ModeSelectWrapper = styled.div`
   text-transform: uppercase;
   font-size: 12px;
   pointer-events: all;
-  div:first-child {
+  div:nth-child(2) {
     border-right: 1px solid var(--border-color);
+    border-left: 1px solid var(--border-color);
   }
   @media (max-width: 768px) {
     margin: 0 0 30px 0;
   }
   @media (max-width: 570px) {
-    width: 110px;
+    width: 180px;
     margin: 0 0 20px 0;
     order: 2;
     .icon {
-      width:16px;
+      width: 16px;
       height: 16px;
       margin: 0;
     }

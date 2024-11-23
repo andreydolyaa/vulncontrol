@@ -16,6 +16,11 @@ export const StartForm = ({ handleChange, startScan }) => {
           className={styles.input}
           onChange={handleChange}
           placeholder="Enter domain address... (example: https://www.hackthissite.org)"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              startScan();
+            }
+          }}
         />
         <Button onClick={startScan}>
           <WorldIcon className="icon-scan" />

@@ -93,7 +93,7 @@ export const abortScan = async (req, res) => {
 
 export const deleteScan = async (req, res) => {
   try {
-    const scan = await NmapScan.findOneAndDelete(req.params.id);
+    const scan = await NmapScan.findOneAndDelete({ id: req.params.id });
     scan.status = PROC_STATUS.DELETED;
     HttpActions.notify(subscriptionPaths.NMAP_ALL, scan, "toast", req.userId);
     return res.status(200).send({ message: "Scan deleted", id: req.params.id });
