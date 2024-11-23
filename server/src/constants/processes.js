@@ -7,6 +7,7 @@ export const DOCKER_BIN = "docker";
 export const NMAP_BIN = "nmap";
 export const NIKTO_BIN = "nikto";
 export const SUBFINDER_BIN = "subfinder";
+export const GEO_IP = "geo-ip";
 
 export const DOCKER_CMD = {
   DOCKER: "docker",
