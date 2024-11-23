@@ -41,6 +41,7 @@ html,
   --purple-2: rgb(0, 255, 153);
   --action-color: rgb(116, 43, 225);
   --action-color-2: #b88342;
+  --action-color-4: #1ae25d;
   --action-color-3: #ff0a7c;
   --orange: rgb(16 185 129);
   --greenish: rgb(0, 255, 166);
@@ -262,6 +263,24 @@ select:focus {
   background: linear-gradient(-133deg, #ff0b50, #6a00ff);
   -webkit-background-clip: text;
   color: transparent;
+}
+
+.custom-popup-wrapper .leaflet-popup-content-wrapper {
+  background-color: var(--background-color);
+  border:1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 15px;
+  box-shadow: 1px 1px 25px 1px black;
+}
+
+.custom-popup-wrapper .leaflet-popup-content {
+  /* margin: 12px; */
+  min-width: 200px;
+}
+
+.custom-popup-wrapper .leaflet-popup-tip {
+  background-color: var(--background-color);
+  border:1px solid var(--border-color);
 }
 
 @keyframes appear {
