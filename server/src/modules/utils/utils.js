@@ -6,6 +6,9 @@ import logger from "../../core/logger.js";
 export class Utils {
   static __filename = fileURLToPath(import.meta.url);
   static __dirname = path.dirname(Utils.__filename);
+  static ipv4Regex = /(\d{1,3}\.){3}\d{1,3}/;
+  static ipv6Regex =
+    /(?:^|(?<=\s))(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:))(?=\s|$)/;
   constructor() {}
 
   static setCurrentTime() {
@@ -52,19 +55,18 @@ export class Utils {
     }
   }
 
+  static isIPAddress(str) {
+    return this.ipv4Regex.test(str) || this.ipv6Regex.test(str);
+  }
+
+  static isDomain(str) {
+    const domainRegex = /^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,}$/;
+    return domainRegex.test(str);
+  }
+
   static extractIPAddress(str) {
-    const ipv4Regex = /(\d{1,3}\.){3}\d{1,3}/;
-    const ipv6Regex =
-      new RegExp(`/(?:^|(?<=\s))(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|
-          ([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|
-          ([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:)
-          {1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]
-          {1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|
-          [0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|
-          :))(?=\s|$)/;
-    `);
     const domainRegex = /([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}/;
-    let match = str.match(ipv4Regex);
+    let match = str.match(this.ipv4Regex);
     if (match) {
       const ip = match[0];
       const isValid = ip.split(".").every((num) => {
@@ -73,7 +75,7 @@ export class Utils {
       });
       if (isValid) return ip;
     }
-    match = str.match(ipv6Regex);
+    match = str.match(this.ipv6Regex);
     if (match) {
       return match[0];
     }

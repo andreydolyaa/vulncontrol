@@ -11,6 +11,7 @@ import {
   NMAP_BIN,
   PROC_STATUS,
 } from "../../constants/processes.js";
+import { GeoIp } from "../geoip/geoip.js";
 
 export class Nmap extends Docker {
   static containerName = "";
@@ -70,7 +71,18 @@ export class Nmap extends Docker {
         close: this._close.bind(this),
       });
 
-      this._notify(this.scan, "toast", this.request.userId);      
+      this._notify(this.scan, "toast", this.request.userId);
+
+      // resolve target domain to ip
+      const ipData = await GeoIp.resolveDomain(this.scan.target);
+      // write ip data to scan doc
+      await this._updateDb({ ipData: ipData });
+      // get first ipv4 address from results
+      const ipToGetData = GeoIp.getIPv4Address(ipData);
+      // look up go geolocation by resolved ip
+      const geoData = GeoIp.lookup(ipToGetData);
+      // insert/update data in db
+      await GeoIp.upsertData(geoData, ipToGetData, this.scan.id);
 
       Nmap.log("warn: scan started");
       return this.scan;

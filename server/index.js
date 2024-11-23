@@ -3,6 +3,7 @@ import { HttpServer } from "./src/core/http-server.js";
 import { Database } from "./src/core/database.js";
 import router from "./src/router.js";
 import logger from "./src/core/logger.js";
+import { GeoIp } from "./src/modules/geoip/geoip.js";
 
 dotenv.config();
 
@@ -20,6 +21,11 @@ server
   })
   // TEST
   .then(async () => {
+    // const ipsList = await GeoIp.resolveDomain();
+    // const ip = ipsList[ipsList.length-1].address;
+    // console.log(GeoIp.lookup(ip));
+    
+    
     // await removeAll(NmapScan);
     // await removeAll(SubfinderScan);
   });
