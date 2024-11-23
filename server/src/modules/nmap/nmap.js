@@ -82,7 +82,17 @@ export class Nmap extends Docker {
       // look up go geolocation by resolved ip
       const geoData = GeoIp.lookup(ipToGetData);
       // insert/update data in db
-      await GeoIp.upsertData(geoData, ipToGetData, this.scan.id);
+      if (geoData) {
+        await GeoIp.upsertData(
+          geoData,
+          ipToGetData,
+          this.scan.id,
+          this.scan.target,
+          "Nmap"
+        );
+
+        await this._updateDb({ geoData });
+      }
 
       Nmap.log("warn: scan started");
       return this.scan;

@@ -267,10 +267,11 @@ select:focus {
 
 .custom-popup-wrapper .leaflet-popup-content-wrapper {
   background-color: var(--background-color);
-  border:1px solid var(--border-color);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius);
   padding: 15px;
   box-shadow: 1px 1px 25px 1px black;
+  color: white;
 }
 
 .custom-popup-wrapper .leaflet-popup-content {
@@ -280,7 +281,37 @@ select:focus {
 
 .custom-popup-wrapper .leaflet-popup-tip {
   background-color: var(--background-color);
-  border:1px solid var(--border-color);
+  border: 1px solid var(--border-color);
+}
+
+.leaflet-tooltip {
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 15px 25px;
+  box-shadow: 1px 1px 25px 1px black;
+  color: white;
+  font-size: 12px;
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+/* Directional styling */
+.leaflet-tooltip-top:before {
+  border-top-color: var(--background-color);
+}
+
+.leaflet-tooltip-bottom:before {
+  border-bottom-color: var(--background-color);
+}
+
+.leaflet-tooltip-left:before {
+  border-left-color: var(--background-color);
+}
+
+.leaflet-tooltip-right:before {
+  border-right-color: var(--background-color);
 }
 
 @keyframes appear {

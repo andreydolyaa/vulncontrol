@@ -1,5 +1,4 @@
 import dns from "dns/promises";
-import mongoose from "mongoose";
 import geoip from "geoip-lite";
 import { Utils } from "../utils/utils.js";
 import { GEO_IP } from "../../constants/processes.js";
@@ -18,11 +17,14 @@ export class GeoIp {
     return;
   }
 
-  static async upsertData(data, ip, scanId) {
+  static async upsertData(data, ip, scanId, target, scanModel) {
     try {
       const doc = await GeolocationIP.findOneAndUpdate(
         { ip },
-        { $set: { data, ip }, $inc: { scanCount: 1 } },
+        {
+          $set: { data, scanId, ip, target, scanModel },
+          $inc: { scanCount: 1 },
+        },
         {
           new: true,
           upsert: true,

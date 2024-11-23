@@ -23,7 +23,12 @@ export const ModuleName = ({
       {enableSearch && (
         <Search onSearch={onSearch} placeholder="Search scans..." />
       )}
-      {children && children}
+
+      {!enableSearch ? (
+        <div className="childrens">{children && children}</div>
+      ) : (
+        <>{children && children}</>
+      )}
     </StyledDiv>
   );
 };
@@ -39,6 +44,30 @@ const StyledDiv = styled.div`
   background-color: var(--background-color);
   border-radius: var(--radius);
   animation: appear4 0.2s ease-in-out 1;
+  .childrens {
+    min-width: 150px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    button {
+      /* border: 1px solid red; */
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      svg {
+        transition: 0.2s;
+        font-size: 24px;
+        stroke-width: 1.3;
+      }
+      svg:hover {
+        color: var(--action-color-2);
+        transform: scale(1.1);
+      }
+    }
+  }
   .text-and-icon {
     display: flex;
     align-items: center;

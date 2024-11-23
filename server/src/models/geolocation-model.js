@@ -8,11 +8,17 @@ const GeolocationIPSchema = new mongoose.Schema(
       default: 0,
     },
     ip: String,
+    target: String,
     scanId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Nmap",
+      refPath: "scanModel",
       required: true,
       index: true,
+    },
+    scanModel: {
+      type: String,
+      required: true,
+      enum: ["Nmap", "Subfinder"],
     },
   },
   {

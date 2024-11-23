@@ -11,6 +11,7 @@ import {
   SUBFINDER_ARG,
   SUBFINDER_BIN,
 } from "../../constants/processes.js";
+import { GeoIp } from "../geoip/geoip.js";
 
 export class Subfinder extends Docker {
   static containerName = "";
@@ -66,6 +67,27 @@ export class Subfinder extends Docker {
       });
 
       this._notify(this.scan, "toast", this.request.userId);
+
+      // resolve target domain to ip
+      const ipData = await GeoIp.resolveDomain(this.scan.target);
+      // write ip data to scan doc
+      await this._updateDb({ ipData: ipData });
+      // get first ipv4 address from results
+      const ipToGetData = GeoIp.getIPv4Address(ipData);
+      // look up go geolocation by resolved ip
+      const geoData = GeoIp.lookup(ipToGetData);
+      // insert/update data in db
+      if (geoData) {
+        await GeoIp.upsertData(
+          geoData,
+          ipToGetData,
+          this.scan.id,
+          this.scan.target,
+          "Subfinder"
+        );
+
+        await this._updateDb({ geoData });
+      }
 
       Subfinder.log("warn: scan started");
       return this.scan;

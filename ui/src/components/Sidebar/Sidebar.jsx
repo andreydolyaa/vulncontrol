@@ -10,7 +10,7 @@ import {
   TbSettings as Settings,
   TbLogout as Logout,
   TbWorldSearch as World,
-  TbWorld as Map
+  TbMap2 as Map
 } from "react-icons/tb";
 
 export const Sidebar = () => {
@@ -26,13 +26,13 @@ export const Sidebar = () => {
         <Section title="Recon & Enumeration" />
         <Item icon={Radar} title="Nmap" link="nmap" />
         <Item icon={World} title="Subfinder" link="subfinder" />
+        <Item icon={Map} title="Geolocation" link="map" />
         <Item icon={Bug} title="Nikto" link="nikto" />
-        <Item icon={Map} title="Map" link="map" />
 
         {/* <Section title={"Vulnerability Scanners"} /> */}
 
         <Section title="System" />
-        <Item icon={Settings} title="Settings" link="settings" />
+        {/* <Item icon={Settings} title="Settings" link="settings" /> */}
         <Item icon={Logout} title="Log Out" isLogout />
       </div>
     </div>

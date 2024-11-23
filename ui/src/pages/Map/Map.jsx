@@ -1,10 +1,26 @@
-import React, { useRef } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  Tooltip,
+  useMap,
+} from "react-leaflet";
 import { customMarker } from "./customData";
 import { CustomPopup } from "./CustomPopup";
+import { useDispatch, useSelector } from "react-redux";
+import { getGeolocationPoints } from "../../redux/geolocation/geolocationThunks";
+import { MapControls } from "./MapControls";
 
 export const Map = () => {
-  const position = [55.505, -0.09];
+  const dispatch = useDispatch();
+  const { geolocationPoints, coords } = useSelector((state) => state.geolocation);
+
+  // ll: latitude and longitude
+  useEffect(() => {
+    dispatch(getGeolocationPoints());
+  }, []);
 
   return (
     <MapContainer
@@ -20,12 +36,27 @@ export const Map = () => {
         [90, 180],
       ]}
     >
+      <MapControls coords={coords} />
       <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" />
-      <Marker position={position} icon={customMarker} >
-        <Popup className="custom-popup-wrapper" >
-          <CustomPopup title="X" content="X" />
-        </Popup>
-      </Marker>
+      {geolocationPoints.length &&
+        geolocationPoints.map((point) => {
+          return (
+            <Marker
+              key={point._id}
+              position={point.data.ll}
+              icon={customMarker}
+            >
+              <Tooltip>
+                {point.target}
+                <br />
+                {point.ip}
+              </Tooltip>
+              <Popup className="custom-popup-wrapper">
+                <CustomPopup title="" content="TBD" />
+              </Popup>
+            </Marker>
+          );
+        })}
     </MapContainer>
   );
 };
