@@ -17,6 +17,7 @@ import { Subfinder } from "./pages/Subfinder/Subfinder";
 import { Map } from "./pages/Map/Map";
 import "react-tooltip/dist/react-tooltip.css";
 import 'leaflet/dist/leaflet.css';
+import { About } from "./pages/About";
 
 
 
@@ -42,6 +43,7 @@ export const App = () => {
           <Route path="/nmap/:scanId" element={<Terminal />} />
           <Route path="/nikto" element={<Nikto />} />
           <Route path="/map" element={<Map />} />
+          <Route path="/about" element={<About />} />
           {/* <Route path="/settings" element={<Settings />} /> */}
           <Route path="/subfinder" element={<Subfinder />} />
           <Route path="*" element={<Navigate to="/" replace />} />

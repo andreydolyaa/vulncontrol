@@ -6,7 +6,7 @@ export const MapControls = ({ coords }) => {
   
   useEffect(() => {
     if (coords.length) {
-      map.setView(coords, 14);
+      map.setView(coords,7);
     }
   }, [coords]);
 

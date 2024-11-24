@@ -25,7 +25,11 @@ export const Status = ({ text, background }) => {
   const checkText = (text) => (text === "done" ? "completed" : text);
 
   return (
-    <StyledDiv className="status-cmp" $background={background} $isLoading={!text}>
+    <StyledDiv
+      className="status-cmp"
+      $background={background}
+      $isLoading={!text}
+    >
       {!text ? (
         <div className="placeholder">
           <LoadingBlink text={""} />
@@ -48,7 +52,7 @@ const blinkAnimation = keyframes`
 const StyledDiv = styled.div`
   width: 100px;
   height: 26px;
-  border-radius: 20px;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;

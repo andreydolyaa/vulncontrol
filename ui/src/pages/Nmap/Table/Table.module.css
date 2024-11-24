@@ -1,6 +1,6 @@
 .table-wrapper {
   border: 1px solid var(--border-color);
-  border-radius: 10px;
+  border-radius: var(--radius);
   background-color: #1e1e2b;
   overflow-y: auto;
   width: 100%;
@@ -89,10 +89,13 @@
   .table-row {
     td {
       padding: 15px;
+      font-size: 12px;
     }
   }
   .table-header-cell {
     padding: 0 15px;
+    height: 40px;
+    font-size: 12px;
   }
   .table-wrapper {
     min-height: 410px;

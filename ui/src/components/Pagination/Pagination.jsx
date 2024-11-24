@@ -81,12 +81,12 @@ const StyledButtonPagination = styled.button`
     &:first-child {
       border-radius: unset;
       border-top-left-radius: var(--radius);
-      border-top-right-radius: var(--radius);
+      border-bottom-left-radius: var(--radius);
     }
     &:last-child {
       border-radius: unset;
+      border-top-right-radius: var(--radius);
       border-bottom-right-radius: var(--radius);
-      border-bottom-left-radius: var(--radius);
     }
   }
 `;

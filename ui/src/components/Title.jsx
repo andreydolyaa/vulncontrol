@@ -46,4 +46,12 @@ const StyledDiv = styled.div`
       max-width:90px;
     }
   }
+  @media (max-width:578px) {
+    font-size: 12px;
+    .header {
+      .icon {
+        font-size: 16px;
+      }
+    }
+  }
 `;

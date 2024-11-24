@@ -6,7 +6,7 @@
 .header {
   position: sticky;
   top: 0;
-  height: 60px;
+  height: 50px;
   padding: 20px var(--padding);
   border-bottom: 1px solid var(--border-color);
   background-color: #2e2e41;
@@ -15,11 +15,11 @@
   display: flex;
   @media (max-width: 570px) {
     padding: 15px;
+    height: 40px;
   }
 }
 
-
-@media (max-width:1000px) {
+@media (max-width: 1000px) {
   .list {
     height: 400px;
   }

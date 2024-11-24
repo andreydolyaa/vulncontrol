@@ -12,15 +12,23 @@ import { CustomPopup } from "./CustomPopup";
 import { useDispatch, useSelector } from "react-redux";
 import { getGeolocationPoints } from "../../redux/geolocation/geolocationThunks";
 import { MapControls } from "./MapControls";
+import { setMapCoords } from "../../redux/geolocation/geolocationSlice";
+import { TooltipData } from "./TooltipData";
+import { useFetch } from '../../hooks/useFetch';
 
 export const Map = () => {
   const dispatch = useDispatch();
+  // const { data, loading, error } = useFetch(`/`);
   const { geolocationPoints, coords } = useSelector((state) => state.geolocation);
 
   // ll: latitude and longitude
   useEffect(() => {
     dispatch(getGeolocationPoints());
   }, []);
+
+  const handleMarkerClick = (point) => {
+    dispatch(setMapCoords(point.data?.ll || []))
+  }
 
   return (
     <MapContainer
@@ -31,6 +39,7 @@ export const Map = () => {
       style={{ height: "100%", width: "100%" }}
       maxBoundsViscosity={1.0}
       zoomControl={false}
+      attributionControl={false}
       maxBounds={[
         [-90, -180],
         [90, 180],
@@ -45,14 +54,15 @@ export const Map = () => {
               key={point._id}
               position={point.data.ll}
               icon={customMarker}
+              eventHandlers={{
+                click: () => handleMarkerClick(point),
+              }}
             >
               <Tooltip>
-                {point.target}
-                <br />
-                {point.ip}
+                <TooltipData point={point}/>
               </Tooltip>
               <Popup className="custom-popup-wrapper">
-                <CustomPopup title="" content="TBD" />
+                <CustomPopup title="" content="TDB" />
               </Popup>
             </Marker>
           );

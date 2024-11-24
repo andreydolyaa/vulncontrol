@@ -24,7 +24,7 @@
   animation: modalAppear 0.3s ease-in-out 1;
 
   .title {
-    color: var(--action-color);
+    color: white;
     font-weight: bold;
     padding-bottom: 10px;
     border-bottom: 1px dotted var(--border-color);
@@ -51,7 +51,7 @@
       transition: 0.3s;
     }
     .confirm {
-      background-color: var(--action-color);
+      background-color: var(--primary);
       color: white;
     }
   }

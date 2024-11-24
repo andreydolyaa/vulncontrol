@@ -85,25 +85,15 @@ export const ModeSelectButton = styled.div`
   flex-grow: 1;
   cursor: pointer;
   transition: all 0.3s;
-  /* color: ${({ $active }) =>
-    $active ? "white" : "var(--brighter-color)"}; */
   color: var(--brighter-color);
   background-color: ${({ $active }) =>
-    $active ? "var(--purple-3)" : "var(--main-background-color)"};
+    $active ? "var(--primary)" : "var(--main-background-color)"};
   font-weight: 500;
   .icon {
     height: 16px;
     width: 16px;
     margin-right: 5px;
     stroke-width: 1.5;
-  }
-  &:first-child {
-    border-top-left-radius: var(--radius);
-    border-bottom-left-radius: var(--radius);
-  }
-  &:last-child {
-    border-top-right-radius: var(--radius);
-    border-bottom-right-radius: var(--radius);
   }
   &:hover {
     background-color: ${({ $active }) =>
@@ -118,12 +108,13 @@ export const ModeSelectWrapper = styled.div`
   border: 1px solid var(--border-color);
   background-color: var(--main-background-color);
   width: 300px;
-  height: 35px;
+  height: 30px;
   margin-bottom: 20px;
   margin-right: auto;
   text-transform: uppercase;
   font-size: 12px;
   pointer-events: all;
+  overflow: hidden;
   div:nth-child(2) {
     border-right: 1px solid var(--border-color);
     border-left: 1px solid var(--border-color);
@@ -152,6 +143,7 @@ export const StartButtonWrapper = styled.div`
   margin: ${({ $easyMode }) => (!$easyMode ? "0px 0 20px 0" : "0px")};
   @media (max-width: 768px) {
     flex-direction: column;
+    margin: auto 0;
   }
 `;
 
@@ -173,13 +165,8 @@ export const Button = styled.button`
   justify-content: center;
   border: none;
   border-radius: var(--radius);
-  background: rgb(116, 43, 225);
-  box-shadow: 1px 1px 1px 1px #510a8b;
-  background: linear-gradient(
-    108deg,
-    rgba(116, 43, 225, 1) 0%,
-    rgba(177, 0, 255, 1) 100%
-  );
+  background: var(--primary);
+  box-shadow: 1px 1px 1px 1px #311b92;
   color: var(--brighter-color);
   font-size: 16px;
   font-weight: bold;
@@ -202,7 +189,11 @@ export const Button = styled.button`
   @media (max-width: 768px) {
     margin: 20px 0 0 0;
     width: 100%;
-    height: 40px;
-    font-size: 14px;
+    height: 36px;
+  }
+  @media (max-width: 570px) {
+    height: 32px;
+    font-size: 12px;
+    margin: 20px 0 0 0;
   }
 `;

@@ -23,4 +23,7 @@ const StyledDiv = styled.div`
     font-size: 16px;
     color:var(--icon-color);
   }
+  @media (max-width:570px) {
+    font-size: 11px;
+  }
 `;
