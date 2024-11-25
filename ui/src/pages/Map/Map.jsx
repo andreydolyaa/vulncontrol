@@ -14,21 +14,44 @@ import { getGeolocationPoints } from "../../redux/geolocation/geolocationThunks"
 import { MapControls } from "./MapControls";
 import { setMapCoords } from "../../redux/geolocation/geolocationSlice";
 import { TooltipData } from "./TooltipData";
-import { useFetch } from '../../hooks/useFetch';
+import api from "../../api/index";
+import { MODULE_TYPE } from "../../constants/index";
 
 export const Map = () => {
   const dispatch = useDispatch();
-  // const { data, loading, error } = useFetch(`/`);
-  const { geolocationPoints, coords } = useSelector((state) => state.geolocation);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [scan, setScan] = useState({});
+  const { geolocationPoints, coords } = useSelector(
+    (state) => state.geolocation
+  );
 
   // ll: latitude and longitude
   useEffect(() => {
     dispatch(getGeolocationPoints());
   }, []);
 
-  const handleMarkerClick = (point) => {
-    dispatch(setMapCoords(point.data?.ll || []))
-  }
+  const customFetch = async (scanType, scanId) => {
+    setLoading(true);
+    try {
+      const response = await api.get(`/api/${scanType}/${scanId}`);
+      setScan(response.data);
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleMarkerClick = async (point) => {
+    dispatch(setMapCoords(point.data?.ll || []));
+    if (point.scanModel === "Nmap") {
+      customFetch(MODULE_TYPE.NMAP, point.scanId);
+    }
+    if (point.scanModel === "Subfinder") {
+      customFetch(MODULE_TYPE.SUBFINDER, point.scanId);
+    }
+  };
 
   return (
     <MapContainer
@@ -59,10 +82,10 @@ export const Map = () => {
               }}
             >
               <Tooltip>
-                <TooltipData point={point}/>
+                <TooltipData point={point} />
               </Tooltip>
               <Popup className="custom-popup-wrapper">
-                <CustomPopup title="" content="TDB" />
+                <CustomPopup point={scan} loading={loading} error={error} />
               </Popup>
             </Marker>
           );

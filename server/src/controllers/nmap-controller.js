@@ -13,7 +13,12 @@ export const startNmap = async (req, res) => {
   try {
     if (Docker.processes.size >= process.env.MAX_IMAGES) {
       const msg = `Cannot run more then ${process.env.MAX_IMAGES} scans`;
-      HttpActions.notify(subscriptionPaths.NMAP_ALL, { error: msg }, "toast", userId);
+      HttpActions.notify(
+        subscriptionPaths.NMAP_ALL,
+        { error: msg },
+        "toast",
+        userId
+      );
       throw new Error(msg);
     }
     const nmap = new Nmap({ args, userId, scanType });
@@ -77,7 +82,7 @@ export const getScanById = async (req, res) => {
     const scan = await NmapScan.findOne({ _id: req.params.id });
     return res.status(200).send(moduleWrapper(NMAP_BIN, scan));
   } catch (error) {
-    return res.status(400).send({ message: "Could not find user", error });
+    return res.status(400).send({ message: "Could not get scan by id", error });
   }
 };
 

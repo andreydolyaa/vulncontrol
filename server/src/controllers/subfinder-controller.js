@@ -1,9 +1,5 @@
 import { subscriptionPaths } from "../constants/common.js";
-import {
-  NMAP_BIN,
-  PROC_STATUS,
-  SUBFINDER_BIN,
-} from "../constants/processes.js";
+import { PROC_STATUS, SUBFINDER_BIN } from "../constants/processes.js";
 import { moduleWrapper } from "../constants/wrappers.js";
 import logger from "../core/logger.js";
 import { SubfinderScan } from "../models/subfinder-model.js";
@@ -78,11 +74,25 @@ export const getAllScans = async (req, res) => {
   }
 };
 
+export const getScanById = async (req, res) => {
+  try {
+    const scan = await SubfinderScan.findOne({ _id: req.params.id });
+    return res.status(200).send(moduleWrapper(SUBFINDER_BIN, scan));
+  } catch (error) {
+    return res.status(400).send({ message: "Could not get scan by id", error });
+  }
+};
+
 export const deleteScan = async (req, res) => {
   try {
     const scan = await SubfinderScan.findOneAndDelete({ id: req.params.id });
     scan.status = PROC_STATUS.DELETED;
-    HttpActions.notify(subscriptionPaths.SUBFINDER_ALL, scan, "toast", req.userId);
+    HttpActions.notify(
+      subscriptionPaths.SUBFINDER_ALL,
+      scan,
+      "toast",
+      req.userId
+    );
     return res.status(200).send({ message: "Scan deleted", id: req.params.id });
   } catch (error) {
     return res.status(400).send({ message: "Failed to delete scan", error });

@@ -4,6 +4,9 @@ import { Database } from "./src/core/database.js";
 import router from "./src/router.js";
 import logger from "./src/core/logger.js";
 import { GeoIp } from "./src/modules/geoip/geoip.js";
+import { removeAll } from "./src/modules/actions/db-actions.js";
+import { NmapScan } from "./src/models/nmap-model.js";
+import { SubfinderScan } from "./src/models/subfinder-model.js";
 
 dotenv.config();
 
