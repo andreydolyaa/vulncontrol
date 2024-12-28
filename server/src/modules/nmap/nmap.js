@@ -83,6 +83,9 @@ export class Nmap extends Docker {
       const geoData = GeoIp.lookup(ipToGetData);
       // insert/update data in db
       if (geoData) {
+        if (geoData.ll[0] == null || geoData.ll[1] == null) {
+          geoData.ll = [31, 31];
+        }
         await GeoIp.upsertData(
           geoData,
           ipToGetData,

@@ -11,7 +11,7 @@ export const TerminalHeader = ({ scan }) => {
   const dispatch = useDispatch();
 
   const goToMap = () => {
-    dispatch(setMapCoords(scan?.geoData?.ll || [31.12,31.12]));
+    dispatch(setMapCoords(scan?.geoData?.ll || []));
     navigate("/map");
   };
   return (
